@@ -20,4 +20,4 @@ can just be opened in any browser as local file
 
 `npm run start`
 
-Go to http://127.0.0.1:6742/
+Go to http://127.0.0.1:8434/
