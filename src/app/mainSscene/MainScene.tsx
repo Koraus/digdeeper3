@@ -1,7 +1,7 @@
-import { v3 } from "../../utils/v";
-import { GizmoHelper, GizmoViewport, PerspectiveCamera, Box, OrbitControls, Grid } from "@react-three/drei";
-import { GroupSync } from "../../utils/GroupSync";
-
+import { GizmoHelper, GizmoViewport, PerspectiveCamera, OrbitControls } from "@react-three/drei";
+import { universe } from "../model/universe";
+import { CellView } from "./CellView";
+import { PlayerView } from "./PlayerView";
 
 export function MainScene() {
 
@@ -13,15 +13,8 @@ export function MainScene() {
             intensity={0.6}
             position={[0, 5, 5]}
         />
-        <PerspectiveCamera
-            makeDefault
-            fov={60}
-            near={0.1}
-            far={1000}
-            position={v3.scale(v3.from(1, Math.SQRT2, 1), 5)}
-        >
-        </PerspectiveCamera>
-        <OrbitControls />
+
+        {/* <OrbitControls /> */}
         <GizmoHelper
             alignment="bottom-right"
             margin={[80, 110]}
@@ -29,15 +22,24 @@ export function MainScene() {
             <GizmoViewport />
         </GizmoHelper>
 
-        <GroupSync onFrame={g => {
-            g.rotation.x = performance.now() / 1000 * 0.1;
-            g.rotation.y = performance.now() / 1000 * 0.2;
-            g.rotation.z = performance.now() / 1000 * 0.5;
-        }}>
-            <Box>
-                <meshPhongMaterial color={"#d7d7ff"} />
-            </Box>
-        </GroupSync>
-        <Grid infiniteGrid />
+        <PlayerView>
+            <PerspectiveCamera
+                makeDefault
+                fov={60}
+                near={0.1}
+                far={1000}
+                position={[0, 0, 10]}
+            >
+            </PerspectiveCamera>
+        </PlayerView>
+
+        {universe.spacetime.map((space, t) => space.map((_, x) => {
+            return <CellView
+                key={`${t}_${x}`}
+                position={[x, -t, 0]}
+                t={t}
+                x={x}
+            />;
+        }))}
     </>;
 }
