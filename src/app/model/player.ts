@@ -30,7 +30,7 @@ export const maxDepthEver = ((key: string) => ({
     },
     set(value: number) {
         localStorage.setItem(key, value.toString());
-    }
+    },
 }))("maxDepthEver");
 
 export const player = new class Player {
@@ -126,7 +126,11 @@ export const player = new class Player {
         return d;
     }
 
-    getNeighbourCell(direction: "left" | "right" | "up" | "down", t: number, x: number) {
+    getNeighbourCell(
+        direction: "left" | "right" | "up" | "down",
+        t: number,
+        x: number,
+    ) {
         switch (direction) {
             case "left":
                 if (x <= 0) {
@@ -226,7 +230,7 @@ export const player = new class Player {
             targetCell: {
                 isEmpty: cellToCatch.isEmpty,
                 state: cellToCatch.state,
-            }
+            },
         });
 
 

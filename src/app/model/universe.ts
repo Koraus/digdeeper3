@@ -1,6 +1,6 @@
-import {LehmerPrng} from "../../utils/LehmerPrng";
-import {rule} from "./rule";
-import {VersionSubject} from "../../utils/VersionSubject";
+import { LehmerPrng } from "../../utils/LehmerPrng";
+import { rule } from "./rule";
+import { VersionSubject } from "../../utils/VersionSubject";
 
 export type Cell = Universe["spacetime"][0][0];
 
@@ -18,9 +18,9 @@ export class Universe {
     startingDepth = 10;
 
     spacetime = Array.from(
-        {length: this.timeSize},
+        { length: this.timeSize },
         () => Array.from(
-            {length: this.spaceSize},
+            { length: this.spaceSize },
             () => ({
                 isEmpty: true,
                 isPlayer: false,
@@ -58,7 +58,8 @@ export class Universe {
         for (let x = 0; x < nr; x++) {
             this.spacetime[t][x].state = Universe.getRandomState();
             this.spacetime[t][x].isEmpty = false;
-            this.spacetime[t][this.spacetime[t].length - 1 - x].state = Universe.getRandomState();
+            this.spacetime[t][this.spacetime[t].length - 1 - x].state =
+                Universe.getRandomState();
             this.spacetime[t][this.spacetime[t].length - 1 - x].isEmpty = false;
         }
         for (let x = nr; x < this.spacetime[t].length - nr; x++) {
@@ -74,6 +75,7 @@ export class Universe {
     }
 
     constructor() {
+        // eslint-disable-next-line no-console
         console.log("seed", Universe.seed);
 
         this._ruleGetState = this._ruleGetState.bind(this);
@@ -87,7 +89,11 @@ export class Universe {
             this.spacetime[t][x].isEmpty = false;
         }
         this.spacetime[playerT + 1][playerX].state = 1;
-        for (let _ = 0; _ < this.spacetime.length - this.startingDepth - 2; _++) {
+        for (
+            let _ = 0;
+            _ < this.spacetime.length - this.startingDepth - 2;
+            _++
+        ) {
             this._iterate();
         }
     }

@@ -5,6 +5,7 @@ import { MainScene } from "./mainSscene/MainScene";
 import { NoToneMapping } from "three";
 import { appVersion } from "./appVersion";
 import { player } from "./model/player";
+import { Gui } from "./Gui";
 
 
 window.addEventListener("keydown", ev => {
@@ -90,6 +91,9 @@ export function App() {
                 position: "relative",
                 margin: "1.5vmin",
             }}>
+                <div>
+                    <Gui />
+                </div>
                 <div css={{ // appVersion panel
                     position: "absolute",
                     right: 0,
