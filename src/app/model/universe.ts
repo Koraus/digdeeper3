@@ -30,7 +30,7 @@ export class Universe {
     step = 0;
 
     get(t: number, x: number) {
-        return this.spacetime[t - this.step][x];
+        return this.spacetime[t - this.step]?.[x];
     }
 
     _ruleGetState(t: number, x: number) {

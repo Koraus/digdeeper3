@@ -11,7 +11,7 @@ export function PlayerView({
     useEffect(() => {
         const s = universe.stateVersion.subscribe(() => {
             const { t, x } = player.cell;
-            setPos([x, -t]);
+            setPos([x, -(t + universe.step)]);
         });
         return () => s.unsubscribe();
     }, [universe.stateVersion]);
