@@ -4,46 +4,30 @@ import { Canvas } from "@react-three/fiber";
 import { MainScene } from "./mainSscene/MainScene";
 import { NoToneMapping } from "three";
 import { appVersion } from "./appVersion";
-import { player } from "./model/player";
+import { movePlayer, player } from "./model/player";
 import { Gui } from "./Gui";
 
 
 window.addEventListener("keydown", ev => {
     switch (ev.code) {
-        case "ArrowLeft": {
-            player.move("left");
-            break;
-        }
+        case "ArrowLeft":
         case "KeyA": {
-            player.move("left");
+            movePlayer(player, "left");
             break;
         }
-        case "ArrowRight": {
-            player.move("right");
-            break;
-        }
+        case "ArrowRight":
         case "KeyD": {
-            player.move("right");
+            movePlayer(player, "right");
             break;
         }
-        case "ArrowUp": {
-            player.move("up");
-            break;
-        }
+        case "ArrowUp":
         case "KeyW": {
-            player.move("up");
+            movePlayer(player, "up");
             break;
         }
-        case "ArrowDown": {
-            player.move("down");
-            break;
-        }
+        case "ArrowDown":
         case "KeyS": {
-            player.move("down");
-            break;
-        }
-        case "KeyZ": {
-            player.undo();
+            movePlayer(player, "down");
             break;
         }
         // case "KeyJ": {

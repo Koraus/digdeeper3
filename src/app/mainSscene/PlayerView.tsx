@@ -10,15 +10,14 @@ export function PlayerView({
     const [pos, setPos] = useState<v2>(v2.zero());
     useEffect(() => {
         const s = universe.stateVersion.subscribe(() => {
-            const { t, x } = player.cell;
-            setPos([x, -(t + universe.step)]);
+            setPos(player.position);
         });
         return () => s.unsubscribe();
     }, [universe.stateVersion]);
 
     return <group
         {...props}
-        position={[...pos, 0]}
+        position={[pos[0], -pos[1], 0]}
     >
         <mesh position={[0, 0, 1]}>
             <sphereGeometry args={[0.5]} />
