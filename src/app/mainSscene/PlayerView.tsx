@@ -1,19 +1,52 @@
-import { universe } from "../model/universe";
 import { ThreeElements } from "@react-three/fiber";
-import { useEffect, useState } from "react";
-import { v2 } from "../../utils/v";
-import { player } from "../model/player";
+import { useWindowEvent } from "../../utils/useWindowEvent";
+import { useRecoilState } from "recoil";
+import { progressionRecoil } from "../progressionRecoil";
+import { worldAt } from "../../model/terms";
 
 export function PlayerView({
     children, ...props
 }: ThreeElements["group"]) {
-    const [pos, setPos] = useState<v2>(v2.zero());
-    useEffect(() => {
-        const s = universe.stateVersion.subscribe(() => {
-            setPos(player.position);
-        });
-        return () => s.unsubscribe();
-    }, [universe.stateVersion]);
+    const [progression, setProgression] = useRecoilState(progressionRecoil);
+    const world = worldAt(progression);
+    const pos = world.playerPosition;
+
+    useWindowEvent("keydown", ev => {
+        switch (ev.code) {
+            case "ArrowLeft":
+            case "KeyA": {
+                setProgression({
+                    prev: progression,
+                    action: "left",
+                });
+                break;
+            }
+            case "ArrowRight":
+            case "KeyD": {
+                setProgression({
+                    prev: progression,
+                    action: "right",
+                });
+                break;
+            }
+            case "ArrowUp":
+            case "KeyW": {
+                setProgression({
+                    prev: progression,
+                    action: "backward",
+                });
+                break;
+            }
+            case "ArrowDown":
+            case "KeyS": {
+                setProgression({
+                    prev: progression,
+                    action: "forward",
+                });
+                break;
+            }
+        }
+    });
 
     return <group
         {...props}

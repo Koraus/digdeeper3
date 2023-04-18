@@ -1,4 +1,4 @@
-import { LehmerPrng } from "../../utils/LehmerPrng";
+import { LehmerPrng } from "../utils/LehmerPrng";
 import { fillSpace } from "../ca";
 
 

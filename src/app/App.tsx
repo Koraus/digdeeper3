@@ -4,44 +4,8 @@ import { Canvas } from "@react-three/fiber";
 import { MainScene } from "./mainSscene/MainScene";
 import { NoToneMapping } from "three";
 import { appVersion } from "./appVersion";
-import { movePlayer, player } from "./model/player";
 import { Gui } from "./Gui";
 
-
-window.addEventListener("keydown", ev => {
-    switch (ev.code) {
-        case "ArrowLeft":
-        case "KeyA": {
-            movePlayer(player, "left");
-            break;
-        }
-        case "ArrowRight":
-        case "KeyD": {
-            movePlayer(player, "right");
-            break;
-        }
-        case "ArrowUp":
-        case "KeyW": {
-            movePlayer(player, "up");
-            break;
-        }
-        case "ArrowDown":
-        case "KeyS": {
-            movePlayer(player, "down");
-            break;
-        }
-        // case "KeyJ": {
-        //     stage.gui.switchGamepadMode();
-        //     break;
-        // }
-        case "KeyN": {
-            if (confirm("Start new game? Current progress will be lost")) {
-                location.href += "";
-            }
-            break;
-        }
-    }
-});
 
 export function App() {
     return <div
