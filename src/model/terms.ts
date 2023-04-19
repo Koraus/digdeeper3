@@ -2,6 +2,7 @@ import { v2 } from "../utils/v";
 import memoize from "memoizee";
 import { ca } from "./ca";
 
+
 export const modelId = "digdeeper3@1";
 
 export const caStateCount = 3;
@@ -77,7 +78,7 @@ function getLastOkWorld(world: World): World {
     return world; // init world is always ok
 }
 
-export function worldAt(progression: Progression): World {
+export const worldAt = memoize((progression: Progression): World => {
     if (!("prev" in progression)) {
         return {
             progression: progression,
@@ -89,6 +90,7 @@ export function worldAt(progression: Progression): World {
             ok: true,
         };
     }
+
 
     const prevWorld = getLastOkWorld(worldAt(progression.prev));
 
@@ -165,4 +167,4 @@ export function worldAt(progression: Progression): World {
                 : ""),
         ok: true,
     };
-}
+});
