@@ -107,15 +107,16 @@ export const worldAt = memoize((progression: Progression): World => {
         directionVec[progression.action]);
 
     const isOutOfSpace = p1[0] < 0 || p1[0] >= spaceSize;
+    const isOutOfGoBack = p1[1] < prevWorld.depth;
 
-    if (isOutOfSpace) {
+    if (isOutOfSpace || isOutOfGoBack) {
         return {
             progression,
             playerPosition: prevWorld.playerPosition,
             playerEnergy: prevWorld.playerEnergy,
             emptyCells: prevWorld.emptyCells,
             depth: prevWorld.depth,
-            log: "out of space bounds",
+            log: isOutOfSpace ? "out of space bounds" : "cannot return back",
             ok: false,
         };
     }
