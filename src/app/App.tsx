@@ -38,6 +38,7 @@ export function App() {
             flex: "row",
         }}>
             <WorldSelectionPanel css={{
+                pointerEvents: "all",
                 transitionDuration: "0.2s",
                 overflow: "hidden",
                 flex: worldSelectionPanel
