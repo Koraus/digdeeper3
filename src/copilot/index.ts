@@ -1,28 +1,32 @@
-import { Progression } from "../model/terms";
+import { ActionProgression, Progression } from "../model/terms";
 
 
 export function* enumerateProgression(
     progression: Progression,
-): IterableIterator<Progression> {
+): IterableIterator<ActionProgression> {
     if ("prev" in progression) {
         yield* enumerateProgression(progression.prev);
+        yield progression;
     }
-    yield progression;
 }
 
 export const offer = (progression: Progression) => {
     const arr = [...enumerateProgression(progression)];
-    if (arr.length < 5) { return; }
-    const last = arr.slice(-5);
-    for (let i = arr.length - 1 - 5 - 1; i >= 0; i--) {
-        if (arr.slice(i, i + 5).every((x, i) => {
-            if (!("prev" in x)) { return false; }
-            const y = last[i];
-            if (!("prev" in y)) { return false; }
-            return x.action === y.action;
-        })) {
-            const x = arr[i + 5];
-            if ("prev" in x) { return x.action; }
-        }
+    const windowLength = 5;
+    if (arr.length < windowLength + 1) { return; }
+    const map = {} as Record<
+        string,
+        Partial<Record<ActionProgression["action"], number>>>;
+    for (let i = windowLength; i < arr.length; i++) {
+        const key = arr.slice(i - windowLength, i)
+            .map(x => x.action)
+            .join(",");
+        const value = (map[key] ?? (map[key] = {}))[arr[i].action] ?? 0;
+        map[key][arr[i].action] = value * 0.95 + 1;
+    }
+    {
+        const key = arr.slice(-windowLength).map(x => x.action).join(",");
+        return Object.entries(map[key] ?? {})
+            .sort((a, b) => b[1] - a[1])[0]?.[0] as ActionProgression["action"];
     }
 };
