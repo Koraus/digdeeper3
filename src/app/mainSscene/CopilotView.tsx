@@ -9,24 +9,26 @@ export function CopilotView({
     ...props
 }: ThreeElements["group"]) {
     const [progression] = useRecoilState(progressionRecoil);
-    const theOffer = offer(progression);
 
     return <group {...props}>
-        {[...(function *() {
+        {[...(function* () {
+            const stepsToOffer = 10;
             let pr = progression;
-            for (const o of theOffer) {
+            for (let i = 0; i < stepsToOffer; i++) {
+                const theOffer = offer(pr);
+                if (!theOffer) { break; }
                 pr = {
                     prev: pr,
-                    action: o,
+                    action: theOffer,
                 };
                 const w = worldAt(pr);
                 yield w.playerPosition;
             }
-        })()].map((p, i) => <mesh
+        })()].map((p, i, { length }) => <mesh
             key={i}
             position={[p[0], -p[1], 0.5]}
         >
-            <sphereGeometry args={[0.1]} />
+            <sphereGeometry args={[0.01 * (length - i)]} />
             <meshBasicMaterial color={"grey"} />
         </mesh>)}
     </group>;

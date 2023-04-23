@@ -48,10 +48,10 @@ export function PlayerView({
             }
             case "Space": {
                 const theOffer = offer(progression);
-                if (theOffer.length > 0) {
+                if (theOffer) {
                     setProgression({
                         prev: progression,
-                        action: theOffer[0],
+                        action: theOffer,
                     });
                 }
                 break;
