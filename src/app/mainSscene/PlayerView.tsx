@@ -3,6 +3,7 @@ import { useWindowEvent } from "../../utils/useWindowEvent";
 import { useRecoilState } from "recoil";
 import { progressionRecoil } from "../progressionRecoil";
 import { worldAt } from "../../model/terms";
+import { offer } from "../../copilot";
 
 export function PlayerView({
     children, ...props
@@ -43,6 +44,22 @@ export function PlayerView({
                     prev: progression,
                     action: "forward",
                 });
+                break;
+            }
+            case "Space": {
+                const theOffer = offer(progression);
+                if (theOffer.length > 0) {
+                    setProgression({
+                        prev: progression,
+                        action: theOffer[0],
+                    });
+                }
+                break;
+            }
+            case "KeyZ": {
+                if ("prev" in progression) {
+                    setProgression(progression.prev);
+                }
                 break;
             }
         }
