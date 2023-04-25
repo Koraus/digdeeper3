@@ -27,12 +27,9 @@ export type MoveAction =
     | "left" // x--
     | "right"; // x++
 
-export type Progression = {
-    problem: Problem,
-} | {
-    prev: Progression,
-    action: MoveAction,
-}
+export type InitProgression = { problem: Problem };
+export type ActionProgression = { prev: Progression, action: MoveAction };
+export type Progression = InitProgression | ActionProgression;
 
 export type World = {
     progression: Progression,

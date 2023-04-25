@@ -1,6 +1,7 @@
 import { GizmoHelper, GizmoViewport, PerspectiveCamera } from "@react-three/drei";
 import { CellView } from "./CellView";
 import { PlayerView } from "./PlayerView";
+import { CopilotView } from "./CopilotView";
 
 export function MainScene() {
 
@@ -32,6 +33,7 @@ export function MainScene() {
             >
             </PerspectiveCamera>
         </PlayerView>
+        <CopilotView />
 
         {(function* () {
             const tCellsPerScreen = 40;
