@@ -28,7 +28,7 @@ export function MainScene() {
                 fov={60}
                 near={0.1}
                 far={1000}
-                position={[0, 4, 20]}
+                position={[0, 6, 30]}
                 rotation={[-0.3, 0, 0]}
             >
             </PerspectiveCamera>
@@ -36,8 +36,8 @@ export function MainScene() {
         <CopilotView />
 
         {(function* () {
-            const tCellsPerScreen = 40;
-            const xCellsPerScreen = 20;
+            const tCellsPerScreen = 60;
+            const xCellsPerScreen = 50;
             for (let st = 0; st < tCellsPerScreen; st++) {
                 for (let sx = 0; sx < xCellsPerScreen; sx++) {
                     yield <CellView

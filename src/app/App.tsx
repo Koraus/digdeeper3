@@ -40,7 +40,7 @@ export function App() {
             <WorldSelectionPanel css={{
                 pointerEvents: "all",
                 transitionDuration: "0.2s",
-                overflow: "hidden",
+                overflowX: "hidden",
                 flex: worldSelectionPanel
                     ? "0 0 33vmin"
                     : "0 0 0vmin",
