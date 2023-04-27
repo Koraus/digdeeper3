@@ -46,7 +46,7 @@ export function PlayerView({
                 });
                 break;
             }
-            case "Space": {
+            case "KeyC": {
                 const theOffer = offer(progression);
                 if (theOffer) {
                     setProgression({

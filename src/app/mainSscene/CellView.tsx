@@ -37,6 +37,8 @@ export function CellView({
     const caState = caForProblem(problem)._at(t, x);
     const isEmpty = world.emptyCells.some(p => v2.eqStrict(p, [x, t]));
     const isUnreachable = t < world.depth;
+    const unreachableColor = ["#26004D", "#323232", "#408000"][caState];
+    const color = ["#8000FF", "#404040", "#80FF00"][caState];
 
     return <group {...props} position={[x, -t, 0]}>
         {!isEmpty
@@ -45,8 +47,8 @@ export function CellView({
                 <boxGeometry />
                 <meshPhongMaterial
                     color={isUnreachable
-                        ? ["#26004D", "#323232", "#408000"][caState]
-                        : ["#8000FF", "#404040", "#80FF00"][caState]} />
+                        ? unreachableColor
+                        : color} />
             </mesh>
         }
         {!isEmpty
@@ -54,7 +56,7 @@ export function CellView({
             && <mesh>
                 <boxGeometry />
                 <meshPhongMaterial
-                    color={["#8000FF", "#404040", "#80FF00"][caState]}
+                    color={color}
                     transparent
                     opacity={0.3} />
             </mesh>
@@ -64,7 +66,7 @@ export function CellView({
             && <mesh position={[0, 0, -0.5]}>
                 <planeGeometry />
                 <meshPhongMaterial
-                    color={["#8000FF", "#404040", "#80FF00"][caState]}
+                    color={color}
                     transparent
                     opacity={(isInBounds && caState !== emptyState)
                         ? (isEmpty ? 0.3 : 1)

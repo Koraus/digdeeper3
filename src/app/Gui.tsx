@@ -11,7 +11,7 @@ export function Gui() {
     return <div>
 
         <div>WASD / Arrows to move</div>
-        <div>Space to accept hint</div>
+        <div>С to accept hint</div>
         <div>Z to undo</div>
         <div>---</div>
         <div>p: {world.playerPosition.join(",")}</div>
