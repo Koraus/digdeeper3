@@ -79,7 +79,7 @@ export const worldAt = memoize((progression: Progression): World => {
     if (!("prev" in progression)) {
         return {
             progression: progression,
-            playerPosition: [0, 0],
+            playerPosition: [Math.floor(progression.problem.spaceSize / 2), 0],
             playerEnergy: 81 * 3,
             emptyCells: [],
             depth: 0,

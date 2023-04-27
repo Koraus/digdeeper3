@@ -5,9 +5,12 @@ import { MainScene } from "./mainSscene/MainScene";
 import { NoToneMapping } from "three";
 import { appVersion } from "./appVersion";
 import { Gui } from "./Gui";
+import { WorldSelectionPanel } from "./WorldSelectionPanel";
+import { useState } from "react";
 
 
 export function App() {
+    const [worldSelectionPanel, setIsWorldSelectionPanel] = useState(false);
     return <div
         css={{
             display: "flex",
@@ -34,6 +37,32 @@ export function App() {
             display: "flex",
             flex: "row",
         }}>
+            <WorldSelectionPanel css={{
+                pointerEvents: "all",
+                transitionDuration: "0.2s",
+                overflowX: "hidden",
+                flex: worldSelectionPanel
+                    ? "0 0 33vmin"
+                    : "0 0 0vmin",
+                padding: worldSelectionPanel ? "5px 5px" : 0,
+            }} />
+            <button // toggle 
+                css={{
+                    padding: 0,
+                    pointerEvents: "all",
+                }}
+                onClick={() =>
+                    setIsWorldSelectionPanel(!worldSelectionPanel)}
+            >
+                <span css={{
+                    display: "inline-block",
+                    transitionDuration: "0.2s",
+                    transform: worldSelectionPanel
+                        ? "rotate(180deg)"
+                        : "rotate(0deg)",
+                }}>&gt;</span>
+                <br /><span css={{ textDecoration: "underline" }}>S</span>
+            </button>
             <div css={{
                 flex: "1 1 0",
                 position: "relative",
