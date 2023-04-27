@@ -1,17 +1,18 @@
 import { useState } from "react";
 import type { jsx } from "@emotion/react";
-import { useSetRecoilState } from "recoil";
-import { progressionRecoil } from "./progressionRecoil";
-import { LehmerPrng } from "../utils/LehmerPrng";
-import { modelId } from "../model/terms";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { progressionRecoil } from "../progressionRecoil";
+import { LehmerPrng } from "../../utils/LehmerPrng";
+import { modelId } from "../../model/terms";
 import { WorldPreview } from "./WorldPreview";
-
+import { chosenWorldsRecoil } from "./chosenWorldsRecoil";
 
 
 export function WorldSelectionPanel({
     ...props
 }: jsx.JSX.IntrinsicElements["div"]) {
     const setProgression = useSetRecoilState(progressionRecoil);
+    const setChosenWorldsRecoil = useSetRecoilState(chosenWorldsRecoil);
     const stateCount = 3;
     const [ruleTables, setRuleTables] = useState<number[][]>();
     return <div
@@ -62,22 +63,29 @@ export function WorldSelectionPanel({
                             bottom: "1vmin",
                             left: "50%",
                             transform: "translateX(-50%)",
-
                         }]}
-                        onClick={() => setProgression({
-                            problem: {
-                                modelId,
-                                caStateCount: stateCount,
-                                table: ruleTable,
-                                seed: Math.floor(
-                                    Math.random() * LehmerPrng.MAX_INT32),
-                                stateEnergyDrain: [81 * 9, 1, 0],
-                                stateEnergyGain: [0, 0, 81],
-                                emptyState: 1,
-                                spaceSize: 31,
-                                depthLeftBehind: 10,
-                            },
-                        })}
+
+                        onClick={
+                            () => {
+                                const problem = {
+                                    problem: {
+                                        modelId,
+                                        caStateCount: stateCount,
+                                        table: ruleTable,
+                                        seed: Math.floor(
+                                            Math.random() * LehmerPrng.MAX_INT32),
+                                        stateEnergyDrain: [81 * 9, 1, 0],
+                                        stateEnergyGain: [0, 0, 81],
+                                        emptyState: 1,
+                                        spaceSize: 31,
+                                        depthLeftBehind: 10,
+                                    },
+                                };
+
+                                setChosenWorldsRecoil('testChosenWorldsSave');
+                                setProgression(problem);
+                            }
+                        }
                     > Play!</button >
                 </div>)}
             </div>

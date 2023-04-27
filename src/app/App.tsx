@@ -5,7 +5,7 @@ import { MainScene } from "./mainSscene/MainScene";
 import { NoToneMapping } from "three";
 import { appVersion } from "./appVersion";
 import { Gui } from "./Gui";
-import { WorldSelectionPanel } from "./WorldSelectionPanel";
+import { WorldSelectionPanel } from "./lobby/WorldSelectionPanel";
 import { useState } from "react";
 
 

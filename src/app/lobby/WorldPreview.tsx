@@ -1,5 +1,5 @@
 import { useEffect, useRef, useMemo } from "react";
-import { ca } from "../model/ca";
+import { ca } from "../../model/ca";
 import type { jsx } from "@emotion/react";
 
 
