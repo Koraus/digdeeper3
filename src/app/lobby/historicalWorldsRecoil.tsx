@@ -1,12 +1,14 @@
 import { atom } from "recoil";
 import {localStorageAtomEffect} from "../../utils/localStorageAtomEffect";
-import { Problem } from "../../model/terms"
+import { World, sightVersion } from "../../model/terms";
 
 
-export const historicalWorldsRecoil = atom <Problem[] | [] >({
+export const historicalWorldsRecoil = atom <World[] | [] >({
     key: "historicalWorldsRecoil",
     default: [],
     effects: [
-        localStorageAtomEffect(),
+        localStorageAtomEffect({
+            key: key => `${sightVersion}/${key}`,
+        }),
     ],
 });

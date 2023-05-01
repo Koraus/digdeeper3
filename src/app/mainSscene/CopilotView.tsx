@@ -1,6 +1,6 @@
 import { useRecoilState } from "recoil";
-import { worldAt } from "../../model/terms";
-import { progressionRecoil } from "../progressionRecoil";
+import { sightAt } from "../../model/terms";
+import { trekRecoil } from "../trekRecoil";
 import { offer } from "../../copilot";
 import { ThreeElements } from "@react-three/fiber";
 
@@ -8,14 +8,14 @@ import { ThreeElements } from "@react-three/fiber";
 export function CopilotView({
     ...props
 }: ThreeElements["group"]) {
-    const [progression] = useRecoilState(progressionRecoil);
-    const world = worldAt(progression);
-    const pos = world.playerPosition;
+    const [trek] = useRecoilState(trekRecoil);
+    const sight = sightAt(trek);
+    const pos = sight.playerPosition;
 
     return <group {...props}>
         {[...(function* () {
             const stepsToOffer = 10;
-            let pr = progression;
+            let pr = trek;
             for (let i = 0; i < stepsToOffer; i++) {
                 const theOffer = offer(pr);
                 if (!theOffer) { break; }
@@ -23,7 +23,7 @@ export function CopilotView({
                     prev: pr,
                     action: theOffer,
                 };
-                const w = worldAt(pr);
+                const w = sightAt(pr);
                 yield w.playerPosition;
             }
         })()].map((p, i, arr) => {

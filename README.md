@@ -22,6 +22,7 @@ A single step of the `Trek` may be refferred as a `TrekStep`.
 
 The `Sight` is a computed state, 
 all the data available to the player at a given step of the `Trek`.
+Generally, the way `Sight` is computed defines how the player plays.
 
 The `Copilot` (?) is a non-player companion,
 kind of AI to automate the mundane routes

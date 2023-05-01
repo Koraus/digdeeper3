@@ -1,26 +1,15 @@
-import { useEffect, useRef, useMemo } from "react";
+import { useEffect, useRef } from "react";
 import { ca } from "../../model/ca";
 import type { jsx } from "@emotion/react";
+import { World } from "../../model/terms";
 
 
 export function WorldPreview({
-    stateCount, table, spaceSize, seed, emptyState, ...props
+    world, ...props
 }: {
-    stateCount: number;
-    table: number[];
-    spaceSize: number;
-    emptyState: number;
-    seed: number;
+    world: World,
 } & jsx.JSX.IntrinsicElements["div"]) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
-
-    const theCa = useMemo(() => ca({
-        stateCount,
-        table,
-        spaceSize,
-        emptyState,
-        seed,
-    }), [stateCount, table, spaceSize, emptyState, seed]);
 
     useEffect(() => {
         const canvasEl = canvasRef.current;
@@ -35,7 +24,14 @@ export function WorldPreview({
             [128, 255, 0, 255],
         ];
 
-        const w = spaceSize;
+        const theCa = ca({
+            ca: world.ca,
+            spaceSize: world.width,
+            emptyState: world.emptyState,
+            seed: world.seed,
+        });
+
+        const w = world.width;
         const h = 100;
 
         const myImageData = ctx.createImageData(w, h);

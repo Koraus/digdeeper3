@@ -1,64 +1,64 @@
 import { ThreeElements } from "@react-three/fiber";
 import { useWindowEvent } from "../../utils/useWindowEvent";
 import { useRecoilState } from "recoil";
-import { progressionRecoil } from "../progressionRecoil";
-import { worldAt } from "../../model/terms";
+import { trekRecoil } from "../trekRecoil";
+import { sightAt } from "../../model/terms";
 import { offer } from "../../copilot";
 
 export function PlayerView({
     children, ...props
 }: ThreeElements["group"]) {
-    const [progression, setProgression] = useRecoilState(progressionRecoil);
-    const world = worldAt(progression);
-    const pos = world.playerPosition;
+    const [trek, setTrek] = useRecoilState(trekRecoil);
+    const sight = sightAt(trek);
+    const pos = sight.playerPosition;
 
     useWindowEvent("keydown", ev => {
         switch (ev.code) {
             case "ArrowLeft":
             case "KeyA": {
-                setProgression({
-                    prev: progression,
+                setTrek({
+                    prev: trek,
                     action: "left",
                 });
                 break;
             }
             case "ArrowRight":
             case "KeyD": {
-                setProgression({
-                    prev: progression,
+                setTrek({
+                    prev: trek,
                     action: "right",
                 });
                 break;
             }
             case "ArrowUp":
             case "KeyW": {
-                setProgression({
-                    prev: progression,
+                setTrek({
+                    prev: trek,
                     action: "backward",
                 });
                 break;
             }
             case "ArrowDown":
             case "KeyS": {
-                setProgression({
-                    prev: progression,
+                setTrek({
+                    prev: trek,
                     action: "forward",
                 });
                 break;
             }
             case "KeyC": {
-                const theOffer = offer(progression);
+                const theOffer = offer(trek);
                 if (theOffer) {
-                    setProgression({
-                        prev: progression,
+                    setTrek({
+                        prev: trek,
                         action: theOffer,
                     });
                 }
                 break;
             }
             case "KeyZ": {
-                if ("prev" in progression) {
-                    setProgression(progression.prev);
+                if ("prev" in trek) {
+                    setTrek(trek.prev);
                 }
                 break;
             }

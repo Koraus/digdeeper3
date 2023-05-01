@@ -1,25 +1,50 @@
 import { v2 } from "../utils/v";
 import memoize from "memoizee";
 import { ca } from "./ca";
+import { CaCode } from "../ca";
+import { buildFullTransitionLookupTable, version as caVersion } from "../ca";
+import { LehmerPrng } from "../utils/LehmerPrng";
+import { getNumberFromDigits } from "../ca/digits";
 
 
-export const modelId = "digdeeper3@1";
+export const sightVersion = "digdeeper3/sight@1";
 
 export const caStateCount = 3;
 
 export type CaState = number; // 0 | 1 | 2;
 
-export type Problem = {
-    modelId: typeof modelId,
-    caStateCount: typeof caStateCount,
-    table: CaState[],
+export type World = {
+    sightVersion: typeof sightVersion,
+    ca: CaCode,
     seed: number,
+    width: number,
     stateEnergyDrain: Record<CaState, number>,
     stateEnergyGain: Record<CaState, number>,
     emptyState: CaState,
-    spaceSize: number,
     depthLeftBehind: number,
 }
+
+export const createRandomWorld = (): World => ({
+    sightVersion,
+    ca: {
+        version: caVersion,
+        stateCount: caStateCount,
+        rule: (() => {
+            return getNumberFromDigits(
+                buildFullTransitionLookupTable(
+                    caStateCount,
+                    () => Math.floor(Math.random() * caStateCount)),
+                caStateCount,
+            ).toString();
+        })(),
+    },
+    seed: Math.floor(Math.random() * LehmerPrng.MAX_INT32),
+    stateEnergyDrain: [81 * 9, 1, 0],
+    stateEnergyGain: [0, 0, 81],
+    emptyState: 1,
+    width: 31,
+    depthLeftBehind: 10,
+});
 
 export type MoveAction =
     "forward" // t++
@@ -27,12 +52,12 @@ export type MoveAction =
     | "left" // x--
     | "right"; // x++
 
-export type InitProgression = { problem: Problem };
-export type ActionProgression = { prev: Progression, action: MoveAction };
-export type Progression = InitProgression | ActionProgression;
+export type InitTrek = { world: World };
+export type ActionTrekStep = { prev: Trek, action: MoveAction };
+export type Trek = InitTrek | ActionTrekStep;
 
-export type World = {
-    progression: Progression,
+export type Sight = {
+    trek: Trek,
     playerPosition: v2,
     playerEnergy: number,
     emptyCells: v2[],
@@ -41,9 +66,9 @@ export type World = {
     ok: boolean,
 }
 
-export function progressionProblem(progression: Progression): Problem {
-    if (!("prev" in progression)) { return progression.problem; }
-    return progressionProblem(progression.prev);
+export function trekWorld(trek: Trek): World {
+    if (!("prev" in trek)) { return trek.world; }
+    return trekWorld(trek.prev);
 }
 
 export const directionEnergyDrain = {
@@ -59,27 +84,26 @@ export const directionVec = {
     forward: [0, 1],
 } as const;
 
-export const caForProblem = memoize((problem: Problem) => ca({
-    stateCount: caStateCount,
-    spaceSize: problem.spaceSize,
-    table: problem.table,
-    emptyState: problem.emptyState,
-    seed: problem.seed,
+export const caForWorld = memoize((world: World) => ca({
+    ca: world.ca,
+    spaceSize: world.width,
+    emptyState: world.emptyState,
+    seed: world.seed,
 }));
 
-function getLastOkWorld(world: World): World {
-    if (world.ok) { return world; }
-    if ("prev" in world.progression) {
-        return getLastOkWorld(worldAt(world.progression.prev));
+function getLastOkSight(sight: Sight): Sight {
+    if (sight.ok) { return sight; }
+    if ("prev" in sight.trek) {
+        return getLastOkSight(sightAt(sight.trek.prev));
     }
-    return world; // init world is always ok
+    return sight; // init sight is always ok
 }
 
-export const worldAt = memoize((progression: Progression): World => {
-    if (!("prev" in progression)) {
+export const sightAt = memoize((trek: Trek): Sight => {
+    if (!("prev" in trek)) {
         return {
-            progression: progression,
-            playerPosition: [Math.floor(progression.problem.spaceSize / 2), 0],
+            trek,
+            playerPosition: [Math.floor(trek.world.width / 2), 0],
             playerEnergy: 81 * 3,
             emptyCells: [],
             depth: 0,
@@ -89,66 +113,66 @@ export const worldAt = memoize((progression: Progression): World => {
     }
 
 
-    const prevWorld = getLastOkWorld(worldAt(progression.prev));
+    const prevSight = getLastOkSight(sightAt(trek.prev));
 
-    const problem = progressionProblem(progression);
+    const world = trekWorld(trek);
     const {
-        spaceSize,
+        width,
         stateEnergyDrain,
         stateEnergyGain,
-        depthLeftBehind: depathLeftBehind,
-    } = problem;
+        depthLeftBehind,
+    } = world;
 
     const p1 = v2.add(
-        prevWorld.playerPosition,
-        directionVec[progression.action]);
+        prevSight.playerPosition,
+        directionVec[trek.action]);
 
-    const isOutOfSpace = p1[0] < 0 || p1[0] >= spaceSize;
-    const isOutOfGoBack = p1[1] < prevWorld.depth;
+    const isOutOfSpace = p1[0] < 0 || p1[0] >= width;
+    const isOutOfGoBack = p1[1] < prevSight.depth;
 
     if (isOutOfSpace || isOutOfGoBack) {
         return {
-            progression,
-            playerPosition: prevWorld.playerPosition,
-            playerEnergy: prevWorld.playerEnergy,
-            emptyCells: prevWorld.emptyCells,
-            depth: prevWorld.depth,
+            trek,
+            playerPosition: prevSight.playerPosition,
+            playerEnergy: prevSight.playerEnergy,
+            emptyCells: prevSight.emptyCells,
+            depth: prevSight.depth,
             log: isOutOfSpace ? "out of space bounds" : "cannot return back",
             ok: false,
         };
     }
 
-    const isEmptyAtP1 = prevWorld.emptyCells.some(x => v2.eqStrict(x, p1));
-    const caState = caForProblem(problem)._at(p1[1], p1[0]);
+    const isEmptyAtP1 = prevSight.emptyCells.some(x => v2.eqStrict(x, p1));
+    const caState = caForWorld(world)._at(p1[1], p1[0]);
 
-    const theStateEnergyDrain = directionEnergyDrain[progression.action];
+    const theStateEnergyDrain = directionEnergyDrain[trek.action];
     const theDirectionEnergyDrain = isEmptyAtP1 ? 0 : stateEnergyDrain[caState];
     const moveCost = theStateEnergyDrain + theDirectionEnergyDrain;
 
-    if (prevWorld.playerEnergy < moveCost) {
+    if (prevSight.playerEnergy < moveCost) {
         return {
-            progression,
-            playerPosition: prevWorld.playerPosition,
-            playerEnergy: prevWorld.playerEnergy,
-            emptyCells: prevWorld.emptyCells,
-            depth: prevWorld.depth,
-            log: `insufficient energy ${moveCost - prevWorld.playerEnergy}`,
+            trek,
+            playerPosition: prevSight.playerPosition,
+            playerEnergy: prevSight.playerEnergy,
+            emptyCells: prevSight.emptyCells,
+            depth: prevSight.depth,
+            log: `insufficient energy ${moveCost - prevSight.playerEnergy}`,
             ok: false,
         };
     }
 
     const energyGain = isEmptyAtP1 ? 0 : stateEnergyGain[caState];
     const energyDelta = energyGain - moveCost;
-    const newPlayerEnergy = prevWorld.playerEnergy + energyDelta;
+    const newPlayerEnergy = prevSight.playerEnergy + energyDelta;
 
     const newEmptyCells = isEmptyAtP1
-        ? prevWorld.emptyCells
-        : [p1, ...prevWorld.emptyCells];
+        ? prevSight.emptyCells
+        : [p1, ...prevSight.emptyCells];
 
-    const newDepth = Math.max(prevWorld.depth, p1[1] - depathLeftBehind);
+    const newDepth = Math.max(prevSight.depth, p1[1] - depthLeftBehind);
 
     return {
-        progression,
+        trek,
         playerPosition: p1,
         playerEnergy: newPlayerEnergy,
         emptyCells: newEmptyCells,

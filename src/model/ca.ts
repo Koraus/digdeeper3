@@ -1,16 +1,18 @@
 import { LehmerPrng } from "../utils/LehmerPrng";
-import { fillSpace } from "../ca";
+import { fillSpace } from "../ca/fillSpace";
+import { CaCode, parseFullTransitionLookupTable } from "../ca";
 
 
 export function ca({
-    stateCount, table, spaceSize, seed, emptyState,
+    ca: caCode, spaceSize, seed, emptyState,
 }: {
-    stateCount: number;
-    table: number[];
+    ca: CaCode;
     spaceSize: number;
     emptyState: number;
     seed: number;
 }) {
+    const { stateCount } = caCode;
+    const table = parseFullTransitionLookupTable(caCode);
     const random = new LehmerPrng(seed);
 
     const spacetime = [

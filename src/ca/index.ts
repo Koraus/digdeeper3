@@ -1,27 +1,22 @@
+import { version } from "./version";
+import { getDigits } from "./digits";
+
+export { version };
+
+/**
+ * Full Combined State is a full state of the target neighborhood, expressed 
+ * as a single integer in a range of [0, stateCount ** neighborhoodSize).
+ * Neighborhood size is 4 in this case.
+ */
 export const getFullCombinedState =
     (stateCount: number, n1: number, c: number, n2: number, pc: number) =>
         n1 + stateCount * (c + stateCount * (n2 + stateCount * pc));
 
-export function fillSpace(
-    stateCount: number,
-    prevPrevSpace: number[],
-    prevSpace: number[],
-    outSpace: number[],
-    table: number[],
-) {
-    const nr = 1;
-    for (let x = nr; x < outSpace.length - nr; x++) {
-        const cs = getFullCombinedState(
-            stateCount,
-            prevSpace[x - 1],
-            prevSpace[x],
-            prevSpace[x + 1],
-            prevPrevSpace[x]);
-        outSpace[x] = table[cs];
-    }
-}
-
-export const toFullTable = (
+/**
+ * Given a getState function, 
+ * builds a full transition lookup table for all possible neighborhood states.
+ */
+export const buildFullTransitionLookupTable = (
     stateCount: number,
     getState: typeof getFullCombinedState,
 ) => {
@@ -38,5 +33,17 @@ export const toFullTable = (
         }
     }
 
+    return table;
+};
+
+export type CaCode = {
+    version: typeof version;
+    stateCount: number;
+    rule: string; // BigInt base 10
+};
+
+export const parseFullTransitionLookupTable = (code: CaCode) => {
+    const table = getDigits(BigInt(code.rule), code.stateCount);
+    while (table.length < code.stateCount ** 4) { table.push(0); }
     return table;
 };

@@ -1,29 +1,23 @@
 import { useState } from "react";
 import type { jsx } from "@emotion/react";
 import { useRecoilState, useSetRecoilState } from "recoil";
-import { progressionRecoil } from "../progressionRecoil";
-import { LehmerPrng } from "../../utils/LehmerPrng";
-import { modelId } from "../../model/terms";
+import { trekRecoil } from "../trekRecoil";
+import { createRandomWorld } from "../../model/terms";
 import { WorldPreview } from "./WorldPreview";
 import { historicalWorldsRecoil } from "./historicalWorldsRecoil";
-import { Problem } from "../../model/terms"
+import { World } from "../../model/terms";
 
 
 export function WorldSelectionPanel({
     ...props
 }: jsx.JSX.IntrinsicElements["div"]) {
-    const setProgression = useSetRecoilState(progressionRecoil);
+    const setProgression = useSetRecoilState(trekRecoil);
     const [isWorldSelection, setIsWorldSelection] = useState(false);
 
     const [historicalWorlds, setHistoricalWorlds] =
         useRecoilState(historicalWorldsRecoil);
 
-    const tempPlayedWorlds = localStorage.getItem("historicalWorldsRecoil");
-    const playedWorlds =
-        tempPlayedWorlds ? JSON.parse(tempPlayedWorlds) : undefined;
-
-    const stateCount = 3;
-    const [ruleTables, setRuleTables] = useState<number[][]>();
+    const [worlds, setWorlds] = useState<World[]>();
 
     return <div
         css={[{
@@ -51,32 +45,26 @@ export function WorldSelectionPanel({
                     margin: "0.9vmin 0",
                 }]}
                 onClick={() =>
-                    setRuleTables(
+                    setWorlds(
                         Array.from(
                             { length: 20 },
-                            () => Array.from(
-                                { length: stateCount ** 4 },
-                                () => Math.floor(Math.random() * stateCount))))
+                            () => createRandomWorld()))
                 }> Reroll </button>
-            {ruleTables
+            {worlds
                 && <div css={[{
                     listStyle: "none",
                     display: "flex",
                     flexDirection: "row",
                     flexWrap: "wrap",
                 }]}>
-                    {ruleTables.map((ruleTable, i) => <div key={i} css={[{
+                    {worlds.map((world, i) => <div key={i} css={[{
                         position: "relative",
                     }]}>
                         <WorldPreview
                             css={[{
                                 margin: "0.1vmin",
                             }]}
-                            stateCount={stateCount}
-                            table={ruleTable}
-                            spaceSize={31}
-                            emptyState={1}
-                            seed={4242}
+                            world={world}
                         />
                         <button
                             css={[{
@@ -88,24 +76,10 @@ export function WorldSelectionPanel({
 
                             onClick={
                                 () => {
-                                    const problem: Problem =
-                                    {
-                                        modelId,
-                                        caStateCount: stateCount,
-                                        table: ruleTable,
-                                        seed: Math.floor(
-                                        Math.random() * LehmerPrng.MAX_INT32),
-                                        stateEnergyDrain: [81 * 9, 1, 0],
-                                        stateEnergyGain: [0, 0, 81],
-                                        emptyState: 1,
-                                        spaceSize: 31,
-                                        depthLeftBehind: 10,
-                                    };
-
                                     setHistoricalWorlds(
-                                        [problem, ...historicalWorlds],
+                                        [world, ...historicalWorlds],
                                     );
-                                    setProgression({ problem });
+                                    setProgression({ world });
                                 }
                             }
                         > Play!</button >
@@ -117,14 +91,14 @@ export function WorldSelectionPanel({
             margin: "0.9vmin 0",
         }]}>Previously played worlds:</h3>
 
-        {playedWorlds
+        {historicalWorlds
             && <div css={[{
                 listStyle: "none",
                 display: "flex",
                 flexDirection: "row",
                 flexWrap: "wrap",
             }]}>
-                {playedWorlds.map((i: Problem, key: number) => <div
+                {historicalWorlds.map((world: World, key: number) => <div
                     key={key + "playedWorlds"} css={[{
                         position: "relative",
                     }]}>
@@ -132,11 +106,7 @@ export function WorldSelectionPanel({
                         css={[{
                             margin: "0.1vmin",
                         }]}
-                        stateCount={stateCount}
-                        table={i.table}
-                        spaceSize={i.spaceSize}
-                        emptyState={i.emptyState}
-                        seed={i.seed}
+                        world={world}
                     />
                     <button
                         css={[{
@@ -145,7 +115,7 @@ export function WorldSelectionPanel({
                             left: "50%",
                             transform: "translateX(-50%)",
                         }]}
-                        onClick={() => setProgression({ problem: i })}
+                        onClick={() => setProgression({ world: world })}
                     > Play!</button >
                 </div>)}
             </div>
