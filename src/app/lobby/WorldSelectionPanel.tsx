@@ -5,44 +5,56 @@ import { progressionRecoil } from "../progressionRecoil";
 import { LehmerPrng } from "../../utils/LehmerPrng";
 import { modelId } from "../../model/terms";
 import { WorldPreview } from "./WorldPreview";
+import { FavoritesWorlds } from "./FavoritesWorlds";
 import { historicalWorldsRecoil } from "./historicalWorldsRecoil";
-import { Problem } from "../../model/terms"
+import { Problem } from "../../model/terms";
+import { HistoricalWorlds } from "./HistoricalWorlds";
+import { Dice } from "@emotion-icons/fa-solid/Dice";
+import { eqProblem } from "../../model/terms";
 
 
 export function WorldSelectionPanel({
+    css: cssProp,
     ...props
 }: jsx.JSX.IntrinsicElements["div"]) {
+
     const setProgression = useSetRecoilState(progressionRecoil);
     const [isWorldSelection, setIsWorldSelection] = useState(false);
-
     const [historicalWorlds, setHistoricalWorlds] =
         useRecoilState(historicalWorldsRecoil);
 
-    const tempPlayedWorlds = localStorage.getItem("historicalWorldsRecoil");
-    const playedWorlds =
-        tempPlayedWorlds ? JSON.parse(tempPlayedWorlds) : undefined;
-
     const stateCount = 3;
     const [ruleTables, setRuleTables] = useState<number[][]>();
+
+    const setWorld = (problem: Problem) => {
+        setHistoricalWorlds([
+            problem,
+            ...historicalWorlds
+                .filter(p => !eqProblem(p, problem)),
+        ]);
+        setProgression({ problem });
+    };
 
     return <div
         css={[{
             background: "#000000b0",
             border: "1px solid #ffffffb0",
-        }]}
+        }, cssProp]}
         {...props}
     >
         <div css={[{
             transitionDuration: "0.4s",
             height: isWorldSelection ? "fit-content" : "3vmin",
             overflow: "hidden",
-        }]}
-        >
+        }]} >
             <h3 css={[{
                 margin: "0.9vmin 0",
             }]}
                 onClick={() => setIsWorldSelection(!isWorldSelection)}
-            >World Selection: <span css={[{
+            > <Dice css={[{
+                width: "2vmin",
+                marginRight: "0.4vmin",
+            }]} />Generate: <span css={[{
                 display: "inline-block",
                 rotate: isWorldSelection ? "0deg" : "180deg",
             }]} > ^ </span> </h3>
@@ -86,69 +98,25 @@ export function WorldSelectionPanel({
                                 transform: "translateX(-50%)",
                             }]}
 
-                            onClick={
-                                () => {
-                                    const problem: Problem =
-                                    {
-                                        modelId,
-                                        caStateCount: stateCount,
-                                        table: ruleTable,
-                                        seed: Math.floor(
-                                        Math.random() * LehmerPrng.MAX_INT32),
-                                        stateEnergyDrain: [81 * 9, 1, 0],
-                                        stateEnergyGain: [0, 0, 81],
-                                        emptyState: 1,
-                                        spaceSize: 31,
-                                        depthLeftBehind: 10,
-                                    };
-
-                                    setHistoricalWorlds(
-                                        [problem, ...historicalWorlds],
-                                    );
-                                    setProgression({ problem });
-                                }
-                            }
+                            onClick={() => setWorld({
+                                modelId,
+                                caStateCount: stateCount,
+                                table: ruleTable,
+                                seed: Math.floor(
+                                    Math.random()
+                                    * LehmerPrng.MAX_INT32),
+                                stateEnergyDrain: [81 * 9, 1, 0],
+                                stateEnergyGain: [0, 0, 81],
+                                emptyState: 1,
+                                spaceSize: 31,
+                                depthLeftBehind: 10,
+                            })}
                         > Play!</button >
                     </div>)}
                 </div>
             }
         </div>
-        <h3 css={[{
-            margin: "0.9vmin 0",
-        }]}>Previously played worlds:</h3>
-
-        {playedWorlds
-            && <div css={[{
-                listStyle: "none",
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-            }]}>
-                {playedWorlds.map((i: Problem, key: number) => <div
-                    key={key + "playedWorlds"} css={[{
-                        position: "relative",
-                    }]}>
-                    <WorldPreview
-                        css={[{
-                            margin: "0.1vmin",
-                        }]}
-                        stateCount={stateCount}
-                        table={i.table}
-                        spaceSize={i.spaceSize}
-                        emptyState={i.emptyState}
-                        seed={i.seed}
-                    />
-                    <button
-                        css={[{
-                            position: "absolute",
-                            bottom: "1vmin",
-                            left: "50%",
-                            transform: "translateX(-50%)",
-                        }]}
-                        onClick={() => setProgression({ problem: i })}
-                    > Play!</button >
-                </div>)}
-            </div>
-        }
+        <FavoritesWorlds />
+        <HistoricalWorlds />
     </div >;
 }

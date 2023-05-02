@@ -3,8 +3,8 @@ import { localStorageAtomEffect } from "../../utils/localStorageAtomEffect";
 import { Problem } from "../../model/terms";
 
 
-export const historicalWorldsRecoil = atom({
-    key: "historicalWorlds",
+export const favoritesWorldsRecoil = atom({
+    key: "favoritesWorlds",
     default: [] as Problem[],
     effects: [
         localStorageAtomEffect(),

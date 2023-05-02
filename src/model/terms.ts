@@ -21,6 +21,9 @@ export type Problem = {
     depthLeftBehind: number,
 }
 
+export const eqProblem = (a: Problem, b: Problem) =>
+    JSON.stringify(a) === JSON.stringify(b);
+
 export type MoveAction =
     "forward" // t++
     | "backward" // t--
