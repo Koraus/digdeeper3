@@ -30,6 +30,10 @@ export function NewDropzones({
         ]);
         setProgression({ dropzone });
     };
+    
+    if (!worlds) {
+        setWorlds(Array.from({ length: 20 }, () => createRandomDropzone()));
+    }
 
     return <div {...props}>
         <div css={[{
