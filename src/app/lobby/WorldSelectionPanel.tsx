@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { jsx } from "@emotion/react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { trekRecoil } from "../trekRecoil";
-import { createRandomDropzone } from "../../model/terms";
+import { generateRandomDropzone } from "../../model/terms";
 import { WorldPreview } from "./WorldPreview";
 import { FavoritesWorlds } from "./FavoritesWorlds";
 import { historicalWorldsRecoil } from "./historicalWorldsRecoil";
@@ -64,7 +64,7 @@ export function WorldSelectionPanel({
                     setWorlds(
                         Array.from(
                             { length: 20 },
-                            () => createRandomDropzone()))
+                            () => generateRandomDropzone()))
                 }> Reroll </button>
             {worlds
                 && <div css={[{

@@ -1,25 +1,12 @@
 import { v2 } from "../utils/v";
 import memoize from "memoizee";
 import { ca } from "./ca";
-import { CaCode } from "../ca";
-import { buildFullTransitionLookupTable, version as caVersion } from "../ca";
 import { LehmerPrng } from "../utils/LehmerPrng";
-import { getNumberFromDigits } from "../ca/digits";
+import { version as sightVersion } from "./version";
+import { World, generateRandomWorld } from "./World";
 
 
-export const sightVersion = "digdeeper3/sight@2";
-
-export const caStateCount = 3;
-
-export type CaState = number; // 0 | 1 | 2;
-
-export type World = {
-    sightVersion: typeof sightVersion,
-    ca: CaCode,
-    stateEnergyDrain: Record<CaState, number>,
-    stateEnergyGain: Record<CaState, number>,
-    emptyState: CaState,
-};
+export { sightVersion };
 
 export type Dropzone = {
     world: World,
@@ -28,34 +15,17 @@ export type Dropzone = {
     depthLeftBehind: number,
 };
 
-export const createRandomDropzone = (): Dropzone => ({
-    world: {
-        sightVersion,
-        ca: {
-            version: caVersion,
-            stateCount: caStateCount,
-            rule: (() => {
-                return getNumberFromDigits(
-                    buildFullTransitionLookupTable(
-                        caStateCount,
-                        () => Math.floor(Math.random() * caStateCount)),
-                    caStateCount,
-                ).toString();
-            })(),
-        },
-        stateEnergyDrain: [81 * 9, 1, 0],
-        stateEnergyGain: [0, 0, 81],
-        emptyState: 1,
-    },
+export const generateRandomDropzone = (): Dropzone => ({
+    world: generateRandomWorld(),
     seed: Math.floor(Math.random() * LehmerPrng.MAX_INT32),
     width: 31,
     depthLeftBehind: 10,
 });
 
-export const eqStringify = (a: unknown, b: unknown) =>
+export const eqStringify = <T>(a: T, b: T) =>
     JSON.stringify(a) === JSON.stringify(b);
 
-export const eqDropzone = (a: Dropzone, b: Dropzone) => eqStringify(a, b);
+export const eqDropzone = eqStringify<Dropzone>;
 
 export type MoveAction =
     "forward" // t++

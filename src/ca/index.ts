@@ -36,13 +36,22 @@ export const buildFullTransitionLookupTable = (
     return table;
 };
 
-export type CaCode = {
+export type Code = {
     version: typeof version;
     stateCount: number;
     rule: string; // BigInt base 10
 };
 
-export const parseFullTransitionLookupTable = (code: CaCode) => {
+
+export const keyProjectCode = ({
+    version, stateCount, rule,
+}: Code) => ({
+    version, stateCount, rule,
+});
+
+export const keyifyCode = (code: Code) => JSON.stringify(keyProjectCode(code));
+
+export const parseFullTransitionLookupTable = (code: Code) => {
     const table = getDigits(BigInt(code.rule), code.stateCount);
     while (table.length < code.stateCount ** 4) { table.push(0); }
     return table;

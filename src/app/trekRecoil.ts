@@ -1,8 +1,9 @@
 import { atom } from "recoil";
-import { Trek, caStateCount, sightVersion } from "../model/terms";
+import { Trek, sightVersion } from "../model/terms";
 import { LehmerPrng } from "../utils/LehmerPrng";
 import { buildFullTransitionLookupTable, version as caVersion } from "../ca";
 import { getDigits, getNumberFromDigits } from "../ca/digits";
+import { caStateCount } from "../model/World";
 
 
 export const trekRecoil = atom<Trek>({
