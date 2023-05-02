@@ -5,8 +5,6 @@ import { Star } from "@emotion-icons/ionicons-solid/Star";
 import { useRecoilState } from "recoil";
 import { favoriteWorldsRecoil } from "./favoriteWorldsRecoil";
 import { eqDropzone } from "../../model/terms";
-import { some } from "lodash";
-
 
 
 export function WorldPreview({
@@ -19,14 +17,12 @@ export function WorldPreview({
     const [isFavorite, setIsFavorite] = useState(false);
     const [favorites, setFavorites] = useRecoilState(favoriteWorldsRecoil);
 
-    useEffect(
-        () => {
-            if (favorites
-                .some((el) => eqDropzone(dropzone, el))) {
-                setIsFavorite(true);
-            } else  setIsFavorite(false);
-        }, [favorites]
-    );
+    useEffect(() => {
+        if (favorites
+            .some((el) => eqDropzone(dropzone, el))) {
+            setIsFavorite(true);
+        } else setIsFavorite(false);
+    }, [favorites]);
 
 
     useEffect(() => {
