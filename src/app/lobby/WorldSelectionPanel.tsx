@@ -4,39 +4,55 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import { trekRecoil } from "../trekRecoil";
 import { createRandomDropzone } from "../../model/terms";
 import { WorldPreview } from "./WorldPreview";
+import { FavoritesWorlds } from "./FavoritesWorlds";
 import { historicalWorldsRecoil } from "./historicalWorldsRecoil";
 import { Dropzone } from "../../model/terms";
+import { HistoricalWorlds } from "./HistoricalWorlds";
+import { Dice } from "@emotion-icons/fa-solid/Dice";
+import { eqDropzone } from "../../model/terms";
 
 
 export function WorldSelectionPanel({
+    css: cssProp,
     ...props
 }: jsx.JSX.IntrinsicElements["div"]) {
     const setProgression = useSetRecoilState(trekRecoil);
-    const [isWorldSelection, setIsWorldSelection] = useState(false);
 
+    const [isWorldSelection, setIsWorldSelection] = useState(false);
     const [historicalWorlds, setHistoricalWorlds] =
         useRecoilState(historicalWorldsRecoil);
 
     const [worlds, setWorlds] = useState<Dropzone[]>();
 
+    const setWorld = (dropzone: Dropzone) => {
+        setHistoricalWorlds([
+            dropzone,
+            ...historicalWorlds
+                .filter(p => !eqDropzone(p, dropzone)),
+        ]);
+        setProgression({ dropzone });
+    };
+
     return <div
         css={[{
             background: "#000000b0",
             border: "1px solid #ffffffb0",
-        }]}
+        }, cssProp]}
         {...props}
     >
         <div css={[{
             transitionDuration: "0.4s",
             height: isWorldSelection ? "fit-content" : "3vmin",
             overflow: "hidden",
-        }]}
-        >
+        }]} >
             <h3 css={[{
                 margin: "0.9vmin 0",
             }]}
                 onClick={() => setIsWorldSelection(!isWorldSelection)}
-            >World Selection: <span css={[{
+            > <Dice css={[{
+                width: "2vmin",
+                marginRight: "0.4vmin",
+            }]} />Generate: <span css={[{
                 display: "inline-block",
                 rotate: isWorldSelection ? "0deg" : "180deg",
             }]} > ^ </span> </h3>
@@ -73,52 +89,13 @@ export function WorldSelectionPanel({
                                 left: "50%",
                                 transform: "translateX(-50%)",
                             }]}
-
-                            onClick={
-                                () => {
-                                    setHistoricalWorlds(
-                                        [world, ...historicalWorlds],
-                                    );
-                                    setProgression({ dropzone: world });
-                                }
-                            }
+                            onClick={() => setWorld(world)}
                         > Play!</button >
                     </div>)}
                 </div>
             }
         </div>
-        <h3 css={[{
-            margin: "0.9vmin 0",
-        }]}>Previously played worlds:</h3>
-
-        {historicalWorlds
-            && <div css={[{
-                listStyle: "none",
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-            }]}>
-                {historicalWorlds.map((world: Dropzone, key: number) => <div
-                    key={key + "playedWorlds"} css={[{
-                        position: "relative",
-                    }]}>
-                    <WorldPreview
-                        css={[{
-                            margin: "0.1vmin",
-                        }]}
-                        dropzone={world}
-                    />
-                    <button
-                        css={[{
-                            position: "absolute",
-                            bottom: "1vmin",
-                            left: "50%",
-                            transform: "translateX(-50%)",
-                        }]}
-                        onClick={() => setProgression({ dropzone: world })}
-                    > Play!</button >
-                </div>)}
-            </div>
-        }
+        <FavoritesWorlds />
+        <HistoricalWorlds />
     </div >;
 }

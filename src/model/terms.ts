@@ -52,6 +52,11 @@ export const createRandomDropzone = (): Dropzone => ({
     depthLeftBehind: 10,
 });
 
+export const eqStringify = (a: unknown, b: unknown) =>
+    JSON.stringify(a) === JSON.stringify(b);
+
+export const eqDropzone = (a: Dropzone, b: Dropzone) => eqStringify(a, b);
+
 export type MoveAction =
     "forward" // t++
     | "backward" // t--
