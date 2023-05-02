@@ -1,6 +1,12 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { jsx } from "@emotion/react";
 import { Dropzone, caForDropzone } from "../../model/terms";
+import { Star } from "@emotion-icons/ionicons-solid/Star";
+import { useRecoilState } from "recoil";
+import { favoriteWorldsRecoil } from "./favoriteWorldsRecoil";
+import { eqDropzone } from "../../model/terms";
+import { some } from "lodash";
+
 
 
 export function WorldPreview({
@@ -9,6 +15,19 @@ export function WorldPreview({
     dropzone: Dropzone,
 } & jsx.JSX.IntrinsicElements["div"]) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
+
+    const [isFavorite, setIsFavorite] = useState(false);
+    const [favorites, setFavorites] = useRecoilState(favoriteWorldsRecoil);
+
+    useEffect(
+        () => {
+            if (favorites
+                .some((el) => eqDropzone(dropzone, el))) {
+                setIsFavorite(true);
+            } else  setIsFavorite(false);
+        }, [favorites]
+    );
+
 
     useEffect(() => {
         const canvasEl = canvasRef.current;
@@ -49,10 +68,32 @@ export function WorldPreview({
         ctx.drawImage(canvasEl, 0, 0, w, h, 0, 0, w * scale, h * scale);
     });
 
-    return <div {...props}>
+    return <div {...props} css={[{
+        position: "relative",
+    }]} >
+
+        <Star
+            onClick={() => {
+                if (favorites.some(p => eqDropzone(p, dropzone))) {
+                    setFavorites([...favorites.
+                        filter(p => !eqDropzone(p, dropzone))]);
+                } else setFavorites([dropzone, ...favorites]);
+            }}
+            color={isFavorite ? "red" : "#444444"}
+            strokeWidth={"4vmin"}
+            stroke={isFavorite ? "red" : "#E0DEDE"}
+            size={"20px"}
+            css={[{
+                position: "absolute",
+                top: "7px",
+                right: "7px",
+            }]}
+        />
+
         <canvas ref={canvasRef} css={[{
             imageRendering: "pixelated",
         }]}>
+
         </canvas>
     </div>;
 }
