@@ -1,12 +1,12 @@
 import { useRecoilValue } from "recoil";
-import { trekWorld, sightAt } from "../model/terms";
+import { trekDropzone, sightAt } from "../model/terms";
 import { trekRecoil } from "./trekRecoil";
 
 
 export function Gui() {
     const progression = useRecoilValue(trekRecoil);
     const sight = sightAt(progression);
-    const world = trekWorld(progression);
+    const dropzone = trekDropzone(progression);
 
     return <div>
 
@@ -15,7 +15,7 @@ export function Gui() {
         <div>Z to undo</div>
         <div>---</div>
         <div>p: {sight.playerPosition.join(",")}</div>
-        <div>Seed: {world.seed}</div>
+        <div>Seed: {dropzone.seed}</div>
         <div>Energy: {sight.playerEnergy}</div>
         <div>Last move: {sight.log}</div>
 

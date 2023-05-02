@@ -2,10 +2,10 @@ import { useState } from "react";
 import type { jsx } from "@emotion/react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { trekRecoil } from "../trekRecoil";
-import { createRandomWorld } from "../../model/terms";
+import { createRandomDropzone } from "../../model/terms";
 import { WorldPreview } from "./WorldPreview";
 import { historicalWorldsRecoil } from "./historicalWorldsRecoil";
-import { World } from "../../model/terms";
+import { Dropzone } from "../../model/terms";
 
 
 export function WorldSelectionPanel({
@@ -17,7 +17,7 @@ export function WorldSelectionPanel({
     const [historicalWorlds, setHistoricalWorlds] =
         useRecoilState(historicalWorldsRecoil);
 
-    const [worlds, setWorlds] = useState<World[]>();
+    const [worlds, setWorlds] = useState<Dropzone[]>();
 
     return <div
         css={[{
@@ -48,7 +48,7 @@ export function WorldSelectionPanel({
                     setWorlds(
                         Array.from(
                             { length: 20 },
-                            () => createRandomWorld()))
+                            () => createRandomDropzone()))
                 }> Reroll </button>
             {worlds
                 && <div css={[{
@@ -64,7 +64,7 @@ export function WorldSelectionPanel({
                             css={[{
                                 margin: "0.1vmin",
                             }]}
-                            world={world}
+                            dropzone={world}
                         />
                         <button
                             css={[{
@@ -79,7 +79,7 @@ export function WorldSelectionPanel({
                                     setHistoricalWorlds(
                                         [world, ...historicalWorlds],
                                     );
-                                    setProgression({ world });
+                                    setProgression({ dropzone: world });
                                 }
                             }
                         > Play!</button >
@@ -98,7 +98,7 @@ export function WorldSelectionPanel({
                 flexDirection: "row",
                 flexWrap: "wrap",
             }]}>
-                {historicalWorlds.map((world: World, key: number) => <div
+                {historicalWorlds.map((world: Dropzone, key: number) => <div
                     key={key + "playedWorlds"} css={[{
                         position: "relative",
                     }]}>
@@ -106,7 +106,7 @@ export function WorldSelectionPanel({
                         css={[{
                             margin: "0.1vmin",
                         }]}
-                        world={world}
+                        dropzone={world}
                     />
                     <button
                         css={[{
@@ -115,7 +115,7 @@ export function WorldSelectionPanel({
                             left: "50%",
                             transform: "translateX(-50%)",
                         }]}
-                        onClick={() => setProgression({ world: world })}
+                        onClick={() => setProgression({ dropzone: world })}
                     > Play!</button >
                 </div>)}
             </div>

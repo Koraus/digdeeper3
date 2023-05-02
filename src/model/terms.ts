@@ -7,7 +7,7 @@ import { LehmerPrng } from "../utils/LehmerPrng";
 import { getNumberFromDigits } from "../ca/digits";
 
 
-export const sightVersion = "digdeeper3/sight@1";
+export const sightVersion = "digdeeper3/sight@2";
 
 export const caStateCount = 3;
 
@@ -16,32 +16,38 @@ export type CaState = number; // 0 | 1 | 2;
 export type World = {
     sightVersion: typeof sightVersion,
     ca: CaCode,
-    seed: number,
-    width: number,
     stateEnergyDrain: Record<CaState, number>,
     stateEnergyGain: Record<CaState, number>,
     emptyState: CaState,
-    depthLeftBehind: number,
-}
+};
 
-export const createRandomWorld = (): World => ({
-    sightVersion,
-    ca: {
-        version: caVersion,
-        stateCount: caStateCount,
-        rule: (() => {
-            return getNumberFromDigits(
-                buildFullTransitionLookupTable(
+export type Dropzone = {
+    world: World,
+    seed: number,
+    width: number,
+    depthLeftBehind: number,
+};
+
+export const createRandomDropzone = (): Dropzone => ({
+    world: {
+        sightVersion,
+        ca: {
+            version: caVersion,
+            stateCount: caStateCount,
+            rule: (() => {
+                return getNumberFromDigits(
+                    buildFullTransitionLookupTable(
+                        caStateCount,
+                        () => Math.floor(Math.random() * caStateCount)),
                     caStateCount,
-                    () => Math.floor(Math.random() * caStateCount)),
-                caStateCount,
-            ).toString();
-        })(),
+                ).toString();
+            })(),
+        },
+        stateEnergyDrain: [81 * 9, 1, 0],
+        stateEnergyGain: [0, 0, 81],
+        emptyState: 1,
     },
     seed: Math.floor(Math.random() * LehmerPrng.MAX_INT32),
-    stateEnergyDrain: [81 * 9, 1, 0],
-    stateEnergyGain: [0, 0, 81],
-    emptyState: 1,
     width: 31,
     depthLeftBehind: 10,
 });
@@ -52,7 +58,7 @@ export type MoveAction =
     | "left" // x--
     | "right"; // x++
 
-export type InitTrek = { world: World };
+export type InitTrek = { dropzone: Dropzone };
 export type ActionTrekStep = { prev: Trek, action: MoveAction };
 export type Trek = InitTrek | ActionTrekStep;
 
@@ -66,9 +72,9 @@ export type Sight = {
     ok: boolean,
 }
 
-export function trekWorld(trek: Trek): World {
-    if (!("prev" in trek)) { return trek.world; }
-    return trekWorld(trek.prev);
+export function trekDropzone(trek: Trek): Dropzone {
+    if (!("prev" in trek)) { return trek.dropzone; }
+    return trekDropzone(trek.prev);
 }
 
 export const directionEnergyDrain = {
@@ -84,11 +90,11 @@ export const directionVec = {
     forward: [0, 1],
 } as const;
 
-export const caForWorld = memoize((world: World) => ca({
-    ca: world.ca,
-    spaceSize: world.width,
-    emptyState: world.emptyState,
-    seed: world.seed,
+export const caForDropzone = memoize((dropzone: Dropzone) => ca({
+    ca: dropzone.world.ca,
+    spaceSize: dropzone.width,
+    emptyState: dropzone.world.emptyState,
+    seed: dropzone.seed,
 }));
 
 function getLastOkSight(sight: Sight): Sight {
@@ -103,7 +109,7 @@ export const sightAt = memoize((trek: Trek): Sight => {
     if (!("prev" in trek)) {
         return {
             trek,
-            playerPosition: [Math.floor(trek.world.width / 2), 0],
+            playerPosition: [Math.floor(trek.dropzone.width / 2), 0],
             playerEnergy: 81 * 3,
             emptyCells: [],
             depth: 0,
@@ -115,12 +121,15 @@ export const sightAt = memoize((trek: Trek): Sight => {
 
     const prevSight = getLastOkSight(sightAt(trek.prev));
 
-    const world = trekWorld(trek);
+    const dropzone = trekDropzone(trek);
     const {
+        world,
         width,
+        depthLeftBehind,
+    } = dropzone;
+    const {
         stateEnergyDrain,
         stateEnergyGain,
-        depthLeftBehind,
     } = world;
 
     const p1 = v2.add(
@@ -143,7 +152,7 @@ export const sightAt = memoize((trek: Trek): Sight => {
     }
 
     const isEmptyAtP1 = prevSight.emptyCells.some(x => v2.eqStrict(x, p1));
-    const caState = caForWorld(world)._at(p1[1], p1[0]);
+    const caState = caForDropzone(dropzone)._at(p1[1], p1[0]);
 
     const theStateEnergyDrain = directionEnergyDrain[trek.action];
     const theDirectionEnergyDrain = isEmptyAtP1 ? 0 : stateEnergyDrain[caState];

@@ -1,9 +1,9 @@
 import { atom } from "recoil";
 import {localStorageAtomEffect} from "../../utils/localStorageAtomEffect";
-import { World, sightVersion } from "../../model/terms";
+import { Dropzone, sightVersion } from "../../model/terms";
 
 
-export const historicalWorldsRecoil = atom <World[] | [] >({
+export const historicalWorldsRecoil = atom <Dropzone[]>({
     key: "historicalWorldsRecoil",
     default: [],
     effects: [

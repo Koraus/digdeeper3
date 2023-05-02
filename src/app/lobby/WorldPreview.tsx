@@ -1,13 +1,12 @@
 import { useEffect, useRef } from "react";
-import { ca } from "../../model/ca";
 import type { jsx } from "@emotion/react";
-import { World } from "../../model/terms";
+import { Dropzone, caForDropzone } from "../../model/terms";
 
 
 export function WorldPreview({
-    world, ...props
+    dropzone, ...props
 }: {
-    world: World,
+    dropzone: Dropzone,
 } & jsx.JSX.IntrinsicElements["div"]) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -24,14 +23,9 @@ export function WorldPreview({
             [128, 255, 0, 255],
         ];
 
-        const theCa = ca({
-            ca: world.ca,
-            spaceSize: world.width,
-            emptyState: world.emptyState,
-            seed: world.seed,
-        });
+        const theCa = caForDropzone(dropzone);
 
-        const w = world.width;
+        const w = dropzone.width;
         const h = 100;
 
         const myImageData = ctx.createImageData(w, h);
