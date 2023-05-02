@@ -15,6 +15,7 @@
         "./node_modules/vite/client.d.ts", 
         "./node_modules/vite-plugin-info/client.d.ts",
         "./node_modules/@rauschma/iterator-helpers-polyfill/dist/src/install.d.ts",
+        "./src/app/lobby/GenerateDropzone.tsx",
     ],
     "include": ["./src/"],
     "exclude": ["./vite.config/"]

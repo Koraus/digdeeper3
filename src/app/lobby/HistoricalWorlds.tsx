@@ -5,6 +5,7 @@ import { WorldPreview } from "./WorldPreview";
 import { useState } from "react";
 import { Time } from "@emotion-icons/ionicons-solid/Time";
 import { historicalWorldsRecoil } from "./historicalWorldsRecoil";
+import { ChevronForward } from "@emotion-icons/ionicons-solid/ChevronForward";
 
 
 export function HistoricalWorlds({
@@ -15,18 +16,24 @@ export function HistoricalWorlds({
 
     const [isHistoricalWorlds, setIsHistoricalWorlds] = useState(false);
 
-    return <div {...props}>
+    return <div  {...props} css={[{ marginBottom: "1vmin" }]}>
         <h3
             onClick={() => setIsHistoricalWorlds(!isHistoricalWorlds)}
             css={[{
                 margin: "0.9vmin 0",
             }]}
         >
-            <Time css={[{
+            <ChevronForward css={[{
+                transitionDuration: "100ms",
                 width: "2vmin",
                 marginRight: "0.4vmin",
+                transform: isHistoricalWorlds
+                    ? "rotate(90deg)" : "rotate(0deg)",
             }]} />
-            Previously played worlds:
+           <Time css={[{
+                width: "2vmin",
+                marginRight: "0.6vmin",
+            }]} />Last Played
         </h3>
         {historicalWorlds && isHistoricalWorlds &&
             <div css={[{
