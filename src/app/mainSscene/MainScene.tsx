@@ -39,8 +39,8 @@ export function MainScene() {
         <StopLine />
         
         {(function* () {
-            const tCellsPerScreen = 60;
-            const xCellsPerScreen = 50;
+            const tCellsPerScreen = 61;
+            const xCellsPerScreen = 51;
             for (let st = 0; st < tCellsPerScreen; st++) {
                 for (let sx = 0; sx < xCellsPerScreen; sx++) {
                     yield <CellView

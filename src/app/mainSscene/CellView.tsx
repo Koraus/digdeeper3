@@ -21,14 +21,13 @@ export function CellView({
     const dropzone = trekDropzone(trek);
     const emptyState = dropzone.world.emptyState;
 
-    const pos_t = pos[1];
-    const t1 = Math.floor(pos_t / tc) * tc + st;
-    const t = [t1, t1 + tc, t1 - tc]
-        .sort((a, b) => Math.abs(pos_t - a) - Math.abs(pos_t - b))[0];
+    const [px, pt] = pos;
 
-    const x1 = Math.floor(pos[0] / xc) * xc + sx;
-    const x = [x1, x1 + xc, x1 - xc]
-        .sort((a, b) => Math.abs(pos[0] - a) - Math.abs(pos[0] - b))[0];
+    const t1 = Math.round(pt / tc) * tc + st;
+    const t = t1 + (pt > (t1 - tc / 2) ? 0 : -tc);
+
+    const x1 = Math.round(px / xc) * xc + sx;
+    const x = x1 + (px > (x1 - xc / 2) ? 0 : -xc);
 
     const isInBounds = t >= 0 && x >= 0 && x < dropzone.width;
     if (!isInBounds) {
