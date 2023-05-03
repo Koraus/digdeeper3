@@ -14,14 +14,11 @@ export function DropzonePreview({
 } & jsx.JSX.IntrinsicElements["div"]) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
-    let isFavoriteDropzone = false;
     const [favoriteDropzones, setFavoriteDropzones] =
         useRecoilState(favoriteDropzonesRecoil);
 
-    if (favoriteDropzones
-        .some((el) => eqDropzone(dropzone, el))) {
-        isFavoriteDropzone = true;
-    }
+    const isFavoriteDropzone = favoriteDropzones
+        .some((el) => eqDropzone(dropzone, el));
 
     useEffect(() => {
         const canvasEl = canvasRef.current;
@@ -76,11 +73,19 @@ export function DropzonePreview({
         >
             <Star
                 onClick={() => {
-                    if (favoriteDropzones.some(p => eqDropzone(p, dropzone))) {
-                        setFavoriteDropzones([...favoriteDropzones.
-                            filter(p => !eqDropzone(p, dropzone))]);
-                    } else setFavoriteDropzones(
-                        [dropzone, ...favoriteDropzones]);
+                    if (isFavoriteDropzone) {
+                        // remove from favorites
+                        setFavoriteDropzones([
+                            ...favoriteDropzones.
+                                filter(p => !eqDropzone(p, dropzone)),
+                        ]);
+                    } else {
+                        // add to favorites
+                        setFavoriteDropzones([
+                            dropzone,
+                            ...favoriteDropzones,
+                        ]);
+                    }
                 }}
                 color={isFavoriteDropzone ? "#D84949" : "#444444"}
                 size={"2.1vmin"}
