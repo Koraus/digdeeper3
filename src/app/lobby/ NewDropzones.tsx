@@ -10,7 +10,7 @@ import { Dice } from "@emotion-icons/fa-solid/Dice";
 import { eqDropzone } from "../../model/terms";
 import { ChevronForward } from "@emotion-icons/ionicons-solid/ChevronForward";
 
-export function GenerateDropzone({
+export function NewDropzones({
     ...props
 }: jsx.JSX.IntrinsicElements["div"]) {
     const [isWorldSelection, setIsWorldSelection] = useState(false);
@@ -30,6 +30,10 @@ export function GenerateDropzone({
         ]);
         setProgression({ dropzone });
     };
+    
+    if (!worlds) {
+        setWorlds(Array.from({ length: 20 }, () => createRandomDropzone()));
+    }
 
     return <div {...props}>
         <div css={[{
@@ -89,5 +93,4 @@ export function GenerateDropzone({
                 </div>}
         </div>
     </div>;
-
 }

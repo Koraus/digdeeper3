@@ -46,7 +46,7 @@ export function CellView({
             && <mesh>
                 <boxGeometry />
                 <meshPhongMaterial
-                 color={isUnreachable ? unreachableColor : color} />
+                    color={isUnreachable ? unreachableColor : color} />
             </mesh>
         }
         {!isEmpty

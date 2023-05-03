@@ -1,23 +1,23 @@
 import type { jsx } from "@emotion/react";
-import { FavoriteWorlds } from "./FavoriteWorlds";
+import { FavoriteDropzones} from "./FavoriteDropzones";
 import { HistoricalWorlds } from "./HistoricalWorlds";
-import { GenerateDropzone } from "./GenerateDropzone";
+import { NewDropzones } from "./ NewDropzones";
 
 
 export function WorldSelectionPanel({
     css: cssProp,
     ...props
 }: jsx.JSX.IntrinsicElements["div"]) {
-    
-        return <div
+
+    return <div
         css={[{
             background: "#000000b0",
             border: "1px solid #ffffffb0",
         }, cssProp]}
         {...props}
     >
-        <GenerateDropzone />
-        <FavoriteWorlds />
+        <NewDropzones/>
+        <FavoriteDropzones/>
         <HistoricalWorlds />
     </div >;
 }

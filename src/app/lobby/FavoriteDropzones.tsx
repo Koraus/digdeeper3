@@ -3,16 +3,18 @@ import { useState } from "react";
 import { Bookmarks } from "@emotion-icons/ionicons-solid/Bookmarks";
 import { ChevronForward } from "@emotion-icons/ionicons-solid/ChevronForward";
 import { favoriteWorldsRecoil } from "./favoriteWorldsRecoil";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { WorldPreview } from "./WorldPreview";
+import { trekRecoil } from "../trekRecoil";
 
 
-export function FavoriteWorlds({
+export function FavoriteDropzones({
     ...props
 }: jsx.JSX.IntrinsicElements["div"]) {
 
     const [isFavorite, setIsFavorite] = useState(false);
     const favorites = useRecoilValue(favoriteWorldsRecoil);
+    const setProgression = useSetRecoilState(trekRecoil);
 
     return <div  {...props} css={[{ marginBottom: "1vmin" }]}>
 
@@ -21,7 +23,6 @@ export function FavoriteWorlds({
             css={[{
                 margin: "0.9vmin 0",
             }]}>
-
             <ChevronForward css={[{
                 transitionDuration: "100ms",
                 width: "2vmin",
@@ -49,6 +50,7 @@ export function FavoriteWorlds({
                         }]}
                         dropzone={dropzone} />
                     <button
+                        onClick={() => setProgression({ dropzone })}
                         css={[{
                             position: "absolute",
                             bottom: "1vmin",
@@ -57,8 +59,7 @@ export function FavoriteWorlds({
                         }]}
                     > Play!</button>
                 </div>)}
-            </div>}
-
-
-    </div>;
+            </div>
+        }
+    </div >;
 }
