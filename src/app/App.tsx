@@ -61,7 +61,7 @@ export function App() {
                         ? "rotate(180deg)"
                         : "rotate(0deg)",
                 }}>&gt;</span>
-                <br /><span css={{ textDecoration: "underline" }}>S</span>
+                <br /><span css={{ textDecoration: "underline" }}></span>
             </button>
             <div css={{
                 flex: "1 1 0",
