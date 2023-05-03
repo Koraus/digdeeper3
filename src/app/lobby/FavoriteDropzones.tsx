@@ -12,14 +12,14 @@ export function FavoriteDropzones({
     ...props
 }: jsx.JSX.IntrinsicElements["div"]) {
 
-    const [isFavorite, setIsFavorite] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
     const favorites = useRecoilValue(favoriteWorldsRecoil);
     const setProgression = useSetRecoilState(trekRecoil);
 
     return <div  {...props} css={[{ marginBottom: "1vmin" }]}>
 
         <h3
-            onClick={() => setIsFavorite(!isFavorite)}
+            onClick={() => setIsOpen(!isOpen)}
             css={[{
                 margin: "0.9vmin 0",
             }]}>
@@ -27,14 +27,14 @@ export function FavoriteDropzones({
                 transitionDuration: "100ms",
                 width: "2vmin",
                 marginRight: "0.4vmin",
-                transform: isFavorite ? "rotate(90deg)" : "rotate(0deg)",
+                transform: isOpen ? "rotate(90deg)" : "rotate(0deg)",
             }]} />
             <Bookmarks css={[{
                 width: "2vmin",
                 marginRight: "0.6vmin",
             }]} />Favorites</h3>
 
-        {isFavorite &&
+        {isOpen &&
             <div css={[{
                 listStyle: "none",
                 display: "flex",

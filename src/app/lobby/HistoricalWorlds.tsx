@@ -14,11 +14,11 @@ export function HistoricalWorlds({
     const setProgression = useSetRecoilState(trekRecoil);
     const historicalWorlds = useRecoilValue(historicalWorldsRecoil);
 
-    const [isHistoricalWorlds, setIsHistoricalWorlds] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
 
     return <div  {...props} css={[{ marginBottom: "1vmin" }]}>
         <h3
-            onClick={() => setIsHistoricalWorlds(!isHistoricalWorlds)}
+            onClick={() => setIsOpen(!isOpen)}
             css={[{
                 margin: "0.9vmin 0",
             }]}
@@ -27,7 +27,7 @@ export function HistoricalWorlds({
                 transitionDuration: "100ms",
                 width: "2vmin",
                 marginRight: "0.4vmin",
-                transform: isHistoricalWorlds
+                transform: isOpen
                     ? "rotate(90deg)" : "rotate(0deg)",
             }]} />
            <Time css={[{
@@ -35,7 +35,7 @@ export function HistoricalWorlds({
                 marginRight: "0.6vmin",
             }]} />Last Played
         </h3>
-        {historicalWorlds && isHistoricalWorlds &&
+        {historicalWorlds && isOpen &&
             <div css={[{
                 listStyle: "none",
                 display: "flex",

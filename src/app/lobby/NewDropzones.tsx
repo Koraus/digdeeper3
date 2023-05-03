@@ -13,7 +13,7 @@ import { ChevronForward } from "@emotion-icons/ionicons-solid/ChevronForward";
 export function NewDropzones({
     ...props
 }: jsx.JSX.IntrinsicElements["div"]) {
-    const [isWorldSelection, setIsWorldSelection] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
 
     const setProgression = useSetRecoilState(trekRecoil);
 
@@ -37,20 +37,20 @@ export function NewDropzones({
 
     return <div {...props}>
         <div css={[{
-            height: isWorldSelection ? "fit-content" : "3vmin",
+            height: isOpen ? "fit-content" : "3vmin",
             overflow: "hidden",
             marginBottom: "1vmin",
         }]}>
             <h3 css={[{
                 margin: "0.9vmin 0",
             }]}
-                onClick={() => setIsWorldSelection(!isWorldSelection)}
+                onClick={() => setIsOpen(!isOpen)}
             >
                 <ChevronForward css={[{
                     transitionDuration: "100ms",
                     width: "2vmin",
                     marginRight: "0.4vmin",
-                    transform: isWorldSelection
+                    transform: isOpen
                         ? "rotate(90deg)" : "rotate(0deg)",
                 }]} />
                 <Dice css={[{
