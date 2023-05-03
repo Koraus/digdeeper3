@@ -1,7 +1,7 @@
 import type { jsx } from "@emotion/react";
 import { useSetRecoilState, useRecoilValue } from "recoil";
 import { trekRecoil } from "../trekRecoil";
-import { WorldPreview } from "./WorldPreview";
+import { DropzonePreview } from "./DropzonePreview";
 import { useState } from "react";
 import { Time } from "@emotion-icons/ionicons-solid/Time";
 import { historicalWorldsRecoil } from "./historicalWorldsRecoil";
@@ -30,7 +30,7 @@ export function HistoricalWorlds({
                 transform: isOpen
                     ? "rotate(90deg)" : "rotate(0deg)",
             }]} />
-           <Time css={[{
+            <Time css={[{
                 width: "2vmin",
                 marginRight: "0.6vmin",
             }]} />Last Played
@@ -49,7 +49,7 @@ export function HistoricalWorlds({
                         css={[{
                             position: "relative",
                         }]}>
-                        <WorldPreview
+                        <DropzonePreview
                             css={[{
                                 margin: "0.1vmin",
                             }]}

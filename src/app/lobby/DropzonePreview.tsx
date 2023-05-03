@@ -1,29 +1,27 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import type { jsx } from "@emotion/react";
 import { Dropzone, caForDropzone } from "../../model/terms";
 import { Star } from "@emotion-icons/ionicons-solid/Star";
 import { useRecoilState } from "recoil";
-import { favoriteWorldsRecoil } from "./favoriteWorldsRecoil";
+import { favoriteDropzonesRecoil } from "./favoriteDropzonesRecoil";
 import { eqDropzone } from "../../model/terms";
 
 
-export function WorldPreview({
+export function DropzonePreview({
     dropzone, ...props
 }: {
     dropzone: Dropzone,
 } & jsx.JSX.IntrinsicElements["div"]) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
-    const [isFavorite, setIsFavorite] = useState(false);
-    const [favorites, setFavorites] = useRecoilState(favoriteWorldsRecoil);
+    let isFavoriteDropzone = false;
+    const [favoriteDropzones, setFavoriteDropzones] =
+        useRecoilState(favoriteDropzonesRecoil);
 
-    useEffect(() => {
-        if (favorites
-            .some((el) => eqDropzone(dropzone, el))) {
-            setIsFavorite(true);
-        } else setIsFavorite(false);
-    }, [favorites]);
-
+    if (favoriteDropzones
+        .some((el) => eqDropzone(dropzone, el))) {
+        isFavoriteDropzone = true;
+    }
 
     useEffect(() => {
         const canvasEl = canvasRef.current;
@@ -54,7 +52,6 @@ export function WorldPreview({
                 myImageData.data[i + 3] = color[3]; // A 
             }
         }
-
         const scale = 2;
         canvasEl.width = w * scale;
         canvasEl.height = h * scale;
@@ -67,29 +64,31 @@ export function WorldPreview({
     return <div {...props} css={[{
         position: "relative",
     }]} >
-
-        <Star
-            onClick={() => {
-                if (favorites.some(p => eqDropzone(p, dropzone))) {
-                    setFavorites([...favorites.
-                        filter(p => !eqDropzone(p, dropzone))]);
-                } else setFavorites([dropzone, ...favorites]);
-            }}
-            color={isFavorite ? "red" : "#444444"}
-            strokeWidth={"4vmin"}
-            stroke={isFavorite ? "red" : "#E0DEDE"}
-            size={"20px"}
+        <div
             css={[{
                 position: "absolute",
-                top: "7px",
-                right: "7px",
+                top: "0.8vmin",
+                right: "0.8vmin",
+                borderRadius: "4px",
+                backgroundColor: "#A8E7D8",
+                padding: "0.2vmin",
             }]}
-        />
-
+        >
+            <Star
+                onClick={() => {
+                    if (favoriteDropzones.some(p => eqDropzone(p, dropzone))) {
+                        setFavoriteDropzones([...favoriteDropzones.
+                            filter(p => !eqDropzone(p, dropzone))]);
+                    } else setFavoriteDropzones(
+                        [dropzone, ...favoriteDropzones]);
+                }}
+                color={isFavoriteDropzone ? "#D84949" : "#444444"}
+                size={"2.1vmin"}
+            />
+        </div>
         <canvas ref={canvasRef} css={[{
             imageRendering: "pixelated",
         }]}>
-
         </canvas>
     </div>;
 }

@@ -42,7 +42,7 @@ export function App() {
                 transitionDuration: "0.2s",
                 overflowX: "hidden",
                 flex: worldSelectionPanel
-                    ? "0 0 33vmin"
+                    ? "0 0 100vmin"
                     : "0 0 0vmin",
                 padding: worldSelectionPanel ? "5px 5px" : 0,
             }} />

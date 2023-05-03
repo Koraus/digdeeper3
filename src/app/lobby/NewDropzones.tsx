@@ -3,7 +3,7 @@ import type { jsx } from "@emotion/react";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { trekRecoil } from "../trekRecoil";
 import { generateRandomDropzone } from "../../model/terms";
-import { WorldPreview } from "./WorldPreview";
+import { DropzonePreview } from "./DropzonePreview";
 import { historicalWorldsRecoil } from "./historicalWorldsRecoil";
 import { Dropzone } from "../../model/terms";
 import { Dice } from "@emotion-icons/fa-solid/Dice";
@@ -30,7 +30,7 @@ export function NewDropzones({
         ]);
         setProgression({ dropzone });
     };
-    
+
     if (!worlds) {
         setWorlds(Array.from({ length: 20 }, () => generateRandomDropzone()));
     }
@@ -75,7 +75,7 @@ export function NewDropzones({
                     {worlds.map((world, i) => <div key={i} css={[{
                         position: "relative",
                     }]}>
-                        <WorldPreview
+                        <DropzonePreview
                             css={[{
                                 margin: "0.1vmin",
                             }]}

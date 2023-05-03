@@ -2,9 +2,9 @@ import type { jsx } from "@emotion/react";
 import { useState } from "react";
 import { Bookmarks } from "@emotion-icons/ionicons-solid/Bookmarks";
 import { ChevronForward } from "@emotion-icons/ionicons-solid/ChevronForward";
-import { favoriteWorldsRecoil } from "./favoriteWorldsRecoil";
+import { favoriteDropzonesRecoil } from "./favoriteDropzonesRecoil";
 import { useRecoilValue, useSetRecoilState } from "recoil";
-import { WorldPreview } from "./WorldPreview";
+import { DropzonePreview } from "./DropzonePreview";
 import { trekRecoil } from "../trekRecoil";
 
 
@@ -13,7 +13,7 @@ export function FavoriteDropzones({
 }: jsx.JSX.IntrinsicElements["div"]) {
 
     const [isOpen, setIsOpen] = useState(false);
-    const favorites = useRecoilValue(favoriteWorldsRecoil);
+    const favorites = useRecoilValue(favoriteDropzonesRecoil);
     const setProgression = useSetRecoilState(trekRecoil);
 
     return <div  {...props} css={[{ marginBottom: "1vmin" }]}>
@@ -44,7 +44,7 @@ export function FavoriteDropzones({
                 {favorites.map((dropzone, i) => <div key={i} css={[{
                     position: "relative",
                 }]}>
-                    <WorldPreview
+                    <DropzonePreview
                         css={[{
                             margin: "0.1vmin",
                         }]}
