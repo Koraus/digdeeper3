@@ -1,7 +1,7 @@
 import type { jsx } from "@emotion/react";
 import { FavoriteDropzones} from "./FavoriteDropzones";
 import { HistoricalWorlds } from "./HistoricalWorlds";
-import { NewDropzones } from "./ NewDropzones";
+import { NewDropzones } from "./NewDropzones";
 
 
 export function WorldSelectionPanel({

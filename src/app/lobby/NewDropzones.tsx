@@ -32,7 +32,7 @@ export function NewDropzones({
     };
     
     if (!worlds) {
-        setWorlds(Array.from({ length: 20 }, () => createRandomDropzone()));
+        setWorlds(Array.from({ length: 20 }, () => generateRandomDropzone()));
     }
 
     return <div {...props}>
