@@ -88,7 +88,7 @@ export function DropzonePreview({
                     }
                 }}
                 color={isFavoriteDropzone ? "#D84949" : "#444444"}
-                size={"2.1vmin"}
+                css={[{ width: "2.1vmin" }]}
             />
         </div>
         <canvas ref={canvasRef} css={[{
