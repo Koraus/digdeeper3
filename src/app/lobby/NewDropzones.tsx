@@ -1,35 +1,19 @@
 import { useState } from "react";
 import type { jsx } from "@emotion/react";
-import { useRecoilState, useSetRecoilState } from "recoil";
-import { trekRecoil } from "../trekRecoil";
 import { generateRandomDropzone } from "../../model/terms";
 import { DropzonePreview } from "./DropzonePreview";
-import { historicalWorldsRecoil } from "./historicalWorldsRecoil";
 import { Dropzone } from "../../model/terms";
 import { Dice } from "@emotion-icons/fa-solid/Dice";
-import { eqDropzone } from "../../model/terms";
 import { ChevronForward } from "@emotion-icons/ionicons-solid/ChevronForward";
+import { useSetDropzone } from "./useSetDropzone";
 
 export function NewDropzones({
     ...props
 }: jsx.JSX.IntrinsicElements["div"]) {
     const [isOpen, setIsOpen] = useState(false);
-
-    const setProgression = useSetRecoilState(trekRecoil);
-
-    const [historicalWorlds, setHistoricalWorlds] =
-        useRecoilState(historicalWorldsRecoil);
-
     const [worlds, setWorlds] = useState<Dropzone[]>();
 
-    const setWorld = (dropzone: Dropzone) => {
-        setHistoricalWorlds([
-            dropzone,
-            ...historicalWorlds
-                .filter(p => !eqDropzone(p, dropzone)),
-        ]);
-        setProgression({ dropzone });
-    };
+    const setDropzone = useSetDropzone();
 
     if (!worlds) {
         setWorlds(Array.from({ length: 20 }, () => generateRandomDropzone()));
@@ -87,7 +71,7 @@ export function NewDropzones({
                                 left: "50%",
                                 transform: "translateX(-50%)",
                             }]}
-                            onClick={() => setWorld(world)}
+                            onClick={() => setDropzone(world)}
                         > Play!</button>
                     </div>)}
                 </div>}

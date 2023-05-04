@@ -3,9 +3,9 @@ import { useState } from "react";
 import { Bookmarks } from "@emotion-icons/ionicons-solid/Bookmarks";
 import { ChevronForward } from "@emotion-icons/ionicons-solid/ChevronForward";
 import { favoriteDropzonesRecoil } from "./favoriteDropzonesRecoil";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { DropzonePreview } from "./DropzonePreview";
-import { trekRecoil } from "../trekRecoil";
+import { useSetDropzone } from "./useSetDropzone";
 
 
 export function FavoriteDropzones({
@@ -14,10 +14,10 @@ export function FavoriteDropzones({
 
     const [isOpen, setIsOpen] = useState(false);
     const favorites = useRecoilValue(favoriteDropzonesRecoil);
-    const setProgression = useSetRecoilState(trekRecoil);
+    const setDropzone = useSetDropzone();
+
 
     return <div  {...props} css={[{ marginBottom: "1vmin" }]}>
-
         <h3
             onClick={() => setIsOpen(!isOpen)}
             css={[{
@@ -50,7 +50,7 @@ export function FavoriteDropzones({
                         }]}
                         dropzone={dropzone} />
                     <button
-                        onClick={() => setProgression({ dropzone })}
+                        onClick={() => setDropzone(dropzone)}
                         css={[{
                             position: "absolute",
                             bottom: "1vmin",

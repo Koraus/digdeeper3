@@ -1,20 +1,22 @@
 import type { jsx } from "@emotion/react";
-import { useSetRecoilState, useRecoilValue } from "recoil";
-import { trekRecoil } from "../trekRecoil";
+import { useRecoilValue } from "recoil";
 import { DropzonePreview } from "./DropzonePreview";
 import { useState } from "react";
 import { Time } from "@emotion-icons/ionicons-solid/Time";
 import { historicalWorldsRecoil } from "./historicalWorldsRecoil";
 import { ChevronForward } from "@emotion-icons/ionicons-solid/ChevronForward";
+import { useSetDropzone } from "./useSetDropzone";
 
 
 export function HistoricalWorlds({
     ...props
 }: jsx.JSX.IntrinsicElements["div"]) {
-    const setProgression = useSetRecoilState(trekRecoil);
     const historicalWorlds = useRecoilValue(historicalWorldsRecoil);
 
     const [isOpen, setIsOpen] = useState(false);
+
+    const setDropzone = useSetDropzone();
+
 
     return <div  {...props} css={[{ marginBottom: "1vmin" }]}>
         <h3
@@ -61,7 +63,7 @@ export function HistoricalWorlds({
                                 left: "50%",
                                 transform: "translateX(-50%)",
                             }]}
-                            onClick={() => setProgression({ dropzone: p })}
+                            onClick={() => setDropzone(p)}
                         > Play!</button>
                     </div>)}
             </div>}
