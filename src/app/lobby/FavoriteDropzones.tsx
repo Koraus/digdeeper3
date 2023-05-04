@@ -13,7 +13,7 @@ export function FavoriteDropzones({
 }: jsx.JSX.IntrinsicElements["div"]) {
 
     const [isOpen, setIsOpen] = useState(false);
-    const favorites = useRecoilValue(favoriteDropzonesRecoil);
+    const favoriteDropzones = useRecoilValue(favoriteDropzonesRecoil);
     const setProgression = useSetRecoilState(trekRecoil);
 
     return <div  {...props} css={[{ marginBottom: "1vmin" }]}>
@@ -41,7 +41,9 @@ export function FavoriteDropzones({
                 flexDirection: "row",
                 flexWrap: "wrap",
             }]}>
-                {favorites.map((dropzone, i) => <div key={i} css={[{
+                {favoriteDropzones.length === 0 &&
+                    <div> Your favorites list is empty </div>}
+                {favoriteDropzones.map((dropzone, i) => <div key={i} css={[{
                     position: "relative",
                 }]}>
                     <DropzonePreview
