@@ -44,6 +44,8 @@ export function HistoricalWorlds({
                 flexDirection: "row",
                 flexWrap: "wrap",
             }]}>
+                {historicalWorlds.length === 0 &&
+                    <div> You have no played worlds yet</div>}
                 {historicalWorlds
                     .slice(0, 10)
                     .map((p, i) => <div
