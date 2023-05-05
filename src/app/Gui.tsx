@@ -1,26 +1,15 @@
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { trekDropzone, sightAt, generateRandomDropzone, Dropzone, eqDropzone } from "../model/terms";
+import { useRecoilValue } from "recoil";
+import { trekDropzone, sightAt, generateRandomDropzone } from "../model/terms";
 import { trekRecoil } from "./trekRecoil";
-import { historicalWorldsRecoil } from "./lobby/historicalWorldsRecoil";
+import { useSetDropzone } from "./lobby/useSetDropzone";
 
 
 export function Gui() {
     const progression = useRecoilValue(trekRecoil);
-    const setProgression = useSetRecoilState(trekRecoil);
     const sight = sightAt(progression);
     const dropzone = trekDropzone(progression);
 
-    const [historicalWorlds, setHistoricalWorlds] =
-        useRecoilState(historicalWorldsRecoil);
-
-    const setWorld = (dropzone: Dropzone) => {
-        setHistoricalWorlds([
-            dropzone,
-            ...historicalWorlds
-                .filter(p => !eqDropzone(p, dropzone)),
-        ]);
-        setProgression({ dropzone });
-    };
+    const setDropzone = useSetDropzone();
 
     return <div>
 
@@ -37,12 +26,18 @@ export function Gui() {
             display: "flex",
             flexWrap: "wrap",
         }}>
-            <button onClick={() => setProgression({ dropzone })}
-            > Restart </button>
             <button
-                onClick={() => { setWorld(generateRandomDropzone()); }}
-            > New World
-            </button>
+                onClick={() => setDropzone(dropzone)}
+            >Restart</button>
+            <button
+                onClick={() =>
+                    setDropzone(generateRandomDropzone(dropzone.world))}
+            >New Dropzone</button>
+            <button
+                onClick={() =>
+                    setDropzone(generateRandomDropzone())
+                }
+            >New World</button>
         </div>
     </div >;
 }

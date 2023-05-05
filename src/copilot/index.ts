@@ -10,7 +10,7 @@ export function saveTrek(trek: Trek) {
     const trekId = savedTrekCount;
     localStorage.setItem(
         `${worldKey}/savedTreks/${trekId}`, JSON.stringify(trek));
-    localStorage.setItem(savedTrekCountKey + 1, JSON.stringify(trekId));
+    localStorage.setItem(savedTrekCount + 1, JSON.stringify(trekId));
 }
 
 export function loadTreks(world: World) {

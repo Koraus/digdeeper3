@@ -15,8 +15,10 @@ export type Dropzone = {
     depthLeftBehind: number,
 };
 
-export const generateRandomDropzone = (): Dropzone => ({
-    world: generateRandomWorld(),
+export const generateRandomDropzone = (
+     world: World = generateRandomWorld(),
+): Dropzone => ({
+    world,
     seed: Math.floor(Math.random() * LehmerPrng.MAX_INT32),
     width: 31,
     depthLeftBehind: 10,
