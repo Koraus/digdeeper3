@@ -78,9 +78,7 @@ given the same world, means
 
 `npm run build`
 
-Find built app in `./dist/` folder,
-this does not need web-server to run, 
-can just be opened in any browser as local file
+Find built app in `./dist/` folder.
 
 ## Run dev locally
 
