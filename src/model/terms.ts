@@ -35,9 +35,8 @@ export type MoveAction =
     | "left" // x--
     | "right"; // x++
 
-export type InitTrek = { dropzone: Dropzone };
-export type ActionTrekStep = { prev: Trek, action: MoveAction };
-export type Trek = InitTrek | ActionTrekStep;
+export type TrekStep = { action: MoveAction };
+export type Trek = { dropzone: Dropzone } | (TrekStep & { prev: Trek });
 
 export type Sight = {
     trek: Trek,
