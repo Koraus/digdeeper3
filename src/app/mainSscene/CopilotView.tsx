@@ -1,5 +1,5 @@
 import { useRecoilState } from "recoil";
-import { sightAt } from "../../model/terms";
+import { TrekStep, sightAt } from "../../model/terms";
 import { trekRecoil } from "../trekRecoil";
 import { offer } from "../../copilot";
 import { ThreeElements } from "@react-three/fiber";
@@ -19,9 +19,14 @@ export function CopilotView({
             for (let i = 0; i < stepsToOffer; i++) {
                 const theOffer = offer(pr);
                 if (!theOffer) { break; }
+
+                // if (i === 0) { console.log("offer", theOffer); }
+                const action = Object.entries(theOffer)
+                    .sort((a, b) => b[1] - a[1])[0]?.[0] as TrekStep["action"];
+                if (!action) { break; }
                 pr = {
                     prev: pr,
-                    action: theOffer,
+                    action,
                 };
                 const w = sightAt(pr);
                 yield w.playerPosition;

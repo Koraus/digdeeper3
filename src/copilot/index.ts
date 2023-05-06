@@ -1,5 +1,5 @@
-import { World, keyProjectWorld, keyifyWorld } from "../model/World";
-import { TrekStep, Dropzone, Trek, trekDropzone } from "../model/terms";
+import { World, keyProjectWorld } from "../model/World";
+import { TrekStep, Dropzone, Trek, trekDropzone, caForDropzone, initSight, applyStep } from "../model/terms";
 import { _throw } from "../utils/_throw";
 
 
@@ -65,7 +65,7 @@ export function loadTreks(world: World) {
         });
 }
 
-const offerVersion = "digdeeper3/copilot/offer@1";
+const offerVersion = "digdeeper3/copilot/offer@5";
 
 function saveAccumulatedMap(
     world: World,
@@ -74,7 +74,6 @@ function saveAccumulatedMap(
 ) {
     const key = JSON.stringify({
         offerVersion,
-        saverVersion,
         world: keyProjectWorld(world),
         key: "map",
     });
@@ -92,7 +91,6 @@ function loadAccumulatedMap(
 } {
     const key = JSON.stringify({
         offerVersion,
-        saverVersion,
         world: keyProjectWorld(world),
         key: "map",
     });
@@ -114,27 +112,51 @@ export const getStateKey = (arr: TrekStep[]) => {
     return arr.slice(-windowLength).map(x => x.action).join(",");
 };
 
-export const write = (
+export const processTrek = (
     map: Record<string, Partial<Record<TrekStep["action"], number>>>,
-    arr: TrekStep[],
-    next: TrekStep,
+    flatTrek: FlatTrek,
 ) => {
-    const key = getStateKey(arr);
-    if (!key) { return; }
+    const ca = caForDropzone(flatTrek.dropzone);
+    let sight = initSight(flatTrek.dropzone);
+    const getCell = (t: number, x: number) => {
+        const _t = sight.playerPosition[1] + t;
+        const _x = sight.playerPosition[0] + x;
+        if (_t < sight.depth) { return "-"; }
+        return ca._at(_t, _x);
+    };
+    const getCells = () => [
+        getCell(-1, -1),
+        getCell(-1, 0),
+        getCell(-1, 1),
+        getCell(0, -1),
+        getCell(0, 0),
+        getCell(0, 1),
+        getCell(1, -1),
+        getCell(1, 0),
+        getCell(1, 1),
+    ];
 
-    const value = (map[key] ?? (map[key] = {}))[next.action] ?? 0;
-    map[key][next.action] = value * 0.95 + 1;
-};
+    const states = [{
+        action: "init" as string,
+        cells: getCells(),
+    }];
+    for (let i = 0; i < flatTrek.array.length; i++) {
+        const step = flatTrek.array[i];
+        if (states.length >= windowLength) {
+            const key = JSON.stringify(states);
+            const value = (map[key] ?? (map[key] = {}))[step.action] ?? 0;
+            map[key][step.action] = value * 0.95 + 1;
+        }
 
-export const read = (
-    map: Record<string, Partial<Record<TrekStep["action"], number>>>,
-    arr: TrekStep[],
-) => {
-    const key = getStateKey(arr);
-    if (!key) { return; }
+        sight = applyStep(flatTrek.dropzone, sight, step);
+        states.push({
+            action: step.action,
+            cells: getCells(),
+        });
+        states.splice(0, states.length - windowLength);
+    }
 
-    return Object.entries(map[key] ?? {})
-        .sort((a, b) => b[1] - a[1])[0]?.[0] as TrekStep["action"];
+    return states;
 };
 
 
@@ -145,19 +167,17 @@ export const offer = (trek: Trek) => {
     const dropzone = trekDropzone(trek);
     const treks = loadTreks(dropzone.world);
     for (let i = accumulatedOverTrekCount; i < treks.length; i++) {
-        const t = treks[i];
-        const tArr = t.array;
-        for (let i = windowLength; i < tArr.length; i++) {
-            write(map, tArr.slice(i - windowLength, i), tArr[i]);
-        }
+        processTrek(map, treks[i]);
     }
+
     if (treks.length > accumulatedOverTrekCount) {
         saveAccumulatedMap(dropzone.world, map, treks.length);
     }
 
-    const arr = flattenTrek(trek).array;
-    for (let i = windowLength; i < arr.length; i++) {
-        write(map, arr.slice(i - windowLength, i), arr[i]);
-    }
-    return read(map, arr.slice(-windowLength));
+    const s = processTrek(map, flattenTrek(trek));
+    if (s.length < windowLength) { return; }
+
+    const key = JSON.stringify(s);
+    const value = map[key] ?? {};
+    return value;
 };

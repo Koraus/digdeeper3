@@ -16,7 +16,7 @@ export type Dropzone = {
 };
 
 export const generateRandomDropzone = (
-     world: World = generateRandomWorld(),
+    world: World = generateRandomWorld(),
 ): Dropzone => ({
     world,
     seed: Math.floor(Math.random() * LehmerPrng.MAX_INT32),
@@ -38,15 +38,16 @@ export type MoveAction =
 export type TrekStep = { action: MoveAction };
 export type Trek = { dropzone: Dropzone } | (TrekStep & { prev: Trek });
 
-export type Sight = {
-    trek: Trek,
+export type SightBody = {
     playerPosition: v2,
     playerEnergy: number,
     emptyCells: v2[],
     depth: number,
     log: string,
     ok: boolean,
-}
+};
+
+export type Sight = SightBody & { trek: Trek };
 
 export function trekDropzone(trek: Trek): Dropzone {
     if (!("prev" in trek)) { return trek.dropzone; }
@@ -81,23 +82,20 @@ function getLastOkSight(sight: Sight): Sight {
     return sight; // init sight is always ok
 }
 
-export const sightAt = memoize((trek: Trek): Sight => {
-    if (!("prev" in trek)) {
-        return {
-            trek,
-            playerPosition: [Math.floor(trek.dropzone.width / 2), 0],
-            playerEnergy: 81 * 3,
-            emptyCells: [],
-            depth: 0,
-            log: "init",
-            ok: true,
-        };
-    }
+export const initSight = (dropzone: Dropzone): SightBody => ({
+    playerPosition: [Math.floor(dropzone.width / 2), 0],
+    playerEnergy: 81 * 3,
+    emptyCells: [],
+    depth: 0,
+    log: "init",
+    ok: true,
+});
 
-
-    const prevSight = getLastOkSight(sightAt(trek.prev));
-
-    const dropzone = trekDropzone(trek);
+export const applyStep = (
+    dropzone: Dropzone,
+    prevSight: SightBody,
+    trek: TrekStep,
+) => {
     const {
         world,
         width,
@@ -117,7 +115,6 @@ export const sightAt = memoize((trek: Trek): Sight => {
 
     if (isOutOfSpace || isOutOfGoBack) {
         return {
-            trek,
             playerPosition: prevSight.playerPosition,
             playerEnergy: prevSight.playerEnergy,
             emptyCells: prevSight.emptyCells,
@@ -136,7 +133,6 @@ export const sightAt = memoize((trek: Trek): Sight => {
 
     if (prevSight.playerEnergy < moveCost) {
         return {
-            trek,
             playerPosition: prevSight.playerPosition,
             playerEnergy: prevSight.playerEnergy,
             emptyCells: prevSight.emptyCells,
@@ -157,7 +153,6 @@ export const sightAt = memoize((trek: Trek): Sight => {
     const newDepth = Math.max(prevSight.depth, p1[1] - depthLeftBehind);
 
     return {
-        trek,
         playerPosition: p1,
         playerEnergy: newPlayerEnergy,
         emptyCells: newEmptyCells,
@@ -174,4 +169,17 @@ export const sightAt = memoize((trek: Trek): Sight => {
                 : ""),
         ok: true,
     };
+};
+
+export const sightAt = memoize((trek: Trek): Sight => {
+    let sight;
+    if (!("prev" in trek)) {
+        sight = initSight(trek.dropzone);
+    } else {
+        const prevSight = getLastOkSight(sightAt(trek.prev));
+        const dropzone = trekDropzone(trek);
+        sight = applyStep(dropzone, prevSight, trek);
+    }
+
+    return { ...sight, trek };
 });
