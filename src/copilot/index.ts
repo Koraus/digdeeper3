@@ -1,75 +1,27 @@
 import { World, keyProjectWorld } from "../model/World";
-import { TrekStep, Dropzone, Trek, trekDropzone, caForDropzone, initSight, applyStep } from "../model/terms";
-import { _throw } from "../utils/_throw";
+import { TrekStep, Trek, trekDropzone, caForDropzone, initSight, applyStep } from "../model/terms";
+import { v2 } from "../utils/v";
+import { FlatTrek, flattenTrek } from "./FlatTrek";
+import { loadFlatTreks } from "./saver";
 
 
-type FlatTrek = {
-    dropzone: Dropzone,
-    array: TrekStep[],
-};
+const offerVersion = "digdeeper3/copilot/offer@6";
 
-function flattenTrek(trek: Trek): FlatTrek {
-    let t = trek;
-    const array = [] as TrekStep[];
-    while ("prev" in t) {
-        array.push({ action: t.action });
-        t = t.prev;
-    }
-    array.reverse();
-    return { dropzone: t.dropzone, array };
-}
-
-const saverVersion = "digdeeper3/copilot/saver@2";
-
-export function saveTrek(trek: Trek) {
-    const countKey = JSON.stringify({
-        saverVersion,
-        world: keyProjectWorld(trekDropzone(trek).world),
-        key: "count",
-    });
-
-    const count = JSON.parse(localStorage.getItem(countKey) ?? "0");
-
-    const trekId = count;
-    const trekKey = JSON.stringify({
-        saverVersion,
-        world: keyProjectWorld(trekDropzone(trek).world),
-        key: "trek",
-        trekId,
-    });
-
-    localStorage.setItem(trekKey, JSON.stringify(flattenTrek(trek)));
-    localStorage.setItem(countKey, JSON.stringify(count + 1));
-}
-
-export function loadTreks(world: World) {
-    const countKey = JSON.stringify({
-        saverVersion,
-        world: keyProjectWorld(world),
-        key: "count",
-    });
-    const count = JSON.parse(localStorage.getItem(countKey) ?? "0");
-    return Array.from(
-        { length: count },
-        (_, i) => {
-            const trekKey = JSON.stringify({
-                saverVersion,
-                world: keyProjectWorld(world),
-                key: "trek",
-                trekId: i,
-            });
-            return JSON.parse(
-                localStorage.getItem(trekKey)
-                ?? _throw("Unexpectedly missing saved trek"),
-            ) as FlatTrek;
-        });
-}
-
-const offerVersion = "digdeeper3/copilot/offer@5";
+type LeafMap = Record<
+    string,
+    Partial<Record<TrekStep["action"], number>>
+>;
+type AccumulatedMap = Record<
+    string,
+    Record<
+        string,
+        LeafMap
+    >
+>;
 
 function saveAccumulatedMap(
     world: World,
-    map: Record<string, Partial<Record<TrekStep["action"], number>>>,
+    map: AccumulatedMap,
     accumulatedOverTrekCount: number,
 ) {
     const key = JSON.stringify({
@@ -86,7 +38,7 @@ function saveAccumulatedMap(
 function loadAccumulatedMap(
     world: World,
 ): {
-    map: Record<string, Partial<Record<TrekStep["action"], number>>>,
+    map: AccumulatedMap | undefined,
     accumulatedOverTrekCount: number,
 } {
     const key = JSON.stringify({
@@ -97,7 +49,7 @@ function loadAccumulatedMap(
     const str = localStorage.getItem(key);
     if (!str) {
         return {
-            map: {},
+            map: undefined,
             accumulatedOverTrekCount: 0,
         };
     }
@@ -105,16 +57,11 @@ function loadAccumulatedMap(
 }
 
 
-const windowLength = 5;
-
-export const getStateKey = (arr: TrekStep[]) => {
-    if (arr.length < windowLength) { return; }
-    return arr.slice(-windowLength).map(x => x.action).join(",");
-};
-
 export const processTrek = (
-    map: Record<string, Partial<Record<TrekStep["action"], number>>>,
+    map: LeafMap,
     flatTrek: FlatTrek,
+    windowLength: number,
+    neighborhood: v2[],
 ) => {
     const ca = caForDropzone(flatTrek.dropzone);
     let sight = initSight(flatTrek.dropzone);
@@ -122,19 +69,12 @@ export const processTrek = (
         const _t = sight.playerPosition[1] + t;
         const _x = sight.playerPosition[0] + x;
         if (_t < sight.depth) { return "-"; }
+        if (_x < 0 || _x >= flatTrek.dropzone.width) { return "-"; }
+        const isEmpty = sight.emptyCells.some(([t, x]) => t === _t && x === _x);
+        if (isEmpty) { return "x"; }
         return ca._at(_t, _x);
     };
-    const getCells = () => [
-        getCell(-1, -1),
-        getCell(-1, 0),
-        getCell(-1, 1),
-        getCell(0, -1),
-        getCell(0, 0),
-        getCell(0, 1),
-        getCell(1, -1),
-        getCell(1, 0),
-        getCell(1, 1),
-    ];
+    const getCells = () => neighborhood.map(([dx, dt]) => getCell(dt, dx));
 
     const states = [{
         action: "init" as string,
@@ -159,25 +99,98 @@ export const processTrek = (
     return states;
 };
 
-
 export const offer = (trek: Trek) => {
-    const { map, accumulatedOverTrekCount } =
+    const { map: _map, accumulatedOverTrekCount } =
         loadAccumulatedMap(trekDropzone(trek).world);
 
+    const map = _map ?? {
+        "5": { "3": {}, "2": {}, "1": {} },
+        "4": { "3": {}, "2": {}, "1": {} },
+        "3": { "3": {}, "2": {}, "1": {} },
+        "2": { "3": {}, "2": {}, "1": {} },
+    };
+
     const dropzone = trekDropzone(trek);
-    const treks = loadTreks(dropzone.world);
+    const treks = loadFlatTreks(dropzone.world);
     for (let i = accumulatedOverTrekCount; i < treks.length; i++) {
-        processTrek(map, treks[i]);
+        for (let w = 5; w >= 2; w--) {
+            processTrek(
+                map[w.toString()]["3"],
+                treks[i],
+                w,
+                [
+                    [-1, -1], [-1, 0], [-1, 1],
+                    [0, -1], [0, 0], [0, 1],
+                    [1, -1], [1, 0], [1, 1],
+                ]);
+            processTrek(
+                map[w.toString()]["2"],
+                treks[i],
+                w,
+                [
+                    [-1, 0],
+                    [0, -1], [0, 0], [0, 1],
+                    [1, 0],
+                ]);
+            processTrek(
+                map[w.toString()]["1"],
+                treks[i],
+                w,
+                [
+                    [0, 0],
+                ]);
+        }
     }
 
     if (treks.length > accumulatedOverTrekCount) {
         saveAccumulatedMap(dropzone.world, map, treks.length);
     }
 
-    const s = processTrek(map, flattenTrek(trek));
-    if (s.length < windowLength) { return; }
-
-    const key = JSON.stringify(s);
-    const value = map[key] ?? {};
-    return value;
+    for (let w = 5; w >= 2; w--) {
+        const s = processTrek(
+            map[w.toString()]["3"],
+            flattenTrek(trek),
+            w,
+            [
+                [-1, -1], [-1, 0], [-1, 1],
+                [0, -1], [0, 0], [0, 1],
+                [1, -1], [1, 0], [1, 1],
+            ]);
+        if (s.length >= w) {
+            const key = JSON.stringify(s);
+            const value = map[w.toString()]["3"][key];
+            if (value) { return value; }
+        }
+    }
+    for (let w = 5; w >= 2; w--) {
+        const s = processTrek(
+            map[w.toString()]["2"],
+            flattenTrek(trek),
+            w,
+            [
+                [-1, 0],
+                [0, -1], [0, 0], [0, 1],
+                [1, 0],
+            ]);
+        if (s.length >= w) {
+            const key = JSON.stringify(s);
+            const value = map[w.toString()]["2"][key];
+            if (value) { return value; }
+        }
+    }
+    for (let w = 5; w >= 2; w--) {
+        const s = processTrek(
+            map[w.toString()]["1"],
+            flattenTrek(trek),
+            w,
+            [
+                [0, 0],
+            ]);
+        if (s.length >= w) {
+            const key = JSON.stringify(s);
+            const value = map[w.toString()]["1"][key];
+            if (value) { return value; }
+        }
+    }
+    return {};
 };

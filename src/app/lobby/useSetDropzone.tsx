@@ -3,7 +3,7 @@ import { trekRecoil } from "../trekRecoil";
 import { historicalWorldsRecoil } from "./historicalWorldsRecoil";
 import { Dropzone } from "../../model/terms";
 import { eqDropzone } from "../../model/terms";
-import { saveTrek } from "../../copilot";
+import { saveTrek } from "../../copilot/saver";
 
 
 export function useSetDropzone() {
