@@ -1,7 +1,7 @@
 import { useRecoilState } from "recoil";
-import { TrekStep, sightAt } from "../../model/terms";
+import { sightAt } from "../../model/terms";
 import { trekRecoil } from "../trekRecoil";
-import { offer } from "../../copilot";
+import { indexedActions, offer } from "../../copilot";
 import { ThreeElements } from "@react-three/fiber";
 
 
@@ -21,9 +21,10 @@ export function CopilotView({
                 if (!theOffer) { break; }
 
                 // if (i === 0) { console.log("offer", theOffer); }
-                const action = Object.entries(theOffer)
-                    .sort((a, b) => b[1] - a[1])[0]?.[0] as TrekStep["action"];
-                if (!action) { break; }
+                const actionIndex = theOffer
+                    .map((v, i) => [i, v])
+                    .sort((a, b) => (b[1] ?? 0) - (a[1] ?? 0))[0]?.[0];
+                const action = indexedActions[actionIndex];
                 pr = {
                     prev: pr,
                     action,

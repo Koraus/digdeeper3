@@ -2,8 +2,8 @@ import { ThreeElements } from "@react-three/fiber";
 import { useWindowEvent } from "../../utils/useWindowEvent";
 import { useRecoilState } from "recoil";
 import { trekRecoil } from "../trekRecoil";
-import { TrekStep, sightAt } from "../../model/terms";
-import { offer } from "../../copilot";
+import { sightAt } from "../../model/terms";
+import { indexedActions, offer } from "../../copilot";
 
 export function PlayerView({
     children, ...props
@@ -49,9 +49,10 @@ export function PlayerView({
             case "KeyC": {
                 const theOffer = offer(trek);
                 if (!theOffer) { break; }
-                const action = Object.entries(theOffer)
-                    .sort((a, b) => b[1] - a[1])[0]?.[0] as TrekStep["action"];
-                if (!action) { break; }
+                const actionIndex = theOffer
+                    .map((v, i) => [i, v])
+                    .sort((a, b) => (b[1] ?? 0) - (a[1] ?? 0))[0]?.[0];
+                const action = indexedActions[actionIndex];
                 setTrek({
                     prev: trek,
                     action,
