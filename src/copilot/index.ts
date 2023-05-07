@@ -195,6 +195,8 @@ export const offer = (trek: Trek) => {
     const flatTrek = flattenTrek(trek);
     const loadedMap = mapForWorld(flatTrek.dropzone.world);
 
+    // todo: optimize live map accumulation
+    
     const map =
         [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}] as AccumulatedMap;
 

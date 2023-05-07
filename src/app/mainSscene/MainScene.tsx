@@ -1,5 +1,5 @@
 import { GizmoHelper, GizmoViewport, PerspectiveCamera } from "@react-three/drei";
-import { CellView } from "./CellView";
+import { CellsView } from "./CellsView";
 import { PlayerView } from "./PlayerView";
 import { CopilotView } from "./CopilotView";
 import { StopLine } from "./StopLine";
@@ -44,11 +44,11 @@ export function MainScene() {
                     g.localToWorld(p);
                     camera.parent?.worldToLocal(p);
 
-                    if (camera.position.distanceTo(p) > 10) {
+                    if (camera.position.distanceTo(p) > 30) {
                         camera.position.copy(p);
                     } else if (camera.position.distanceTo(p) > 0.1) {
                         dampVector3(
-                            camera.position, camera.position, p, 0.1, delta);
+                            camera.position, camera.position, p, 0.3, delta);
                     } else {
                         // 
                     }
@@ -60,20 +60,6 @@ export function MainScene() {
 
         <StopLine />
 
-        {(function* () {
-            const tCellsPerScreen = 61;
-            const xCellsPerScreen = 51;
-            for (let st = 0; st < tCellsPerScreen; st++) {
-                for (let sx = 0; sx < xCellsPerScreen; sx++) {
-                    yield <CellView
-                        key={`${st}_${sx}`}
-                        st={st}
-                        sx={sx}
-                        tc={tCellsPerScreen}
-                        xc={xCellsPerScreen}
-                    />;
-                }
-            }
-        })().toArray()}
+        <CellsView tCellsPerScreen={61} xCellsPerScreen={51} />
     </>;
 }
