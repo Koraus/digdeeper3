@@ -1,7 +1,7 @@
 import { World, keyProjectWorld } from "../model/World";
-import { Trek, caForDropzone, initSight, applyStep } from "../model/terms";
+import { Trek, caForDropzone, initSight, applyStep, sightAt, Dropzone, SightBody, trekDropzone } from "../model/terms";
 import { v2 } from "../utils/v";
-import { FlatTrek, flattenTrek } from "./FlatTrek";
+import { FlatTrek } from "./FlatTrek";
 import { loadFlatTreks } from "./saver";
 import memoize from "memoizee";
 
@@ -88,44 +88,72 @@ const getLeafIndex = (
         + neighborhoodIndex;
 };
 
+const getCell = (
+    dropzone: Dropzone,
+    sight: SightBody,
+    dt: number,
+    dx: number,
+) => {
+    const stateCount = dropzone.world.ca.stateCount;
+    const ca = caForDropzone(dropzone);
+    const t = sight.playerPosition[1] + dt;
+    const x = sight.playerPosition[0] + dx;
+    if (t < sight.depth) { return stateCount + 1; }
+    if (x < 0 || x >= dropzone.width) { return stateCount + 1; }
+    const isEmpty = sight.visitedCells
+        .some(([_t, _x]) => _t === t && _x === x);
+    if (isEmpty) { return stateCount + 0; }
+    return ca._at(t, x);
+};
+
+const getReducedNeighborhoodState = (
+    dropzone: Dropzone,
+    sight: SightBody,
+    neighborhood: v2[],
+) => {
+    const stateCount = dropzone.world.ca.stateCount;
+
+    const sc = stateCount
+        + 1 // for empty (visited)
+        + 1; // for out of bounds
+    let s = 0;
+    for (let i = 0; i < neighborhood.length; i++) {
+        const [dx, dt] = neighborhood[i];
+        s *= sc;
+        s += getCell(dropzone, sight, dt, dx);
+    }
+    return s;
+};
+
+const getReducedState = (
+    dropzone: Dropzone,
+    treksSteps: Trek[],
+    windowLength: number,
+    neighborhood: v2[],
+) => JSON.stringify(
+    treksSteps
+        .slice(-windowLength)
+        .map(trek => {
+            if (!("prev" in trek)) { return; }
+            const sight = sightAt(trek);
+            const rns = getReducedNeighborhoodState(
+                dropzone, sight, neighborhood);
+            return rns * (indexedActions.length + 1)
+                + actionIndices[trek.action];
+        }),
+);
+
 export const processTrek = (
     map: LeafMap,
     flatTrek: FlatTrek,
     windowLength: number,
     neighborhood: v2[],
 ) => {
-    const stateCount = flatTrek.dropzone.world.ca.stateCount;
-    const ca = caForDropzone(flatTrek.dropzone);
     let sight = initSight(flatTrek.dropzone);
-    const getCell = (dt: number, dx: number) => {
-        const t = sight.playerPosition[1] + dt;
-        const x = sight.playerPosition[0] + dx;
-        if (t < sight.depth) { return stateCount + 1; }
-        if (x < 0 || x >= flatTrek.dropzone.width) { return stateCount + 1; }
-        const isEmpty = sight.emptyCells
-            .some(([_t, _x]) => _t === t && _x === x);
-        if (isEmpty) { return stateCount + 0; }
-        return ca._at(t, x);
-    };
 
-
-    const getReducedNeighborhoodState = () => {
-        const sc = stateCount
-            + 1 // for empty (visited)
-            + 1; // for out of bounds
-        let s = 0;
-        for (let i = 0; i < neighborhood.length; i++) {
-            const [dx, dt] = neighborhood[i];
-            s *= sc;
-            s += getCell(dt, dx);
-        }
-        return s;
-    };
-
-    const states = [
-        getReducedNeighborhoodState() * (indexedActions.length + 1)
-        + indexedActions.length,
-    ];
+    const rns = getReducedNeighborhoodState(
+        flatTrek.dropzone, sight, neighborhood);
+    const states = [rns * (indexedActions.length + 1) + indexedActions.length];
     for (let i = 0; i < flatTrek.array.length; i++) {
         const step = flatTrek.array[i];
         if (states.length >= windowLength) {
@@ -140,9 +168,9 @@ export const processTrek = (
         }
 
         sight = applyStep(flatTrek.dropzone, sight, step);
-        states.push(
-            getReducedNeighborhoodState() * (indexedActions.length + 1)
-            + actionIndices[step.action]);
+        const rns = getReducedNeighborhoodState(
+            flatTrek.dropzone, sight, neighborhood);
+        states.push(rns + actionIndices[step.action]);
         states.splice(0, states.length - windowLength);
     }
 
@@ -175,68 +203,41 @@ const mapForWorld = memoize((world: World) => {
     return map;
 });
 
-function mergeX(
-    a: [number, number, number, number] | undefined,
-    b: [number, number, number, number] | undefined,
-) {
-    if (!a) { return b; }
-    if (!b) { return a; }
-    const sum = b[0] + b[1] + b[2] + b[3];
-    const f = Math.pow(0.95, sum);
-    return [
-        a[0] * f + b[0],
-        a[1] * f + b[1],
-        a[2] * f + b[2],
-        a[3] * f + b[3],
-    ] as [number, number, number, number];
-}
+// function mergeX(
+//     a: [number, number, number, number] | undefined,
+//     b: [number, number, number, number] | undefined,
+// ) {
+//     if (!a) { return b; }
+//     if (!b) { return a; }
+//     const sum = b[0] + b[1] + b[2] + b[3];
+//     const f = Math.pow(0.95, sum);
+//     return [
+//         a[0] * f + b[0],
+//         a[1] * f + b[1],
+//         a[2] * f + b[2],
+//         a[3] * f + b[3],
+//     ] as [number, number, number, number];
+// }
 
 export const offer = (trek: Trek) => {
-    const flatTrek = flattenTrek(trek);
-    const loadedMap = mapForWorld(flatTrek.dropzone.world);
+    const dropzone = trekDropzone(trek);
+    const loadedMap = mapForWorld(dropzone.world);
 
-    // todo: optimize live map accumulation
-    
-    const map =
-        [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}] as AccumulatedMap;
+    const treks = [trek];
+    const maxWindowLength = Math.max(...windowLengths);
+    while (treks.length < maxWindowLength && "prev" in trek) {
+        treks.unshift(trek = trek.prev);
+    }
 
-    for (let wi = 0; wi < windowLengths.length; wi++) {
-        const ni = 0;
-        const i = getLeafIndex(wi, ni);
-        const s = processTrek(
-            map[i],
-            flatTrek,
-            windowLengths[wi],
-            neighborhoods[ni]);
-        if (s.length < windowLengths[wi]) { continue; }
-        const key = JSON.stringify(s);
-        const value = mergeX(loadedMap[getLeafIndex(wi, ni)][key], map[i][key]);
-        if (value) { return value; }
-    }
-    for (let wi = 0; wi < windowLengths.length; wi++) {
-        const ni = 1;
-        const i = getLeafIndex(wi, ni);
-        const s = processTrek(
-            map[i],
-            flatTrek,
-            windowLengths[wi],
-            neighborhoods[ni]);
-        if (s.length < windowLengths[wi]) { continue; }
-        const key = JSON.stringify(s);
-        const value = mergeX(loadedMap[getLeafIndex(wi, ni)][key], map[i][key]);
-        if (value) { return value; }
-    }
-    for (let wi = 0; wi < windowLengths.length; wi++) {
-        const ni = 2;
-        const i = getLeafIndex(wi, ni);
-        const s = processTrek(
-            map[i],
-            flatTrek,
-            windowLengths[wi],
-            neighborhoods[ni]);
-        if (s.length < windowLengths[wi]) { continue; }
-        const key = JSON.stringify(s);
-        const value = mergeX(loadedMap[getLeafIndex(wi, ni)][key], map[i][key]);
-        if (value) { return value; }
+    for (let ni = 0; ni < neighborhoods.length; ni++) {
+        for (let wi = 0; wi < windowLengths.length; wi++) {
+            const key = getReducedState(
+                dropzone,
+                treks,
+                windowLengths[wi],
+                neighborhoods[ni]);
+            const value = loadedMap[getLeafIndex(wi, ni)][key];
+            if (value) { return value; }
+        }
     }
 };

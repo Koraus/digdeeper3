@@ -67,7 +67,7 @@ export function CellsView({
                 }
 
                 const caState = caForDropzone(dropzone)._at(t, x);
-                const isVisited = sight.emptyCells
+                const isVisited = sight.visitedCells
                     .some(p => v2.eqStrict(p, [x, t]));
 
                 if (isVisited) {

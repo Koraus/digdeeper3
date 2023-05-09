@@ -41,7 +41,7 @@ export type Trek = { dropzone: Dropzone } | (TrekStep & { prev: Trek });
 export type SightBody = {
     playerPosition: v2,
     playerEnergy: number,
-    emptyCells: v2[],
+    visitedCells: v2[],
     depth: number,
     log: string,
     ok: boolean,
@@ -85,7 +85,7 @@ function getLastOkSight(sight: Sight): Sight {
 export const initSight = (dropzone: Dropzone): SightBody => ({
     playerPosition: [Math.floor(dropzone.width / 2), 0],
     playerEnergy: 81 * 3,
-    emptyCells: [],
+    visitedCells: [],
     depth: 0,
     log: "init",
     ok: true,
@@ -117,45 +117,48 @@ export const applyStep = (
         return {
             playerPosition: prevSight.playerPosition,
             playerEnergy: prevSight.playerEnergy,
-            emptyCells: prevSight.emptyCells,
+            visitedCells: prevSight.visitedCells,
             depth: prevSight.depth,
             log: isOutOfSpace ? "out of space bounds" : "cannot return back",
             ok: false,
         };
     }
 
-    const isEmptyAtP1 = prevSight.emptyCells.some(x => v2.eqStrict(x, p1));
+    const isP1Visited = prevSight.visitedCells.some(x => v2.eqStrict(x, p1));
     const caState = caForDropzone(dropzone)._at(p1[1], p1[0]);
 
     const theStateEnergyDrain = directionEnergyDrain[trek.action];
-    const theDirectionEnergyDrain = isEmptyAtP1 ? 0 : stateEnergyDrain[caState];
+    const theDirectionEnergyDrain = isP1Visited ? 0 : stateEnergyDrain[caState];
     const moveCost = theStateEnergyDrain + theDirectionEnergyDrain;
 
     if (prevSight.playerEnergy < moveCost) {
         return {
             playerPosition: prevSight.playerPosition,
             playerEnergy: prevSight.playerEnergy,
-            emptyCells: prevSight.emptyCells,
+            visitedCells: prevSight.visitedCells,
             depth: prevSight.depth,
             log: `insufficient energy ${moveCost - prevSight.playerEnergy}`,
             ok: false,
         };
     }
 
-    const energyGain = isEmptyAtP1 ? 0 : stateEnergyGain[caState];
+    const energyGain = isP1Visited ? 0 : stateEnergyGain[caState];
     const energyDelta = energyGain - moveCost;
     const newPlayerEnergy = prevSight.playerEnergy + energyDelta;
 
-    const newEmptyCells = isEmptyAtP1
-        ? prevSight.emptyCells
-        : [p1, ...prevSight.emptyCells];
+    const newVisitedCells =
+        (isP1Visited ? prevSight.visitedCells : [p1, ...prevSight.visitedCells])
+
+            // 2x depthLeftBehind
+            .filter(([, t]) => t >= prevSight.depth - depthLeftBehind);
+
 
     const newDepth = Math.max(prevSight.depth, p1[1] - depthLeftBehind);
 
     return {
         playerPosition: p1,
         playerEnergy: newPlayerEnergy,
-        emptyCells: newEmptyCells,
+        visitedCells: newVisitedCells,
         depth: newDepth,
         log: `delta ${energyGain - moveCost}:`
             + ((theDirectionEnergyDrain > 0)
