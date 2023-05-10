@@ -18,7 +18,7 @@ export function PlayerView({
             case "KeyA": {
                 setTrek({
                     prev: trek,
-                    action: "left",
+                    action: "backward",
                 });
                 break;
             }
@@ -26,7 +26,7 @@ export function PlayerView({
             case "KeyD": {
                 setTrek({
                     prev: trek,
-                    action: "right",
+                    action: "forward",
                 });
                 break;
             }
@@ -34,7 +34,7 @@ export function PlayerView({
             case "KeyW": {
                 setTrek({
                     prev: trek,
-                    action: "backward",
+                    action: "left",
                 });
                 break;
             }
@@ -42,7 +42,7 @@ export function PlayerView({
             case "KeyS": {
                 setTrek({
                     prev: trek,
-                    action: "forward",
+                    action: "right",
                 });
                 break;
             }
@@ -70,9 +70,9 @@ export function PlayerView({
 
     return <group
         {...props}
-        position={[pos[0], -pos[1], 0]}
+        position={[pos[1], 0, pos[0]]}
     >
-        <mesh position={[0, 0, 1]}>
+        <mesh position={[0, 0.2, 0]}>
             <sphereGeometry args={[0.5]} />
         </mesh>
         {children}

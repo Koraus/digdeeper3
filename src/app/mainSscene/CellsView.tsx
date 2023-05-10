@@ -58,7 +58,7 @@ export function CellsView({
                 const x1 = Math.round(px / xc) * xc + sx;
                 const x = x1 + (px > (x1 - xc / 2) ? 0 : -xc);
 
-                cell.position.set(x, -t, 0);
+                cell.position.set(t, 0, x);
 
                 const isInBounds = t >= 0 && x >= 0 && x < dropzone.width;
                 if (!isInBounds) {
@@ -82,13 +82,13 @@ export function CellsView({
                         cell.material.needsUpdate = true;
 
                         cell.scale.set(1, 1, 0.01);
-                        cell.position.z = -0.5;
+                        cell.position.y = -0.5;
                     }
                 } else {
                     cell.visible = true;
                     cell.material.color.copy(colors[caState]);
                     cell.scale.setScalar(1);
-                    cell.position.z = 0;
+                    cell.position.y = 0;
                     if (caState !== emptyState) {
                         cell.material.transparent = false;
                         cell.material.opacity = 1;

@@ -34,22 +34,23 @@ export function CopilotView({
             }
         })()].map((p, i, arr) => {
             const prevP = i > 0 ? arr[i - 1] : pos;
+            const dx = p[0] - prevP[0];
+            const dt = p[1] - prevP[1];
             return <group
                 key={i}
-                position={[p[0], -p[1], 0]}
+                position={[p[1], 0.6, p[0]]}
                 rotation={[
                     0,
-                    0,
-                    Math.PI / 2
-                    + Math.atan2(-(p[1] - prevP[1]), p[0] - prevP[0]),
+                    -Math.atan2(dx, dt),
+                    Math.PI / 2,
                 ]}
             >
                 <mesh
-                    position={[0, 0.5, 0.5]}
+                    position={[0, 0.5, 0]}
                 >
                     <cylinderGeometry args={[
-                        0.01 * (arr.length - i),
-                        0.01 * (arr.length - i - 1),
+                        0.02 * (arr.length - i),
+                        0.02 * (arr.length - i - 1),
                         1,
                     ]} />
                     <meshBasicMaterial color={"grey"} />
