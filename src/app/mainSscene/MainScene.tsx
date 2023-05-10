@@ -11,10 +11,10 @@ export function MainScene() {
     return <>
         <color attach="background" args={["#0a000d"]} />
 
-        <ambientLight intensity={0.5} />
+        <ambientLight intensity={0.7} />
         <directionalLight
             intensity={0.6}
-            position={[2, 3, 5]}
+            position={[2, 2, -5]}
         />
 
         {/* <OrbitControls /> */}

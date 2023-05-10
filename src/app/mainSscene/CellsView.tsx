@@ -2,7 +2,7 @@ import { ThreeElements } from "@react-three/fiber";
 import { v2 } from "../../utils/v";
 import { useRecoilValue } from "recoil";
 import { trekRecoil } from "../trekRecoil";
-import { sightAt } from "../../model/terms";
+import { Dropzone, Sight, Trek, sightAt } from "../../model/terms";
 import { trekDropzone } from "../../model/terms";
 import { caForDropzone } from "../../model/terms";
 import { useEffect, useMemo } from "react";
@@ -29,78 +29,74 @@ export function CellsView({
     const trek = useRecoilValue(trekRecoil);
 
     const { manualUpdateGroup, cells } = useMemo(() => {
-        const gbox = new BoxGeometry(1, 1, 1);
-        const cells = Array.from(
-            { length: tc * xc },
-            () => new Mesh(gbox, new MeshPhongMaterial()));
-        const manualUpdateGroup = new ManualUpdateGroup();
-        manualUpdateGroup.add(...cells);
-        return { manualUpdateGroup, cells };
-    }, [tc, xc]);
-    useEffect(() => {
-        const sight = sightAt(trek);
-        const dropzone = trekDropzone(trek);
-        const emptyState = dropzone.world.emptyState;
-
-        const pos = sight.playerPosition;
-        const [px, pt] = pos;
+        const g = new ManualUpdateGroup();
 
         const colors = (["#8000FF", "#404040", "#80FF00"] as const)
             .map(x => new Color(x));
 
-        for (let st = 0; st < tc; st++) {
-            for (let sx = 0; sx < xc; sx++) {
-                const cell = cells[st * xc + sx];
+        const gbox = new BoxGeometry(1, 1, 1);
 
-                const t1 = Math.round(pt / tc) * tc + st;
-                const t = t1 + (pt > (t1 - tc / 2) ? 0 : -tc);
+        const cells = Array.from(
+            { length: tc * xc },
+            (_, i) => {
+                const sx = i % xc;
+                const st = Math.floor(i / xc);
 
-                const x1 = Math.round(px / xc) * xc + sx;
-                const x = x1 + (px > (x1 - xc / 2) ? 0 : -xc);
+                const floor = new Mesh(gbox, new MeshPhongMaterial());
+                g.add(floor);
 
-                cell.position.set(t, 0, x);
+                const m1 = new Mesh(gbox, new MeshPhongMaterial());
+                g.add(m1);
+                return {
+                    update(
+                        trek: Trek,
+                    ) {
+                        const sight = sightAt(trek);
+                        const dropzone = trekDropzone(trek);
+                        const emptyState = dropzone.world.emptyState;
 
-                const isInBounds = t >= 0 && x >= 0 && x < dropzone.width;
-                if (!isInBounds) {
-                    cell.visible = false;
-                    continue;
-                }
+                        const pos = sight.playerPosition;
+                        const [px, pt] = pos;
 
-                const caState = caForDropzone(dropzone)._at(t, x);
-                const isVisited = sight.visitedCells
-                    .some(p => v2.eqStrict(p, [x, t]));
+                        const t1 = Math.round(pt / tc) * tc + st;
+                        const t = t1 + (pt > (t1 - tc / 2) ? 0 : -tc);
 
-                if (isVisited) {
-                    if (caState === emptyState) {
-                        cell.visible = false;
-                    } else {
-                        cell.visible = true;
+                        const x1 = Math.round(px / xc) * xc + sx;
+                        const x = x1 + (px > (x1 - xc / 2) ? 0 : -xc);
 
-                        cell.material.color.copy(colors[caState]);
-                        cell.material.transparent = true;
-                        cell.material.opacity = 0.3;
-                        cell.material.needsUpdate = true;
+                        m1.position.set(t, 0.5, x);
 
-                        cell.scale.set(1, 1, 0.01);
-                        cell.position.y = -0.5;
-                    }
-                } else {
-                    cell.visible = true;
-                    cell.material.color.copy(colors[caState]);
-                    cell.scale.setScalar(1);
-                    cell.position.y = 0;
-                    if (caState !== emptyState) {
-                        cell.material.transparent = false;
-                        cell.material.opacity = 1;
-                    } else {
-                        cell.material.transparent = true;
-                        cell.material.opacity = 0.6;
-                    }
-                    cell.material.needsUpdate = true;
-                }
-            }
-        }
+                        const isInBounds = t >= 0
+                            && x >= 0 && x < dropzone.width;
+                        if (!isInBounds) {
+                            floor.visible = false;
+                            m1.visible = false;
+                            return;
+                        }
+
+                        const caState = caForDropzone(dropzone)._at(t, x);
+                        const isVisited = sight.visitedCells
+                            .some(p => v2.eqStrict(p, [x, t]));
+
+                        floor.position.set(t, -0.1, x);
+                        floor.scale.set(1, 0.2, 1);
+                        floor.material.color.copy(colors[caState]);
+                        floor.material.needsUpdate = true;
+
+                        m1.visible = false;
+                        if (!isVisited && caState !== emptyState) {
+                            m1.visible = true;
+                            m1.material.color.copy(colors[caState]);
+                            m1.material.needsUpdate = true;
+                        }
+                    },
+                };
+            });
+        return { manualUpdateGroup: g, cells };
+    }, [tc, xc]);
+    useEffect(() => {
+        for (const cell of cells) { cell.update(trek); }
         manualUpdateGroup.manualUpdateMatrixWorld();
-    }, [tc, xc, cells, trek, manualUpdateGroup]);
+    }, [cells, trek, manualUpdateGroup]);
     return <primitive object={manualUpdateGroup} {...props} />;
 }
