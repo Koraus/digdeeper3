@@ -91,13 +91,11 @@ const getLeafIndex = (
 const getCell = (
     dropzone: Dropzone,
     sight: SightBody,
-    dt: number,
-    dx: number,
+    t: number,
+    x: number,
 ) => {
     const stateCount = dropzone.world.ca.stateCount;
     const ca = caForDropzone(dropzone);
-    const t = sight.playerPosition[1] + dt;
-    const x = sight.playerPosition[0] + dx;
     if (t < sight.depth) { return stateCount + 1; }
     if (x < 0 || x >= dropzone.width) { return stateCount + 1; }
     const isEmpty = sight.visitedCells
@@ -120,7 +118,11 @@ const getReducedNeighborhoodState = (
     for (let i = 0; i < neighborhood.length; i++) {
         const [dx, dt] = neighborhood[i];
         s *= sc;
-        s += getCell(dropzone, sight, dt, dx);
+        s += getCell(
+            dropzone, 
+            sight, 
+            sight.playerPosition[1] + dt, 
+            sight.playerPosition[0] + dx);
     }
     return s;
 };
