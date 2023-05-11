@@ -85,7 +85,7 @@ function getLastOkSight(sight: Sight): Sight {
 export const initSight = (dropzone: Dropzone): SightBody => ({
     playerPosition: [Math.floor(dropzone.width / 2), 0],
     playerEnergy: 81 * 3,
-    visitedCells: [],
+    visitedCells: [[Math.floor(dropzone.width / 2), 0]],
     depth: 0,
     log: "init",
     ok: true,

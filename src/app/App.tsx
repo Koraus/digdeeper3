@@ -23,7 +23,7 @@ export function App() {
         <Canvas
             css={{ position: "absolute", inset: 0, zIndex: -1 }}
             gl={{
-                useLegacyLights: false,
+                useLegacyLights: true,
                 toneMapping: NoToneMapping,
                 antialias: true,
             }}
