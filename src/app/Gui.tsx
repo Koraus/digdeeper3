@@ -2,6 +2,9 @@ import { useRecoilValue } from "recoil";
 import { trekDropzone, sightAt, generateRandomDropzone } from "../model/terms";
 import { trekRecoil } from "./trekRecoil";
 import { useSetDropzone } from "./lobby/useSetDropzone";
+import { RestartAlt } from "@emotion-icons/material/RestartAlt";
+import { PinDrop } from "@emotion-icons/material-outlined/PinDrop";
+import { World } from "@emotion-icons/boxicons-regular/World";
 
 
 export function Gui() {
@@ -28,16 +31,50 @@ export function Gui() {
         }}>
             <button
                 onClick={() => setDropzone(dropzone)}
-            >Restart</button>
+                css={[{
+                    display: "flex",
+                    alignItems: "center",
+                }]}
+            >
+                <RestartAlt
+                    css={[{
+                        width: "2vmin",
+                        marginRight: "0.4vmin",
+                    }]}
+                />
+                Restart</button>
             <button
+                css={[{
+                    display: "flex",
+                    alignItems: "center",
+                }]}
                 onClick={() =>
                     setDropzone(generateRandomDropzone(dropzone.world))}
-            >New Dropzone</button>
+
+            >
+                <PinDrop
+                    css={[{
+                        width: "2vmin",
+                        marginRight: "0.4vmin",
+                    }]}
+                />
+                New Dropzone</button>
             <button
+                css={[{
+                    display: "flex",
+                    alignItems: "center",
+                }]}
                 onClick={() =>
                     setDropzone(generateRandomDropzone())
                 }
-            >New World</button>
+            >
+                <World
+                    css={[{
+                        width: "2vmin",
+                        marginRight: "0.4vmin",
+                    }]}
+                />
+                New World</button>
         </div>
     </div >;
 }
