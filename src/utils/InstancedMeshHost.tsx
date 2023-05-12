@@ -1,56 +1,39 @@
 import { Color, InstancedMesh, Matrix4, Object3D } from "three";
 import { _throw } from "./_throw";
 
-const zeroScaleMatrix = new Matrix4().set(
+export const zeroScaleMatrix = new Matrix4().set(
     0, 0, 0, 0, /**/ 0, 0, 0, 0, /**/ 0, 0, 0, 0, /**/ 0, 0, 0, 1);
 
-export class InstancedMeshClient extends Object3D {
+export class InstancedMeshClient {
 
     isInUse = false;
-    color?: Color;
 
     constructor(
         public host: InstancedMeshHost,
         public index: number,
     ) {
-        super();
         this.host = host;
         this.index = index;
         this.deuse();
     }
 
-    upload() {
-        if (!this.visible) {
-            this.host.setMatrixAt(this.index, zeroScaleMatrix);
-            this.host.instanceMatrix.needsUpdate = true;
-            return;
-        }
-
-        // todo divide by host matrixWorld 
-        // or at least check if it's identity
-        this.host.setMatrixAt(this.index, this.matrixWorld);
+    setMatrix(m: Matrix4) {
+        this.host.setMatrixAt(this.index, m);
         this.host.instanceMatrix.needsUpdate = true;
-
-        if (this.color) {
-            this.host.setColorAt(this.index, this.color);
-
-            // the above setColorAt initializes instanceColor
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            this.host.instanceColor!.needsUpdate = true;
-        }
     }
 
-    updateMatrixWorld(force?: boolean | undefined): void {
-        super.updateMatrixWorld(force);
-        if (this.isInUse) { this.upload(); }
+    setColor(c: Color) {
+        this.host.setColorAt(this.index, c);
+        // the above setColorAt initializes instanceColor
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        this.host.instanceColor!.needsUpdate = true;
     }
 
     use() { this.isInUse = true; }
 
     deuse() {
         this.isInUse = false;
-        this.host.setMatrixAt(this.index, zeroScaleMatrix);
-        this.host.instanceMatrix.needsUpdate = true;
+        this.setMatrix(zeroScaleMatrix);
     }
 }
 
