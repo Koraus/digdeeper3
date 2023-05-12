@@ -320,6 +320,7 @@ export function CellsView({
             new MeshPhongMaterial(),
             tc * xc * 5,
         );
+        boxHost.frustumCulled = false;
         parent.add(boxHost);
         return {
             parent: parent,
@@ -332,7 +333,7 @@ export function CellsView({
                 boxHost,
             })),
         };
-    }, [tc, xc]);
+    }, [tc, xc, trekDropzone(trek)]);
     useEffect(() => {
         for (const cell of cells) { cell.layout(trek); }
     }, [cells, trek, parent]);
