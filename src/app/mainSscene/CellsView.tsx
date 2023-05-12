@@ -39,7 +39,7 @@ const createCellView = (() => {
                     ?? (stateCount + 0);
             }
         }
-        
+
         let s2 = 0;
         for (let dt = 1; dt <= 4; dt++) {
             for (let dx = 1; dx <= 4; dx++) {
@@ -194,24 +194,30 @@ const createCellView = (() => {
                     }
                     if (caState === 0) {
                         rock1.visible = true;
-                        rock2.visible = true;
-                        rock2.scale.x = 0.4 + 0.8 * rand.nextFloat();
-                        rock2.scale.y = 0.4 + 0.8 * rand.nextFloat();
-                        rock2.scale.z = 0.4 + 0.8 * rand.nextFloat();
-                        rock2.position.x = 0.5 * (rand.nextFloat() - 0.5);
-                        rock2.position.y = 0.8 * rand.nextFloat();
-                        rock2.position.z = 0.5 * (rand.nextFloat() - 0.5);
+                        if (rand.nextFloat() < 0.5) {
+                            rock2.visible = true;
+                            rock2.scale.x = 0.4 + 0.8 * rand.nextFloat();
+                            rock2.scale.y = 0.4 + 0.8 * rand.nextFloat();
+                            rock2.scale.z = 0.4 + 0.8 * rand.nextFloat();
+                            rock2.position.x = 0.5 * (rand.nextFloat() - 0.5);
+                            rock2.position.y = 0.8 * rand.nextFloat();
+                            rock2.position.z = 0.5 * (rand.nextFloat() - 0.5);
+                        }
                     }
                 } else {
                     brick1.visible = true;
                     brick1.position.x = 0.3 * (rand.nextFloat() - 0.5);
                     brick1.position.z = 0.3 * (rand.nextFloat() - 0.5);
-                    brick2.visible = true;
-                    brick2.position.x = 1 * (rand.nextFloat() - 0.5);
-                    brick2.position.z = 1 * (rand.nextFloat() - 0.5);
-                    brick3.visible = true;
-                    brick3.position.x = 1 * (rand.nextFloat() - 0.5);
-                    brick3.position.z = 1 * (rand.nextFloat() - 0.5);
+                    if (rand.nextFloat() < 0.5) {
+                        brick2.visible = true;
+                        brick2.position.x = 1 * (rand.nextFloat() - 0.5);
+                        brick2.position.z = 1 * (rand.nextFloat() - 0.5);
+                    }
+                    if (rand.nextFloat() < 0.5) {
+                        brick3.visible = true;
+                        brick3.position.x = 1 * (rand.nextFloat() - 0.5);
+                        brick3.position.z = 1 * (rand.nextFloat() - 0.5);
+                    }
                 }
             },
             update() {
