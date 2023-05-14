@@ -260,6 +260,7 @@ const createCellView = (() => {
                     }
                 } else {
                     prevState = undefined;
+                    boxIndex = 0;
                 }
 
                 for (let i = boxIndex; i < boxPool.length; i++) {
