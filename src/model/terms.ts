@@ -20,7 +20,7 @@ export const generateRandomDropzone = (
 ): Dropzone => ({
     world,
     seed: Math.floor(Math.random() * LehmerPrng.MAX_INT32),
-    width: 31,
+    width: 51,
     depthLeftBehind: 10,
 });
 

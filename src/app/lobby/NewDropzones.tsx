@@ -16,7 +16,7 @@ export function NewDropzones({
     const setDropzone = useSetDropzone();
 
     if (!worlds) {
-        setWorlds(Array.from({ length: 20 }, () => generateRandomDropzone()));
+        setWorlds(Array.from({ length: 5 }, () => generateRandomDropzone()));
     }
 
     return <div {...props}>
@@ -47,7 +47,7 @@ export function NewDropzones({
                 }]}
                 onClick={() => setWorlds(
                     Array.from(
-                        { length: 20 },
+                        { length: 5 },
                         () => generateRandomDropzone()))}> Reroll </button>
             {worlds
                 && <div css={[{

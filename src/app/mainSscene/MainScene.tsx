@@ -1,4 +1,4 @@
-import { GizmoHelper, GizmoViewport, OrthographicCamera, PerspectiveCamera } from "@react-three/drei";
+import { GizmoHelper, GizmoViewport, PerspectiveCamera } from "@react-three/drei";
 import { CellsView } from "./CellsView";
 import { PlayerView } from "./PlayerView";
 import { CopilotView } from "./CopilotView";
@@ -18,10 +18,8 @@ export function MainScene() {
         />
         <directionalLight
             intensity={0.2}
-            position={[2, 6, 5]}
         />
 
-        {/* <OrbitControls /> */}
         <GizmoHelper
             alignment="bottom-right"
             margin={[80, 110]}
@@ -29,18 +27,19 @@ export function MainScene() {
             <GizmoViewport />
         </GizmoHelper>
 
-        <OrthographicCamera />
+        <PerspectiveCamera
+            makeDefault
+            fov={45}
+            near={0.1}
+            far={1000}
+            rotation={[0, 0, 0]}
+        />
 
         <PlayerView>
             <GroupSync
                 onFrame={(g, { camera }, delta) => {
-                    const z = new Vector3(0, 0, 0);
-                    g.localToWorld(z);
-                    camera.parent?.worldToLocal(z);
-                    z.x += 1;
-                    z.y += 2;
 
-                    const p = new Vector3(-0.1, 18, 7);
+                    const p = new Vector3(2, 36, 20);
                     g.localToWorld(p);
                     camera.parent?.worldToLocal(p);
 
@@ -53,7 +52,14 @@ export function MainScene() {
                         // 
                     }
 
-                    camera.lookAt(z);
+                    if (camera.rotation.x === 0) {
+                        const z = new Vector3(0, 0, 0);
+                        g.localToWorld(z);
+                        camera.parent?.worldToLocal(z);
+                        z.x += 5;
+                        z.y += 4;
+                        camera.lookAt(z);
+                    }
                 }} />
         </PlayerView>
         <CopilotView />

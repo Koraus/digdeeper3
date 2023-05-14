@@ -5,6 +5,7 @@ import { Star } from "@emotion-icons/ionicons-solid/Star";
 import { useRecoilState } from "recoil";
 import { favoriteDropzonesRecoil } from "./favoriteDropzonesRecoil";
 import { eqDropzone } from "../../model/terms";
+import { Color } from "three";
 
 
 export function DropzonePreview({
@@ -28,25 +29,25 @@ export function DropzonePreview({
         if (!ctx) { return; }
 
         const colorMap = [
-            [128, 0, 255, 255],
-            [64, 64, 64, 255],
-            [128, 255, 0, 255],
+            new Color("#8d8d8d"),
+            new Color("#000000"),
+            new Color("#ff6ff5"),
         ];
 
         const theCa = caForDropzone(dropzone);
 
-        const w = dropzone.width;
-        const h = 100;
+        const w = 200;
+        const h = dropzone.width;
 
         const myImageData = ctx.createImageData(w, h);
         for (let y = 0; y < h; y++) {
             for (let x = 0; x < w; x++) {
                 const i = (y * w + x) * 4;
-                const color = colorMap[theCa._at(y, x)];
-                myImageData.data[i + 0] = color[0]; // R 
-                myImageData.data[i + 1] = color[1]; // G 
-                myImageData.data[i + 2] = color[2]; // B 
-                myImageData.data[i + 3] = color[3]; // A 
+                const color = colorMap[theCa._at(x, y)];
+                myImageData.data[i + 0] = Math.floor(color.r * 256);
+                myImageData.data[i + 1] = Math.floor(color.g * 256);
+                myImageData.data[i + 2] = Math.floor(color.b * 256);
+                myImageData.data[i + 3] = 255;
             }
         }
         const scale = 2;
