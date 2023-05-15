@@ -57,7 +57,7 @@ export function DropzonePreview({
         ctx.putImageData(myImageData, 0, 0);
         ctx.imageSmoothingEnabled = false;
         ctx.drawImage(canvasEl, 0, 0, w, h, 0, 0, w * scale, h * scale);
-    });
+    }, [canvasRef.current, dropzone]);
 
     return <div {...props} css={[{
         position: "relative",

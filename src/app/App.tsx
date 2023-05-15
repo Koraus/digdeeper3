@@ -27,6 +27,7 @@ export function App() {
                 toneMapping: NoToneMapping,
                 antialias: true,
             }}
+            shadows="percentage"
         >
             <MainScene />
         </Canvas>

@@ -1,24 +1,20 @@
-import { GizmoHelper, GizmoViewport, PerspectiveCamera } from "@react-three/drei";
-import { CellsView } from "./CellsView";
+import { Box, GizmoHelper, GizmoViewport, PerspectiveCamera } from "@react-three/drei";
+import { CellsView } from "./cells/CellsView";
 import { PlayerView } from "./PlayerView";
 import { CopilotView } from "./CopilotView";
 import { StopLine } from "./StopLine";
 import { GroupSync } from "../../utils/GroupSync";
-import { Vector3 } from "three";
+import { MeshPhongMaterial, Object3D, Vector3 } from "three";
 import { dampVector3 } from "../../utils/dampVector3";
+import { useMemo, useRef } from "react";
 
 export function MainScene() {
+    const lightTarget = useMemo(() => new Object3D(), []);
     return <>
         <color attach="background" args={["#1f0128"]} />
 
         <ambientLight intensity={0.5} />
-        <directionalLight
-            intensity={0.4}
-            position={[2, 10, -5]}
-        />
-        <directionalLight
-            intensity={0.2}
-        />
+
 
         <GizmoHelper
             alignment="bottom-right"
@@ -36,6 +32,29 @@ export function MainScene() {
         />
 
         <PlayerView>
+            <primitive object={lightTarget} />
+            <GroupSync onFrame={(g) => {
+                // g.position.random().multiplyScalar(0.1);
+            }} >
+                <directionalLight
+                    intensity={0.3}
+                    position={[35, 45, 15]}
+                    target={lightTarget}
+                    castShadow
+                    shadow-mapSize={[2 ** 10, 2 ** 11]}
+                    shadow-bias={-0.0001}
+                >
+                    <orthographicCamera
+                        attach="shadow-camera"
+                        args={[-40, 40, 40, -40, 10, 150]}
+                    />
+                </directionalLight>
+            </GroupSync>
+            <directionalLight
+                position={[35, 45, 15]}
+                intensity={0.5}
+                target={lightTarget}
+            />
             <GroupSync
                 onFrame={(g, { camera }, delta) => {
 
@@ -67,5 +86,14 @@ export function MainScene() {
         <StopLine />
 
         <CellsView tCellsPerScreen={61} xCellsPerScreen={51} />
+
+        {/* <Box
+            args={[10, 10, 10]}
+            position={[10, 0, 20]}
+            castShadow
+            receiveShadow
+        >
+            <meshPhongMaterial />
+        </Box> */}
     </>;
 }
