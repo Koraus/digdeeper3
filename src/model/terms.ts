@@ -42,6 +42,7 @@ export type SightBody = {
     playerPosition: v2,
     playerEnergy: number,
     visitedCells: v2[],
+    collectedCells: v2[],
     depth: number,
     log: string,
     ok: boolean,
@@ -86,10 +87,25 @@ export const initSight = (dropzone: Dropzone): SightBody => ({
     playerPosition: [Math.floor(dropzone.width / 2), 0],
     playerEnergy: 81 * 3,
     visitedCells: [[Math.floor(dropzone.width / 2), 0]],
+    collectedCells: neighborhoods[2]
+        .map(x => v2.add(x, [Math.floor(dropzone.width / 2), 0]))
+        .filter((x) => x[1] >= 0),
     depth: 0,
     log: "init",
     ok: true,
 });
+
+const neighborhoods = [[
+    [0, 0],
+], [
+    [-1, 0],
+    [0, -1], [0, 0], [0, 1],
+    [1, 0],
+], [
+    [-1, -1], [-1, 0], [-1, 1],
+    [0, -1], [0, 0], [0, 1],
+    [1, -1], [1, 0], [1, 1],
+]] as v2[][];
 
 export const applyStep = (
     dropzone: Dropzone,
@@ -118,6 +134,7 @@ export const applyStep = (
             playerPosition: prevSight.playerPosition,
             playerEnergy: prevSight.playerEnergy,
             visitedCells: prevSight.visitedCells,
+            collectedCells: prevSight.collectedCells,
             depth: prevSight.depth,
             log: isOutOfSpace ? "out of space bounds" : "cannot return back",
             ok: false,
@@ -125,6 +142,7 @@ export const applyStep = (
     }
 
     const isP1Visited = prevSight.visitedCells.some(x => v2.eqStrict(x, p1));
+    const ca = caForDropzone(dropzone);
     const caState = caForDropzone(dropzone)._at(p1[1], p1[0]);
 
     const theStateEnergyDrain = directionEnergyDrain[trek.action];
@@ -136,13 +154,27 @@ export const applyStep = (
             playerPosition: prevSight.playerPosition,
             playerEnergy: prevSight.playerEnergy,
             visitedCells: prevSight.visitedCells,
+            collectedCells: prevSight.collectedCells,
             depth: prevSight.depth,
             log: `insufficient energy ${moveCost - prevSight.playerEnergy}`,
             ok: false,
         };
     }
 
-    const energyGain = isP1Visited ? 0 : stateEnergyGain[caState];
+    const stepCollectedCells =
+        neighborhoods[2]
+            .map(x => v2.add(x, p1))
+            .filter((x) =>
+                x[0] >= 0
+                && x[0] < width
+                && x[1] >= 0
+                && !prevSight.collectedCells.some(y => v2.eqStrict(x, y)));
+
+
+
+    const energyGain = stepCollectedCells
+        .map(([x, t]) => stateEnergyGain[ca._at(t, x)])
+        .reduce((a, b) => a + b, 0);
     const energyDelta = energyGain - moveCost;
     const newPlayerEnergy = prevSight.playerEnergy + energyDelta;
 
@@ -152,6 +184,13 @@ export const applyStep = (
             // 2x depthLeftBehind
             .filter(([, t]) => t >= prevSight.depth - depthLeftBehind);
 
+    const newcCollectedCells = [
+        ...stepCollectedCells,
+        ...prevSight.collectedCells,
+    ]
+        .filter(([, t]) => t >= prevSight.depth - depthLeftBehind);
+
+
 
     const newDepth = Math.max(prevSight.depth, p1[1] - depthLeftBehind);
 
@@ -159,6 +198,7 @@ export const applyStep = (
         playerPosition: p1,
         playerEnergy: newPlayerEnergy,
         visitedCells: newVisitedCells,
+        collectedCells: newcCollectedCells,
         depth: newDepth,
         log: `delta ${energyGain - moveCost}:`
             + ((theDirectionEnergyDrain > 0)

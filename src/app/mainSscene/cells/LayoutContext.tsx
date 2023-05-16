@@ -6,10 +6,18 @@ import { Dropzone } from "../../../model/terms";
 
 export type ParentState = {
     rootMatrixWorld: Matrix4,
+    prevState: {
+        t: number,
+        x: number,
+        isVisited: boolean,
+        isCollected: boolean,
+        dropzone: Dropzone,
+    } | undefined,
     state: {
         t: number,
         x: number,
         isVisited: boolean,
+        isCollected: boolean,
         dropzone: Dropzone,
     }
 }
