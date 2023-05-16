@@ -111,9 +111,11 @@ const createCellView = ({
                 if (!parentState) {
                     parentState = {
                         rootMatrixWorld,
+                        prevState: undefined,
                         state: { t, x, isVisited, isCollected, dropzone },
                     };
                 } else {
+                    parentState.prevState = parentState.state;
                     parentState.state = {
                         t, x, isVisited, isCollected, dropzone,
                     };

@@ -16,8 +16,8 @@ export const floorColors = (["#576c6e", "#d8dd76", "#ffc57a"] as const)
 
 export function Cell(ctx: LayoutContext) {
     const {
-        rootMatrixWorld, 
-        state: { t, x, isVisited, dropzone, isCollected }, 
+        rootMatrixWorld,
+        state: { t, x, isVisited, dropzone, isCollected },
         abuseBox,
     } = ctx;
 
@@ -33,7 +33,10 @@ export function Cell(ctx: LayoutContext) {
 
     if (caState === 2) {
         if (isCollected) {
-            PickablePick(ctx);
+            const isJustCollected = isCollected && !ctx.prevState?.isCollected;
+            if (isJustCollected) {
+                PickablePick(ctx);
+            }
         } else {
             Pickable(ctx);
         }
