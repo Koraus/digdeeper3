@@ -39,7 +39,8 @@ export function Grass({
                 + sin(timeSec)
                 + sin(timeSec * 0.5)
                 + 0.2 * (t + sin(x * 2) + sin(x * 0.5)));
-        const t0 = 0.5 * sin(timeSec * 0.4 + t + x * 0.5) // regular oscillation
+        const t0 =
+            0.8 * sin(timeSec * 0.4 + t + x * 0.5) // regular oscillation
             + 0.8 * pow(t1, 5); // wind wave
 
         if (grass2) {
