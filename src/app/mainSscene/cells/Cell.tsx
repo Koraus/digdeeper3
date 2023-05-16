@@ -16,7 +16,9 @@ export const floorColors = (["#576c6e", "#d8dd76", "#ffc57a"] as const)
 
 export function Cell(ctx: LayoutContext) {
     const {
-        rootMatrixWorld, state: { t, x, isVisited, dropzone }, abuseBox,
+        rootMatrixWorld, 
+        state: { t, x, isVisited, dropzone, isCollected }, 
+        abuseBox,
     } = ctx;
 
     const caState = caForDropzone(dropzone)._at(t, x);
@@ -29,16 +31,17 @@ export function Cell(ctx: LayoutContext) {
         _v3s[1].set(1, 2, 1),
     ).premultiply(rootMatrixWorld));
 
-    if (caState === 2 && isVisited) {
-        PickablePick(ctx);
+    if (caState === 2) {
+        if (isCollected) {
+            PickablePick(ctx);
+        } else {
+            Pickable(ctx);
+        }
     }
 
     if (!isVisited) {
         if (caState === dropzone.world.emptyState) {
             Grass(ctx);
-        }
-        if (caState === 2) {
-            Pickable(ctx);
         }
         if (caState === 0) {
             Rock(ctx);

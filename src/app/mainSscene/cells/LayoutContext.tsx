@@ -10,6 +10,7 @@ export type ParentState = {
         t: number,
         x: number,
         isVisited: boolean,
+        isCollected: boolean,
         dropzone: Dropzone,
     }
 }

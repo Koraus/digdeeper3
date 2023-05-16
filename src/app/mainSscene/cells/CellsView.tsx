@@ -93,13 +93,16 @@ const createCellView = ({
         if (isInBounds) {
             const isVisited = sight.visitedCells
                 .some(p => v2.eqStrict(p, [x, t]));
+            const isCollected = sight.collectedCells
+                .some(p => v2.eqStrict(p, [x, t]));
 
             const stateChanged =
                 !parentState
                 || parentState.state.dropzone !== dropzone
                 || parentState.state.t !== t
                 || parentState.state.x !== x
-                || parentState.state.isVisited !== isVisited;
+                || parentState.state.isVisited !== isVisited
+                || parentState.state.isCollected !== isCollected;
 
             if (stateChanged) {
                 boxIndex = 0;
@@ -108,10 +111,12 @@ const createCellView = ({
                 if (!parentState) {
                     parentState = {
                         rootMatrixWorld,
-                        state: { t, x, isVisited, dropzone },
+                        state: { t, x, isVisited, isCollected, dropzone },
                     };
                 } else {
-                    parentState.state = { t, x, isVisited, dropzone };
+                    parentState.state = {
+                        t, x, isVisited, isCollected, dropzone,
+                    };
                 }
 
                 parent.updateMatrixWorld(true);
