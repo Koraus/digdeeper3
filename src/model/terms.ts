@@ -87,7 +87,9 @@ export const initSight = (dropzone: Dropzone): SightBody => ({
     playerPosition: [Math.floor(dropzone.width / 2), 0],
     playerEnergy: 81 * 3,
     visitedCells: [[Math.floor(dropzone.width / 2), 0]],
-    collectedCells: [],
+    collectedCells: neighborhoods[2]
+        .map(x => v2.add(x, [Math.floor(dropzone.width / 2), 0]))
+        .filter((x) => x[1] >= 0),
     depth: 0,
     log: "init",
     ok: true,

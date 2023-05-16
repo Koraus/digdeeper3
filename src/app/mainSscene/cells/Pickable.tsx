@@ -43,7 +43,7 @@ export function PickablePick({
     pickable.setColor(pickableColor);
 
     let iniitialTime = Infinity;
-    abuseFrame(({ rootMatrixWorld, state }, { clock }) => {
+    abuseFrame(({ rootMatrixWorld }, { clock }) => {
         if (iniitialTime === Infinity) { iniitialTime = clock.elapsedTime; }
 
         const timeSec = clock.elapsedTime - iniitialTime;

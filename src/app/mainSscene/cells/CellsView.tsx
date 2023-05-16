@@ -115,7 +115,10 @@ const createCellView = ({
                         state: { t, x, isVisited, isCollected, dropzone },
                     };
                 } else {
-                    parentState.prevState = parentState.state;
+                    parentState.prevState =
+                        dropzone !== parentState.state.dropzone
+                            ? undefined
+                            : parentState.state;
                     parentState.state = {
                         t, x, isVisited, isCollected, dropzone,
                     };
