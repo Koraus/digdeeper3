@@ -29,23 +29,15 @@ const getReducedNeighborhoodState = (
     const sc = stateCount
         + 1; // for out of bounds
     let s1 = 0;
-    for (let dt = -4; dt <= 0; dt++) {
-        for (let dx = -4; dx <= 0; dx++) {
+    for (let dt = -2; dt <= 2; dt++) {
+        for (let dx = -2; dx <= 2; dx++) {
             s1 *= sc;
             s1 += caForDropzone(dropzone).at(t + dt, x + dx)
                 ?? (stateCount + 0);
         }
     }
 
-    let s2 = 0;
-    for (let dt = 1; dt <= 4; dt++) {
-        for (let dx = 1; dx <= 4; dx++) {
-            s2 *= sc;
-            s2 += caForDropzone(dropzone).at(t + dt, x + dx)
-                ?? (stateCount + 0);
-        }
-    }
-    return s1 ^ s2;
+    return (t * dropzone.width + x) ^ s1;
 };
 
 const createCellView = ({
