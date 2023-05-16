@@ -3,7 +3,7 @@ import { LayoutContext } from "./LayoutContext";
 import { Grass } from "./Grass";
 import { Rock } from "./Rock";
 import { Bricks } from "./Bricks";
-import { Pickable } from "./Pickable";
+import { Pickable, PickablePick } from "./Pickable";
 import { Color, Matrix4, Quaternion, Vector3 } from "three";
 
 
@@ -28,6 +28,10 @@ export function Cell(ctx: LayoutContext) {
         _qs[0].identity(),
         _v3s[1].set(1, 2, 1),
     ).premultiply(rootMatrixWorld));
+
+    if (caState === 2 && isVisited) {
+        PickablePick(ctx);
+    }
 
     if (!isVisited) {
         if (caState === dropzone.world.emptyState) {
