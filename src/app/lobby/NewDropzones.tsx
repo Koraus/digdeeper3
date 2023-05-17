@@ -6,7 +6,6 @@ import { Dropzone } from "../../model/terms";
 import { Dice } from "@emotion-icons/fa-solid/Dice";
 import { ChevronForward } from "@emotion-icons/ionicons-solid/ChevronForward";
 import { useSetDropzone } from "./useSetDropzone";
-import { WorldСomposition } from "./WorldСomposition";
 
 export function NewDropzones({
     ...props
@@ -60,12 +59,6 @@ export function NewDropzones({
                     {worlds.map((world, i) => <div key={i} css={[{
                         position: "relative",
                     }]}>
-                        <WorldСomposition
-                            world={world.world}
-                            seed={world.seed}
-                            width={world.width}
-                            space={20}
-                        />
                         <DropzonePreview
                             css={[{
                                 margin: "0.1vmin",
