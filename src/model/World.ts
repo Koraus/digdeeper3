@@ -1,6 +1,6 @@
 import { version } from "./version";
 import { Code, keyProjectCode } from "../ca";
-import { ca } from "./ca";
+import { calculateComposition } from "../ca/calculateComposition";
 import { buildFullTransitionLookupTable, version as caVersion } from "../ca";
 import { getNumberFromDigits } from "../ca/digits";
 
@@ -16,34 +16,6 @@ export type World = {
     emptyState: CaState,
 };
 
-export function calculateCaComposition({
-    ca: caCode,
-    spaceSize,
-    timeSize,
-    seed,
-}: {
-    ca: Code;
-    spaceSize: number;
-    timeSize: number;
-    seed: number;
-}) {
-    const theCa = ca({
-        ca: caCode,
-        spaceSize,
-        emptyState: 1,
-        seed,
-    });
-
-    const compostion = [0, 0, 0];
-    for (let x = 1; x < spaceSize - 1; x++) {
-        for (let t = 3; t < timeSize + 3; t++) {
-            compostion[theCa._at(t, x)]++;
-        }
-    }
-    const sum = compostion.reduce((a, b) => a + b, 0);
-    return compostion.map((v) => v / sum);
-}
-
 export const generateRandomWorld = () => {
     const caCode =  {
         version: caVersion,
@@ -58,12 +30,7 @@ export const generateRandomWorld = () => {
         })(),
     };
 
-    const composition = calculateCaComposition({
-        ca: caCode,
-        spaceSize: 31,
-        timeSize: 51,
-        seed: 4242,
-    });
+    const composition = calculateComposition(caCode);
 
     const [stone, grass, energy] = composition
         .map((p, i) => [p, i])

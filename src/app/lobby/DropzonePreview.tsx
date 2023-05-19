@@ -6,7 +6,7 @@ import { useRecoilState } from "recoil";
 import { favoriteDropzonesRecoil } from "./favoriteDropzonesRecoil";
 import { eqDropzone } from "../../model/terms";
 import { Color } from "three";
-import { calculateCaComposition } from "../../model/World";
+import { calculateComposition } from "../../ca/calculateComposition";
 
 
 export function DropzonePreview({
@@ -22,12 +22,7 @@ export function DropzonePreview({
     const isFavoriteDropzone = favoriteDropzones
         .some((el) => eqDropzone(dropzone, el));
 
-    const composition = calculateCaComposition({
-        ca: dropzone.world.ca,
-        spaceSize: 31,
-        timeSize: 51,
-        seed: dropzone.seed,
-    });
+    const composition = calculateComposition(dropzone.world.ca);
 
     useEffect(() => {
         const canvasEl = canvasRef.current;

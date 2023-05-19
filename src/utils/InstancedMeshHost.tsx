@@ -1,4 +1,4 @@
-import { Color, InstancedMesh, Matrix4, Object3D } from "three";
+import { Color, InstancedMesh, Matrix4 } from "three";
 import { _throw } from "./_throw";
 
 export const zeroScaleMatrix = new Matrix4().set(

@@ -56,3 +56,4 @@ export const parseFullTransitionLookupTable = (code: Code) => {
     while (table.length < code.stateCount ** 4) { table.push(0); }
     return table;
 };
+
