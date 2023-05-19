@@ -18,6 +18,7 @@ export function ca({
     const spacetime = [
         Array.from({ length: spaceSize }, () => emptyState),
         Array.from({ length: spaceSize }, () => random.next() % stateCount),
+        Array.from({ length: spaceSize }, () => random.next() % stateCount),
     ];
 
     const _at = (t: number, x: number) => {
