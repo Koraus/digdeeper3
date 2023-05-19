@@ -1,5 +1,6 @@
+import { Dropzone } from "../model/Dropzone";
 import { World, keyProjectWorld } from "../model/World";
-import { Trek, caForDropzone, initSight, applyStep, sightAt, Dropzone, SightBody, trekDropzone } from "../model/terms";
+import { Trek, caForDropzone, initSight, applyStep, sightAt, SightBody, trekDropzone } from "../model/terms";
 import { v2 } from "../utils/v";
 import { FlatTrek } from "./FlatTrek";
 import { loadFlatTreks } from "./saver";

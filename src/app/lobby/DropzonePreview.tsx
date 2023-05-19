@@ -1,10 +1,10 @@
 import { useEffect, useRef } from "react";
 import type { jsx } from "@emotion/react";
-import { Dropzone, caForDropzone } from "../../model/terms";
+import { caForDropzone } from "../../model/terms";
 import { Star } from "@emotion-icons/ionicons-solid/Star";
 import { useRecoilState } from "recoil";
 import { favoriteDropzonesRecoil } from "./favoriteDropzonesRecoil";
-import { eqDropzone } from "../../model/terms";
+import { eqDropzone, Dropzone } from "../../model/Dropzone";
 import { Color } from "three";
 import { calculateComposition } from "../../ca/calculateComposition";
 

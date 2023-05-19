@@ -1,8 +1,9 @@
 import { atom } from "recoil";
-import { Trek, generateRandomDropzone, sightVersion } from "../model/terms";
+import { Trek, sightVersion } from "../model/terms";
 import { buildFullTransitionLookupTable, version as caVersion } from "../ca";
 import { getDigits, getNumberFromDigits } from "../ca/digits";
 import { caStateCount } from "../model/World";
+import { generateRandomDropzone } from "../model/Dropzone";
 
 
 export const trekRecoil = atom<Trek>({

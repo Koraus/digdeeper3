@@ -1,10 +1,11 @@
 import { useRecoilValue } from "recoil";
-import { trekDropzone, sightAt, generateRandomDropzone } from "../model/terms";
+import { trekDropzone, sightAt } from "../model/terms";
 import { trekRecoil } from "./trekRecoil";
 import { useSetDropzone } from "./lobby/useSetDropzone";
 import { RestartAlt } from "@emotion-icons/material/RestartAlt";
 import { PinDrop } from "@emotion-icons/material-outlined/PinDrop";
 import { World } from "@emotion-icons/boxicons-regular/World";
+import { generateRandomDropzone } from "../model/Dropzone";
 
 
 export function Gui() {

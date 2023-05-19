@@ -2,7 +2,7 @@ import { RenderCallback, ThreeElements, useFrame } from "@react-three/fiber";
 import { v2 } from "../../../utils/v";
 import { useRecoilValue } from "recoil";
 import { trekRecoil } from "../../trekRecoil";
-import { Dropzone, Trek, sightAt } from "../../../model/terms";
+import { Trek, sightAt } from "../../../model/terms";
 import { trekDropzone } from "../../../model/terms";
 import { caForDropzone } from "../../../model/terms";
 import { useMemo } from "react";
@@ -11,6 +11,7 @@ import { LehmerPrng } from "../../../utils/LehmerPrng";
 import { InstancedMeshHost, zeroScaleMatrix } from "../../../utils/InstancedMeshHost";
 import { ParentState } from "./LayoutContext";
 import { Cell } from "./Cell";
+import { Dropzone } from "../../../model/Dropzone";
 
 
 export const _m4s = Array.from({ length: 10 }, () => new Matrix4());

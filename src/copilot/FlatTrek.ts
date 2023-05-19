@@ -1,4 +1,5 @@
-import { TrekStep, Dropzone, Trek } from "../model/terms";
+import { Dropzone } from "../model/Dropzone";
+import { TrekStep, Trek } from "../model/terms";
 
 export type FlatTrek = {
     dropzone: Dropzone;

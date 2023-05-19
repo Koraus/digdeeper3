@@ -1,11 +1,10 @@
 import { useState } from "react";
 import type { jsx } from "@emotion/react";
-import { generateRandomDropzone } from "../../model/terms";
 import { DropzonePreview } from "./DropzonePreview";
-import { Dropzone } from "../../model/terms";
 import { Dice } from "@emotion-icons/fa-solid/Dice";
 import { ChevronForward } from "@emotion-icons/ionicons-solid/ChevronForward";
 import { useSetDropzone } from "./useSetDropzone";
+import { Dropzone, generateRandomDropzone } from "../../model/Dropzone";
 
 export function NewDropzones({
     ...props

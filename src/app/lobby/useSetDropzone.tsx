@@ -1,9 +1,8 @@
 import { useRecoilState } from "recoil";
 import { trekRecoil } from "../trekRecoil";
 import { historicalWorldsRecoil } from "./historicalWorldsRecoil";
-import { Dropzone } from "../../model/terms";
-import { eqDropzone } from "../../model/terms";
 import { saveTrek } from "../../copilot/saver";
+import { Dropzone, eqDropzone } from "../../model/Dropzone";
 
 
 export function useSetDropzone() {
