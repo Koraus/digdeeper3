@@ -54,7 +54,7 @@ const createCellView = ({
     onFrame: (callback: RenderCallback) => void,
 }) => {
     const boxPool = Array.from(
-        { length: 5 },
+        { length: 10 },
         () => boxHost.getFreeClientOrThrow());
     let boxIndex = 0;
     const abuseBox = () => boxPool[boxIndex++];
@@ -180,7 +180,7 @@ export function CellsView({
         const boxHost = new InstancedMeshHost(
             new BoxGeometry(),
             new MeshPhongMaterial(),
-            tc * xc * 5,
+            tc * xc * 10,
         );
         boxHost.receiveShadow = true;
         boxHost.castShadow = true;

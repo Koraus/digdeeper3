@@ -6,6 +6,7 @@ import { useRecoilState } from "recoil";
 import { favoriteDropzonesRecoil } from "./favoriteDropzonesRecoil";
 import { eqDropzone } from "../../model/terms";
 import { Color } from "three";
+import { calculateCaComposition } from "../../model/World";
 
 
 export function DropzonePreview({
@@ -20,6 +21,13 @@ export function DropzonePreview({
 
     const isFavoriteDropzone = favoriteDropzones
         .some((el) => eqDropzone(dropzone, el));
+
+    const composition = calculateCaComposition({
+        ca: dropzone.world.ca,
+        spaceSize: 31,
+        timeSize: 51,
+        seed: dropzone.seed,
+    });
 
     useEffect(() => {
         const canvasEl = canvasRef.current;
@@ -59,9 +67,21 @@ export function DropzonePreview({
         ctx.drawImage(canvasEl, 0, 0, w, h, 0, 0, w * scale, h * scale);
     }, [canvasRef.current, dropzone]);
 
-    return <div {...props} css={[{
-        position: "relative",
-    }]} >
+    return <div {...props} css={[{ position: "relative" }]}>
+        <div
+            css={[{
+                position: "absolute",
+                top: "0.1vmin",
+                left: "0.2vmin",
+                borderRadius: "4px",
+                backgroundColor: "#8b4899",
+                padding: "0.15vmin",
+            }]}
+        >{composition.map((v, i) => {
+            return <span key={i}> {i} - {Math.round(v * 100)}%
+                {i + 1 < composition.length && ","} </span>;
+        })}
+        </div>
         <div
             css={[{
                 position: "absolute",
