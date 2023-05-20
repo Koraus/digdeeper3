@@ -1,7 +1,7 @@
-import { TrekStep, Dropzone, Trek } from "../model/terms";
+import { TrekStep, Trek, TrekStart } from "../model/terms";
 
 export type FlatTrek = {
-    dropzone: Dropzone;
+    start: TrekStart;
     array: TrekStep[];
 };
 
@@ -14,5 +14,5 @@ export function flattenTrek(trek: Trek): FlatTrek {
         t = t.prev;
     }
     array.reverse();
-    return { dropzone: t.dropzone, array };
+    return { start: t, array };
 }

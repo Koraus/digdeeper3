@@ -51,9 +51,14 @@ export const keyProjectCode = ({
 
 export const keyifyCode = (code: Code) => JSON.stringify(keyProjectCode(code));
 
-export const parseFullTransitionLookupTable = (code: Code) => {
-    const table = getDigits(BigInt(code.rule), code.stateCount);
-    while (table.length < code.stateCount ** 4) { table.push(0); }
+export const parseFullTransitionLookupTable = ({
+    stateCount, rule,
+}: {
+    stateCount: number;
+    rule: string; // BigInt base 10
+}) => {
+    const table = getDigits(BigInt(rule), stateCount);
+    while (table.length < stateCount ** 4) { table.push(0); }
     return table;
 };
 

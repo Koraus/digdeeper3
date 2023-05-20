@@ -10,15 +10,19 @@ Play [development build](https://ndry.github.io/digdeeper3/) on GitHub Pages
 There is a math universe to explore and map, and the player is a cartographer.
 
 The universe consists of `Worlds` defined mainly by `Cellular Automata`.
-Not all `Worlds` are fun to explore, but none are hostile.
+Not all `Worlds` are fun to explore, 
+so collectively the cartographers are looking for the ones that are.
 
 The `Basecamp` is a common space for the players to share their findings.
 
-The `Dropzone` defines a point in the `World` (seed)
-and the initial player state.
+The `Dropzone` defines a point in the `World` - the parameters to generate
+the specific instance of the `Cellular Automaton` (mainly, the seed).
 
 The `Trek` is a player-made path through the `World`.
 A single step of the `Trek` may be refferred as a `TrekStep`.
+
+The `Drop` or the `TrekStart` describes the player and the `Dropzone`.
+The `Drop` is a single play attempt.
 
 The `Sight` is a computed state, 
 all the data available to the player at a given step of the `Trek`.

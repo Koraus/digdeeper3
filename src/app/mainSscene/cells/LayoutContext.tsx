@@ -1,7 +1,7 @@
 import { RenderCallback } from "@react-three/fiber";
 import { InstancedMeshHost } from "../../../utils/InstancedMeshHost";
 import { Matrix4 } from "three";
-import { Dropzone } from "../../../model/terms";
+import { Dropzone } from "../../../model/Dropzone";
 
 
 export type ParentState = {

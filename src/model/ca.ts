@@ -4,11 +4,11 @@ import { Code, parseFullTransitionLookupTable } from "../ca";
 
 
 export function ca({
-    ca: caCode, spaceSize, seed, emptyState,
+    ca: caCode, spaceSize, seed, startFillState,
 }: {
     ca: Code;
     spaceSize: number;
-    emptyState: number;
+    startFillState: number;
     seed: number;
 }) {
     const { stateCount } = caCode;
@@ -16,7 +16,8 @@ export function ca({
     const random = new LehmerPrng(seed);
 
     const spacetime = [
-        Array.from({ length: spaceSize }, () => emptyState),
+        Array.from({ length: spaceSize }, () => startFillState),
+        Array.from({ length: spaceSize }, () => random.next() % stateCount),
         Array.from({ length: spaceSize }, () => random.next() % stateCount),
     ];
 

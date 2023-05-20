@@ -7,7 +7,7 @@ module.exports = {
     ],
     overrides: [],
     parser: "@typescript-eslint/parser",
-    parserOptions: { 
+    parserOptions: {
         ecmaVersion: "latest",
     },
     extends: [
@@ -28,5 +28,14 @@ module.exports = {
         "comma-dangle": ["warn", "always-multiline"],
         "no-warning-comments": ["warn"],
         "no-console": ["warn", { allow: ["warn", "error"] }],
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": [
+            "warn", // or "error"
+            {
+                "argsIgnorePattern": "^_",
+                "varsIgnorePattern": "^_",
+                "caughtErrorsIgnorePattern": "^_"
+            }
+        ],
     },
 };

@@ -1,5 +1,6 @@
+import { Dropzone } from "../model/Dropzone";
 import { World, keyProjectWorld } from "../model/World";
-import { Trek, caForDropzone, initSight, applyStep, sightAt, Dropzone, SightBody, trekDropzone } from "../model/terms";
+import { Trek, caForDropzone, initSight, applyStep, sightAt, SightBody, trekDropzone } from "../model/terms";
 import { v2 } from "../utils/v";
 import { FlatTrek } from "./FlatTrek";
 import { loadFlatTreks } from "./saver";
@@ -151,10 +152,10 @@ export const processTrek = (
     windowLength: number,
     neighborhood: v2[],
 ) => {
-    let sight = initSight(flatTrek.dropzone);
+    let sight = initSight(flatTrek.start);
 
     const rns = getReducedNeighborhoodState(
-        flatTrek.dropzone, sight, neighborhood);
+        flatTrek.start.dropzone, sight, neighborhood);
     const states = [rns * (indexedActions.length + 1) + indexedActions.length];
     for (let i = 0; i < flatTrek.array.length; i++) {
         const step = flatTrek.array[i];
@@ -169,9 +170,9 @@ export const processTrek = (
             }
         }
 
-        sight = applyStep(flatTrek.dropzone, sight, step);
+        sight = applyStep(flatTrek.start, sight, step);
         const rns = getReducedNeighborhoodState(
-            flatTrek.dropzone, sight, neighborhood);
+            flatTrek.start.dropzone, sight, neighborhood);
         states.push(rns + actionIndices[step.action]);
         states.splice(0, states.length - windowLength);
     }
