@@ -1,19 +1,19 @@
 import { useRecoilValue } from "recoil";
-import { trekDropzone, sightAt } from "../model/terms";
+import { sightAt, startForTrek } from "../model/terms";
 import { trekRecoil } from "./trekRecoil";
-import { useSetDropzone } from "./lobby/useSetDropzone";
 import { RestartAlt } from "@emotion-icons/material/RestartAlt";
 import { PinDrop } from "@emotion-icons/material-outlined/PinDrop";
 import { World } from "@emotion-icons/boxicons-regular/World";
 import { generateRandomDropzone } from "../model/Dropzone";
+import { useSetDrop } from "./lobby/useSetDropzone";
 
 
 export function Gui() {
     const progression = useRecoilValue(trekRecoil);
     const sight = sightAt(progression);
-    const dropzone = trekDropzone(progression);
+    const drop = startForTrek(progression);
 
-    const setDropzone = useSetDropzone();
+    const setDrop = useSetDrop();
 
     return <div>
 
@@ -22,7 +22,7 @@ export function Gui() {
         <div>Z to undo</div>
         <div>---</div>
         <div>p: {sight.playerPosition.join(",")}</div>
-        <div>Seed: {dropzone.seed}</div>
+        <div>Seed: {drop.dropzone.seed}</div>
         <div>Energy: {sight.playerEnergy}</div>
         <div>Last move: {sight.log}</div>
         <div css={{
@@ -31,7 +31,7 @@ export function Gui() {
             flexWrap: "wrap",
         }}>
             <button
-                onClick={() => setDropzone(dropzone)}
+                onClick={() => setDrop(drop)}
                 css={[{
                     display: "flex",
                     alignItems: "center",
@@ -49,9 +49,13 @@ export function Gui() {
                     display: "flex",
                     alignItems: "center",
                 }]}
-                onClick={() =>
-                    setDropzone(generateRandomDropzone(dropzone.world))}
-
+                onClick={() => setDrop({
+                    dropzone: generateRandomDropzone(drop.dropzone.world),
+                    depthLeftBehind: 10,
+                    equipment: {
+                        pickNeighborhoodIndex: 0,
+                    },
+                })}
             >
                 <PinDrop
                     css={[{
@@ -65,9 +69,13 @@ export function Gui() {
                     display: "flex",
                     alignItems: "center",
                 }]}
-                onClick={() =>
-                    setDropzone(generateRandomDropzone())
-                }
+                onClick={() => setDrop({
+                    dropzone: generateRandomDropzone(),
+                    depthLeftBehind: 10,
+                    equipment: {
+                        pickNeighborhoodIndex: 0,
+                    },
+                })}
             >
                 <World
                     css={[{

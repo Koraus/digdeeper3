@@ -1,11 +1,11 @@
 import { LehmerPrng } from "../utils/LehmerPrng";
 import { fillSpace } from "./fillSpace";
 import { Code, parseFullTransitionLookupTable } from ".";
+import memoize from "memoizee";
 
 
-export function calculateComposition(caCode: Code) {
-    const { stateCount } = caCode;
-    const table = parseFullTransitionLookupTable(caCode);
+const _calculateComposition = memoize((stateCount: number, rule: string) => {
+    const table = parseFullTransitionLookupTable({ stateCount, rule });
 
     const spaceSize = 100;
     const timeSize = 1000;
@@ -45,4 +45,7 @@ export function calculateComposition(caCode: Code) {
 
     const sum = compostion.reduce((a, b) => a + b, 0);
     return compostion.map(c => c / sum);
-}
+});
+
+export const getComposition = (caCode: Code) => 
+    _calculateComposition(caCode.stateCount, caCode.rule);

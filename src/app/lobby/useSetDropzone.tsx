@@ -2,21 +2,21 @@ import { useRecoilState } from "recoil";
 import { trekRecoil } from "../trekRecoil";
 import { historicalWorldsRecoil } from "./historicalWorldsRecoil";
 import { saveTrek } from "../../copilot/saver";
-import { Dropzone, eqDropzone } from "../../model/Dropzone";
+import { Drop } from "../../model/terms";
+import { eqDropzone } from "../../model/Dropzone";
 
 
-export function useSetDropzone() {
+export function useSetDrop() {
     const [trek, setTrek] = useRecoilState(trekRecoil);
     const [historicalWorlds, setHistoricalWorlds] =
         useRecoilState(historicalWorldsRecoil);
-    return (dropzone: Dropzone) => {
+    return (drop: Drop) => {
         saveTrek(trek);
         setHistoricalWorlds([
-            dropzone,
+            drop.dropzone,
             ...historicalWorlds
-                .filter(p => !eqDropzone(p, dropzone)),
+                .filter(p => !eqDropzone(p, drop.dropzone)),
         ]);
-        setTrek({ dropzone });
-        
+        setTrek(drop);
     };
 }

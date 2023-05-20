@@ -43,7 +43,7 @@ export function Cell(ctx: LayoutContext) {
     }
 
     if (!isVisited) {
-        if (caState === dropzone.world.emptyState) {
+        if (caState === dropzone.startFillState) {
             Grass(ctx);
         }
         if (caState === 0) {

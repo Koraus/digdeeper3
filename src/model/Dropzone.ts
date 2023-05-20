@@ -1,12 +1,13 @@
+import { getComposition } from "../ca/calculateComposition";
 import { LehmerPrng } from "../utils/LehmerPrng";
-import { World, generateRandomWorld } from "./World";
+import { CaState, World, generateRandomWorld } from "./World";
 
 
 export type Dropzone = {
     world: World,
     seed: number,
     width: number,
-    depthLeftBehind: number,
+    startFillState: CaState,
 };
 
 export const generateRandomDropzone = (
@@ -15,7 +16,16 @@ export const generateRandomDropzone = (
     world,
     seed: Math.floor(Math.random() * LehmerPrng.MAX_INT32),
     width: 51,
-    depthLeftBehind: 10,
+    startFillState: (() => {
+        const composition = getComposition(world.ca);
+
+        const [_stone, grass, _energy] = composition
+            .map((p, i) => [p, i])
+            .sort(([a], [b]) => b - a)
+            .map(([_, i]) => i);
+
+        return grass;
+    })(),
 });
 
 export const eqStringify = <T>(a: T, b: T) =>

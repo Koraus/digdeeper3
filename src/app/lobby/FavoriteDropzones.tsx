@@ -5,7 +5,7 @@ import { ChevronForward } from "@emotion-icons/ionicons-solid/ChevronForward";
 import { favoriteDropzonesRecoil } from "./favoriteDropzonesRecoil";
 import { useRecoilValue } from "recoil";
 import { DropzonePreview } from "./DropzonePreview";
-import { useSetDropzone } from "./useSetDropzone";
+import { useSetDrop } from "./useSetDropzone";
 
 
 export function FavoriteDropzones({
@@ -14,7 +14,7 @@ export function FavoriteDropzones({
 
     const [isOpen, setIsOpen] = useState(false);
     const favoriteDropzones = useRecoilValue(favoriteDropzonesRecoil);
-    const setDropzone = useSetDropzone();
+    const setDrop = useSetDrop();
 
     return <div  {...props} css={[{ marginBottom: "1vmin" }]}>
         <h3
@@ -51,7 +51,13 @@ export function FavoriteDropzones({
                         }]}
                         dropzone={dropzone} />
                     <button
-                        onClick={() => setDropzone(dropzone)}
+                        onClick={() => setDrop({
+                            dropzone,
+                            depthLeftBehind: 10,
+                            equipment: {
+                                pickNeighborhoodIndex: 0,
+                            },
+                        })}
                         css={[{
                             position: "absolute",
                             bottom: "1vmin",

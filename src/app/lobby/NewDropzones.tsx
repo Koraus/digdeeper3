@@ -3,19 +3,19 @@ import type { jsx } from "@emotion/react";
 import { DropzonePreview } from "./DropzonePreview";
 import { Dice } from "@emotion-icons/fa-solid/Dice";
 import { ChevronForward } from "@emotion-icons/ionicons-solid/ChevronForward";
-import { useSetDropzone } from "./useSetDropzone";
+import { useSetDrop } from "./useSetDropzone";
 import { Dropzone, generateRandomDropzone } from "../../model/Dropzone";
 
 export function NewDropzones({
     ...props
 }: jsx.JSX.IntrinsicElements["div"]) {
     const [isOpen, setIsOpen] = useState(false);
-    const [worlds, setWorlds] = useState<Dropzone[]>();
+    const [dropzones, setDropzones] = useState<Dropzone[]>();
 
-    const setDropzone = useSetDropzone();
+    const setDrop = useSetDrop();
 
-    if (!worlds) {
-        setWorlds(Array.from({ length: 5 }, () => generateRandomDropzone()));
+    if (!dropzones) {
+        setDropzones(Array.from({ length: 5 }, () => generateRandomDropzone()));
     }
 
     return <div {...props}>
@@ -44,25 +44,25 @@ export function NewDropzones({
                 css={[{
                     margin: "0.9vmin 0",
                 }]}
-                onClick={() => setWorlds(
+                onClick={() => setDropzones(
                     Array.from(
                         { length: 5 },
                         () => generateRandomDropzone()))}> Reroll </button>
-            {worlds
+            {dropzones
                 && <div css={[{
                     listStyle: "none",
                     display: "flex",
                     flexDirection: "row",
                     flexWrap: "wrap",
                 }]}>
-                    {worlds.map((world, i) => <div key={i} css={[{
+                    {dropzones.map((dropzone, i) => <div key={i} css={[{
                         position: "relative",
                     }]}>
                         <DropzonePreview
                             css={[{
                                 margin: "0.1vmin",
                             }]}
-                            dropzone={world} />
+                            dropzone={dropzone} />
                         <button
                             css={[{
                                 position: "absolute",
@@ -70,7 +70,13 @@ export function NewDropzones({
                                 left: "50%",
                                 transform: "translateX(-50%)",
                             }]}
-                            onClick={() => setDropzone(world)}
+                            onClick={() => setDrop({
+                                dropzone: dropzone,
+                                depthLeftBehind: 10,
+                                equipment: {
+                                    pickNeighborhoodIndex: 0,
+                                },
+                            })}
                         > Play!</button>
                     </div>)}
                 </div>}

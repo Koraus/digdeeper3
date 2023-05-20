@@ -2,7 +2,7 @@ import type { jsx } from "@emotion/react";
 import { FavoriteDropzones} from "./FavoriteDropzones";
 import { HistoricalWorlds } from "./HistoricalWorlds";
 import { NewDropzones } from "./NewDropzones";
-import {СurrentWorldInfo} from "./СurrentWorldInfo";
+import {СurrentDropInfo} from "./СurrentDropInfo";
 
 
 export function WorldSelectionPanel({
@@ -17,7 +17,7 @@ export function WorldSelectionPanel({
         }, cssProp]}
         {...props}
     >
-        <СurrentWorldInfo/>
+        <СurrentDropInfo/>
         <NewDropzones/>
         <FavoriteDropzones/>
         <HistoricalWorlds />

@@ -13,8 +13,17 @@ export type MoveAction =
     | "left" // x--
     | "right"; // x++
 
+export type Drop = {
+    dropzone: Dropzone,
+    equipment: {
+        pickNeighborhoodIndex: number,
+    },
+    depthLeftBehind: number,
+}
+
+export type TrekStart = Drop;
 export type TrekStep = { action: MoveAction };
-export type Trek = { dropzone: Dropzone } | (TrekStep & { prev: Trek });
+export type Trek = TrekStart | (TrekStep & { prev: Trek });
 
 export type SightBody = {
     playerPosition: v2,
@@ -28,9 +37,15 @@ export type SightBody = {
 
 export type Sight = SightBody & { trek: Trek };
 
-export function trekDropzone(trek: Trek): Dropzone {
-    if (!("prev" in trek)) { return trek.dropzone; }
-    return trekDropzone(trek.prev);
+/**
+ * @deprecated use `startForTrek(trek).dropzone`
+ */
+export const trekDropzone = (trek: Trek): Dropzone =>
+    startForTrek(trek).dropzone;
+
+export function startForTrek(trek: Trek): TrekStart {
+    if (!("prev" in trek)) { return trek; }
+    return startForTrek(trek.prev);
 }
 
 export const directionEnergyDrain = {
@@ -49,7 +64,7 @@ export const directionVec = {
 export const caForDropzone = memoize((dropzone: Dropzone) => ca({
     ca: dropzone.world.ca,
     spaceSize: dropzone.width,
-    emptyState: dropzone.world.emptyState,
+    startFillState: dropzone.startFillState,
     seed: dropzone.seed,
 }));
 
@@ -61,7 +76,7 @@ function getLastOkSight(sight: Sight): Sight {
     return sight; // init sight is always ok
 }
 
-export const initSight = (dropzone: Dropzone): SightBody => ({
+export const initSight = ({ dropzone }: TrekStart): SightBody => ({
     playerPosition: [Math.floor(dropzone.width / 2), 0],
     playerEnergy: 81 * 3,
     visitedCells: [[Math.floor(dropzone.width / 2), 0]],
@@ -86,14 +101,17 @@ const neighborhoods = [[
 ]] as v2[][];
 
 export const applyStep = (
-    dropzone: Dropzone,
+    start: TrekStart,
     prevSight: SightBody,
     trek: TrekStep,
 ) => {
     const {
+        dropzone,
+        depthLeftBehind,
+    } = start;
+    const {
         world,
         width,
-        depthLeftBehind,
     } = dropzone;
     const {
         stateEnergyDrain,
@@ -195,11 +213,10 @@ export const applyStep = (
 export const sightAt = memoize((trek: Trek): Sight => {
     let sight;
     if (!("prev" in trek)) {
-        sight = initSight(trek.dropzone);
+        sight = initSight(trek);
     } else {
         const prevSight = getLastOkSight(sightAt(trek.prev));
-        const dropzone = trekDropzone(trek);
-        sight = applyStep(dropzone, prevSight, trek);
+        sight = applyStep(startForTrek(trek), prevSight, trek);
     }
 
     return { ...sight, trek };

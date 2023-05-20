@@ -1,12 +1,12 @@
-import { Box, GizmoHelper, GizmoViewport, PerspectiveCamera } from "@react-three/drei";
+import { GizmoHelper, GizmoViewport, PerspectiveCamera } from "@react-three/drei";
 import { CellsView } from "./cells/CellsView";
 import { PlayerView } from "./PlayerView";
 import { CopilotView } from "./CopilotView";
 import { StopLine } from "./StopLine";
 import { GroupSync } from "../../utils/GroupSync";
-import { MeshPhongMaterial, Object3D, Vector3 } from "three";
+import { Object3D, Vector3 } from "three";
 import { dampVector3 } from "../../utils/dampVector3";
-import { useMemo, useRef } from "react";
+import { useMemo } from "react";
 
 export function MainScene() {
     const lightTarget = useMemo(() => new Object3D(), []);
@@ -33,7 +33,7 @@ export function MainScene() {
 
         <PlayerView>
             <primitive object={lightTarget} />
-            <GroupSync onFrame={(g) => {
+            <GroupSync onFrame={(_g) => {
                 // g.position.random().multiplyScalar(0.1);
             }} >
                 <directionalLight
@@ -86,14 +86,5 @@ export function MainScene() {
         <StopLine />
 
         <CellsView tCellsPerScreen={61} xCellsPerScreen={51} />
-
-        {/* <Box
-            args={[10, 10, 10]}
-            position={[10, 0, 20]}
-            castShadow
-            receiveShadow
-        >
-            <meshPhongMaterial />
-        </Box> */}
     </>;
 }

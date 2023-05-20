@@ -8,7 +8,7 @@ export const saverVersion = "digdeeper3/copilot/saver@2";
 export function saveFlatTrek(flatTrek: FlatTrek) {
     const countKey = JSON.stringify({
         saverVersion,
-        world: keyProjectWorld(flatTrek.dropzone.world),
+        world: keyProjectWorld(flatTrek.start.dropzone.world),
         key: "count",
     });
 
@@ -17,7 +17,7 @@ export function saveFlatTrek(flatTrek: FlatTrek) {
     const trekId = count;
     const trekKey = JSON.stringify({
         saverVersion,
-        world: keyProjectWorld(flatTrek.dropzone.world),
+        world: keyProjectWorld(flatTrek.start.dropzone.world),
         key: "trek",
         trekId,
     });

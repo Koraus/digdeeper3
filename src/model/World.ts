@@ -1,6 +1,6 @@
 import { version } from "./version";
 import { Code, keyProjectCode } from "../ca";
-import { calculateComposition } from "../ca/calculateComposition";
+import { getComposition } from "../ca/calculateComposition";
 import { buildFullTransitionLookupTable, version as caVersion } from "../ca";
 import { getNumberFromDigits } from "../ca/digits";
 
@@ -13,7 +13,6 @@ export type World = {
     ca: Code,
     stateEnergyDrain: [number, number, number],
     stateEnergyGain: [number, number, number],
-    emptyState: CaState,
 };
 
 export const generateRandomWorld = () => {
@@ -30,7 +29,7 @@ export const generateRandomWorld = () => {
         })(),
     };
 
-    const composition = calculateComposition(caCode);
+    const composition = getComposition(caCode);
 
     const [stone, grass, energy] = composition
         .map((p, i) => [p, i])
@@ -52,19 +51,17 @@ export const generateRandomWorld = () => {
         ca: caCode,
         stateEnergyDrain,
         stateEnergyGain,
-        emptyState: stateEnergyGain[grass],
     } as World;
 
 };
 
 export const keyProjectWorld = ({
-    sightVersion, ca, stateEnergyDrain, stateEnergyGain, emptyState,
+    sightVersion, ca, stateEnergyDrain, stateEnergyGain,
 }: World) => ({
     sightVersion,
     ca: keyProjectCode(ca),
     stateEnergyDrain: stateEnergyDrain.slice(0, ca.stateCount),
     stateEnergyGain: stateEnergyGain.slice(0, ca.stateCount),
-    emptyState,
 });
 
 export const keyifyWorld = (world: World) =>

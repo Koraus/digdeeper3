@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Time } from "@emotion-icons/ionicons-solid/Time";
 import { historicalWorldsRecoil } from "./historicalWorldsRecoil";
 import { ChevronForward } from "@emotion-icons/ionicons-solid/ChevronForward";
-import { useSetDropzone } from "./useSetDropzone";
+import { useSetDrop } from "./useSetDropzone";
 
 
 export function HistoricalWorlds({
@@ -15,7 +15,7 @@ export function HistoricalWorlds({
 
     const [isOpen, setIsOpen] = useState(false);
 
-    const setDropzone = useSetDropzone();
+    const setDrop = useSetDrop();
 
 
     return <div  {...props} css={[{ marginBottom: "1vmin" }]}>
@@ -65,7 +65,13 @@ export function HistoricalWorlds({
                                 left: "50%",
                                 transform: "translateX(-50%)",
                             }]}
-                            onClick={() => setDropzone(p)}
+                            onClick={() => setDrop({
+                                dropzone: p,
+                                depthLeftBehind: 10,
+                                equipment: {
+                                    pickNeighborhoodIndex: 0,
+                                },
+                            })}
                         > Play!</button>
                     </div>)}
             </div>}
