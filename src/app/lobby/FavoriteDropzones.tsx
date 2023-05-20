@@ -5,7 +5,7 @@ import { ChevronForward } from "@emotion-icons/ionicons-solid/ChevronForward";
 import { favoriteDropzonesRecoil } from "./favoriteDropzonesRecoil";
 import { useRecoilValue } from "recoil";
 import { DropzonePreview } from "./DropzonePreview";
-import { useSetDrop } from "./useSetDropzone";
+import { useSetDrop } from "../useSetDrop";
 
 
 export function FavoriteDropzones({

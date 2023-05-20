@@ -5,7 +5,7 @@ import { useState } from "react";
 import { Time } from "@emotion-icons/ionicons-solid/Time";
 import { historicalWorldsRecoil } from "./historicalWorldsRecoil";
 import { ChevronForward } from "@emotion-icons/ionicons-solid/ChevronForward";
-import { useSetDrop } from "./useSetDropzone";
+import { useSetDrop } from "../useSetDrop";
 
 
 export function HistoricalWorlds({

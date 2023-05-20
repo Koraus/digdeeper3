@@ -5,13 +5,14 @@ import { RestartAlt } from "@emotion-icons/material/RestartAlt";
 import { PinDrop } from "@emotion-icons/material-outlined/PinDrop";
 import { World } from "@emotion-icons/boxicons-regular/World";
 import { generateRandomDropzone } from "../model/Dropzone";
-import { useSetDrop } from "./lobby/useSetDropzone";
+import { useSetDrop } from "./useSetDrop";
 
 
 export function Gui() {
     const progression = useRecoilValue(trekRecoil);
     const sight = sightAt(progression);
     const drop = startForTrek(progression);
+    const world = drop.dropzone.world;
 
     const setDrop = useSetDrop();
 
@@ -21,8 +22,18 @@ export function Gui() {
         <div>С to accept hint</div>
         <div>Z to undo</div>
         <div>---</div>
+        {world.sightVersion}<br />
+        -- ca rule: {world.ca.rule}<br />
+        -- drain: {world.stateEnergyDrain.join(" ")}
+        &nbsp;/ gain: {world.stateEnergyGain.join(" ")}<br />
+
+        - startFillState: {drop.dropzone.startFillState}<br />
+        - seed: {drop.dropzone.seed}<br />
+        - width: {drop.dropzone.width}<br />
+        depthLeftBehind:{drop.depthLeftBehind} <br />
+        equipment:{JSON.stringify(drop.equipment)}<br />
+        <div>---</div>
         <div>p: {sight.playerPosition.join(",")}</div>
-        <div>Seed: {drop.dropzone.seed}</div>
         <div>Energy: {sight.playerEnergy}</div>
         <div>Last move: {sight.log}</div>
         <div css={{

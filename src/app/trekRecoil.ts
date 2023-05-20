@@ -29,6 +29,6 @@ export const trekRecoil = atom<Trek>({
         equipment: {
             pickNeighborhoodIndex: 0,
         },
-        depthLeftBehind: 0,
+        depthLeftBehind: 10,
     },
 });

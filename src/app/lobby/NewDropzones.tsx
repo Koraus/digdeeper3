@@ -3,7 +3,7 @@ import type { jsx } from "@emotion/react";
 import { DropzonePreview } from "./DropzonePreview";
 import { Dice } from "@emotion-icons/fa-solid/Dice";
 import { ChevronForward } from "@emotion-icons/ionicons-solid/ChevronForward";
-import { useSetDrop } from "./useSetDropzone";
+import { useSetDrop } from "../useSetDrop";
 import { Dropzone, generateRandomDropzone } from "../../model/Dropzone";
 
 export function NewDropzones({
