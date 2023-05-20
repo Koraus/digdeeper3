@@ -73,7 +73,7 @@ export function DropzonePreview({
                 padding: "0.15vmin",
             }]}
         >{composition.map((v, i) => {
-            return <span key={i}> {i} - {Math.round(v * 100)}%
+            return <span key={i}> {i} - {(v * 100).toPrecision(2)}%
                 {i + 1 < composition.length && ","} </span>;
         })}
         </div>

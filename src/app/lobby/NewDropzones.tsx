@@ -6,6 +6,7 @@ import { Dropzone } from "../../model/terms";
 import { Dice } from "@emotion-icons/fa-solid/Dice";
 import { ChevronForward } from "@emotion-icons/ionicons-solid/ChevronForward";
 import { useSetDropzone } from "./useSetDropzone";
+import { calculateComposition } from "../../ca/calculateComposition";
 
 export function NewDropzones({
     ...props
@@ -47,7 +48,7 @@ export function NewDropzones({
                 }]}
                 onClick={() => setWorlds(
                     Array.from(
-                        { length: 5 },
+                        { length: 50 },
                         () => generateRandomDropzone()))}> Reroll </button>
             {worlds
                 && <div css={[{
@@ -56,24 +57,29 @@ export function NewDropzones({
                     flexDirection: "row",
                     flexWrap: "wrap",
                 }]}>
-                    {worlds.map((world, i) => <div key={i} css={[{
-                        position: "relative",
-                    }]}>
-                        <DropzonePreview
-                            css={[{
-                                margin: "0.1vmin",
-                            }]}
-                            dropzone={world} />
-                        <button
-                            css={[{
-                                position: "absolute",
-                                bottom: "1vmin",
-                                left: "50%",
-                                transform: "translateX(-50%)",
-                            }]}
-                            onClick={() => setDropzone(world)}
-                        > Play!</button>
-                    </div>)}
+                    {worlds.map((world, i) => {
+                        const composition =
+                            calculateComposition(world.world.ca);
+                        if (composition[0] < 0.3) { return; }
+                        return <div key={i} css={[{
+                            position: "relative",
+                        }]}>
+                            <DropzonePreview
+                                css={[{
+                                    margin: "0.1vmin",
+                                }]}
+                                dropzone={world} />
+                            <button
+                                css={[{
+                                    position: "absolute",
+                                    bottom: "1vmin",
+                                    left: "50%",
+                                    transform: "translateX(-50%)",
+                                }]}
+                                onClick={() => setDropzone(world)}
+                            > Play!</button>
+                        </div>;
+                    })}
                 </div>}
         </div>
     </div>;
