@@ -67,7 +67,7 @@ export function MainScene() {
                         camera.position.copy(p);
                     } else if (camera.position.distanceTo(p) > 0.1) {
                         dampVector3(
-                            camera.position, camera.position, p, 3, delta);
+                            camera.position, camera.position, p, 10, delta);
                     } else {
                         // 
                     }
