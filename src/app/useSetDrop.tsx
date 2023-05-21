@@ -1,6 +1,6 @@
 import { useRecoilState } from "recoil";
 import { trekRecoil } from "./trekRecoil";
-import { historicalWorldsRecoil } from "./lobby/historicalWorldsRecoil";
+import { historicalWorldsRecoil } from "./basecamp/historicalWorldsRecoil";
 import { saveTrek } from "../copilot/saver";
 import { Drop } from "../model/terms";
 import { eqDropzone } from "../model/Dropzone";

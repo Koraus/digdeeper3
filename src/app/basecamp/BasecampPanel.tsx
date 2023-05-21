@@ -12,8 +12,7 @@ export function WorldSelectionPanel({
 
     return <div
         css={[{
-            background: "#000000b0",
-            border: "1px solid #ffffffb0",
+            //
         }, cssProp]}
         {...props}
     >
