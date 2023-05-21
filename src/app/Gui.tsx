@@ -7,6 +7,8 @@ import { World } from "@emotion-icons/boxicons-regular/World";
 import { generateRandomDropzone } from "../model/Dropzone";
 import { useSetDrop } from "./basecamp/useSetDrop";
 import { jsx } from "@emotion/react";
+import { caStateCount, generateRandomWorld } from "../model/World";
+import { generateRandomSymmetricalRule } from "../ca/generateRandomSymmetricalRule";
 
 
 export function Gui({
@@ -64,7 +66,9 @@ export function Gui({
                     alignItems: "center",
                 }]}
                 onClick={() => setDrop({
-                    dropzone: generateRandomDropzone(drop.dropzone.world),
+                    dropzone: generateRandomDropzone({
+                        world: drop.dropzone.world,
+                    }),
                     depthLeftBehind: 10,
                     equipment: {
                         pickNeighborhoodIndex: 0,
@@ -84,7 +88,12 @@ export function Gui({
                     alignItems: "center",
                 }]}
                 onClick={() => setDrop({
-                    dropzone: generateRandomDropzone(),
+                    dropzone: generateRandomDropzone({
+                        world: generateRandomWorld({
+                            // todo use gen rules from "NewDropzones" here
+                            ca: generateRandomSymmetricalRule(caStateCount),
+                        }),
+                    }),
                     depthLeftBehind: 10,
                     equipment: {
                         pickNeighborhoodIndex: 0,

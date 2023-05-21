@@ -5,6 +5,14 @@ import { Dice } from "@emotion-icons/fa-solid/Dice";
 import { ChevronForward } from "@emotion-icons/ionicons-solid/ChevronForward";
 import { Dropzone, generateRandomDropzone } from "../../model/Dropzone";
 import { useSetDropzone } from "./useSetDropzone";
+import { caStateCount, generateRandomWorld } from "../../model/World";
+import { generateRandomSymmetricalRule } from "../../ca/generateRandomSymmetricalRule";
+import { generateRandomRule } from "../../ca/generateRandomRule";
+
+const generators = {
+    "symmetrical": generateRandomSymmetricalRule,
+    "full": generateRandomRule,
+} as const;
 
 export function NewDropzones({
     ...props
@@ -12,10 +20,17 @@ export function NewDropzones({
     const [isOpen, setIsOpen] = useState(false);
     const [dropzones, setDropzones] = useState<Dropzone[]>();
 
+    const [generator, setGenerator] =
+        useState<keyof typeof generators>("symmetrical");
+
     const setDropzone = useSetDropzone();
 
     if (!dropzones) {
-        setDropzones(Array.from({ length: 5 }, () => generateRandomDropzone()));
+        setDropzones(Array.from({ length: 5 }, () => generateRandomDropzone({
+            world: generateRandomWorld({
+                ca: generators[generator](caStateCount),
+            }),
+        })));
     }
 
     return <div {...props}>
@@ -40,6 +55,18 @@ export function NewDropzones({
                     width: "2vmin",
                     marginRight: "0.6vmin",
                 }]} />Generate </h3>
+            <label>
+                Generator: <select>
+                    {Object.keys(generators).map((key) => <option
+                        key={key}
+                        value={key}
+                        selected={key === generator}
+                        onClick={() =>
+                            setGenerator(key as keyof typeof generators)}
+                    >{key}</option>)}
+                </select>
+            </label>
+            <br />
             <button
                 css={[{
                     margin: "0.9vmin 0",
@@ -47,7 +74,11 @@ export function NewDropzones({
                 onClick={() => setDropzones(
                     Array.from(
                         { length: 5 },
-                        () => generateRandomDropzone()))}> Reroll </button>
+                        () => generateRandomDropzone({
+                            world: generateRandomWorld({
+                                ca: generators[generator](caStateCount),
+                            }),
+                        })))}> Reroll </button>
             {dropzones
                 && <div css={[{
                     listStyle: "none",

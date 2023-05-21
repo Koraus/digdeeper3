@@ -10,21 +10,23 @@ export const trekRecoil = atom<Trek>({
     key: "trek",
     default: {
         dropzone: generateRandomDropzone({
-            sightVersion,
-            ca: {
-                version: caVersion,
-                stateCount: caStateCount,
-                rule: (() => {
-                    const pretable = getDigits(1815n, 3);
-                    const table = buildFullTransitionLookupTable(
-                        /* stateCount: */ 3,
-                        (_stateCount, n1, c, n2, _pc) =>
-                            pretable[n1 + c + n2]);
-                    return getNumberFromDigits(table, 3).toString();
-                })(),
+            world: {
+                sightVersion,
+                ca: {
+                    version: caVersion,
+                    stateCount: caStateCount,
+                    rule: (() => {
+                        const pretable = getDigits(1815n, 3);
+                        const table = buildFullTransitionLookupTable(
+                            /* stateCount: */ 3,
+                            (_stateCount, n1, c, n2, _pc) =>
+                                pretable[n1 + c + n2]);
+                        return getNumberFromDigits(table, 3).toString();
+                    })(),
+                },
+                stateEnergyDrain: [81 * 9, 1, 0],
+                stateEnergyGain: [0, 0, 81],
             },
-            stateEnergyDrain: [81 * 9, 1, 0],
-            stateEnergyGain: [0, 0, 81],
         }),
         equipment: {
             pickNeighborhoodIndex: 0,
