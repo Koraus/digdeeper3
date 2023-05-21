@@ -13,11 +13,13 @@ export type MoveAction =
     | "left" // x--
     | "right"; // x++
 
+export type DropEquipment = {
+    pickNeighborhoodIndex: number,
+};
+
 export type Drop = {
     dropzone: Dropzone,
-    equipment: {
-        pickNeighborhoodIndex: number,
-    },
+    equipment: DropEquipment,
     depthLeftBehind: number,
 }
 
@@ -76,11 +78,11 @@ function getLastOkSight(sight: Sight): Sight {
     return sight; // init sight is always ok
 }
 
-export const initSight = ({ dropzone }: TrekStart): SightBody => ({
+export const initSight = ({ dropzone, equipment }: TrekStart): SightBody => ({
     playerPosition: [Math.floor(dropzone.width / 2), 0],
     playerEnergy: 81 * 3,
     visitedCells: [[Math.floor(dropzone.width / 2), 0]],
-    collectedCells: neighborhoods[2]
+    collectedCells: neighborhoods[equipment.pickNeighborhoodIndex]
         .map(x => v2.add(x, [Math.floor(dropzone.width / 2), 0]))
         .filter((x) => x[1] >= 0),
     depth: 0,
@@ -108,6 +110,7 @@ export const applyStep = (
     const {
         dropzone,
         depthLeftBehind,
+        equipment,
     } = start;
     const {
         world,
@@ -158,7 +161,7 @@ export const applyStep = (
     }
 
     const stepCollectedCells =
-        neighborhoods[2]
+        neighborhoods[equipment.pickNeighborhoodIndex]
             .map(x => v2.add(x, p1))
             .filter((x) =>
                 x[0] >= 0

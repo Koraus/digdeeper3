@@ -1,9 +1,9 @@
 import type { jsx } from "@emotion/react";
-import { FavoriteDropzones} from "./FavoriteDropzones";
+import { FavoriteDropzones } from "./FavoriteDropzones";
 import { HistoricalWorlds } from "./HistoricalWorlds";
 import { NewDropzones } from "./NewDropzones";
 import { CurrentDropInfo } from "./CurrentDropInfo";
-
+import { DropEquipmentSelector } from "./DropEquipmentSelector";
 
 export function WorldSelectionPanel({
     css: cssProp,
@@ -16,9 +16,10 @@ export function WorldSelectionPanel({
         }, cssProp]}
         {...props}
     >
-        <CurrentDropInfo/>
-        <NewDropzones/>
-        <FavoriteDropzones/>
+        <CurrentDropInfo />
+        <DropEquipmentSelector />
+        <NewDropzones />
+        <FavoriteDropzones />
         <HistoricalWorlds />
     </div >;
 }

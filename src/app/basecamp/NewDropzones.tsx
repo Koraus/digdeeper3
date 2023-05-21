@@ -3,8 +3,8 @@ import type { jsx } from "@emotion/react";
 import { DropzonePreview } from "./DropzonePreview";
 import { Dice } from "@emotion-icons/fa-solid/Dice";
 import { ChevronForward } from "@emotion-icons/ionicons-solid/ChevronForward";
-import { useSetDrop } from "../useSetDrop";
 import { Dropzone, generateRandomDropzone } from "../../model/Dropzone";
+import { useSetDropzone } from "./useSetDropzone";
 
 export function NewDropzones({
     ...props
@@ -12,7 +12,7 @@ export function NewDropzones({
     const [isOpen, setIsOpen] = useState(false);
     const [dropzones, setDropzones] = useState<Dropzone[]>();
 
-    const setDrop = useSetDrop();
+    const setDropzone = useSetDropzone();
 
     if (!dropzones) {
         setDropzones(Array.from({ length: 5 }, () => generateRandomDropzone()));
@@ -70,13 +70,7 @@ export function NewDropzones({
                                 left: "50%",
                                 transform: "translateX(-50%)",
                             }]}
-                            onClick={() => setDrop({
-                                dropzone: dropzone,
-                                depthLeftBehind: 10,
-                                equipment: {
-                                    pickNeighborhoodIndex: 0,
-                                },
-                            })}
+                            onClick={() => setDropzone(dropzone)}
                         > Play!</button>
                     </div>)}
                 </div>}
