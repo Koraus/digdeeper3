@@ -10,8 +10,22 @@ const _qs = Array.from({ length: 3 }, () => new Quaternion());
 const _es = Array.from({ length: 3 }, () => new Euler());
 
 export function Pickable({
-    abuseBox, abuseFrame,
+    rootMatrixWorld, abuseBox, abuseFrame,
 }: LayoutContext) {
+    const stand = abuseBox();
+    stand.setColor(pickableColor);
+    stand.setMatrix(_m4s[0].compose(
+        _v3s[0].set(0, 0.1, 0),
+        _qs[0].setFromEuler(
+            _es[0].set(
+                Math.PI / 4,
+                Math.PI / 4,
+                0,
+                "XYZ"),
+            true),
+        _v3s[1].set(0.1, 0.1, 0.1),
+    ).premultiply(rootMatrixWorld));
+
     const pickable = abuseBox();
     pickable.setColor(pickableColor);
     abuseFrame(({ rootMatrixWorld, state }, { clock }) => {
@@ -19,10 +33,10 @@ export function Pickable({
 
         const timeSec = clock.elapsedTime;
 
-        pickable.setMatrix(_m4s[1].compose(
+        pickable.setMatrix(_m4s[0].compose(
             _v3s[0].set(
                 0,
-                0.5 + 0.2 * Math.sin(timeSec + (t ?? 0)),
+                0.45 + 0.2 * Math.sin(timeSec + (t ?? 0)),
                 0),
             _qs[0].setFromEuler(
                 _es[0].set(
@@ -31,7 +45,7 @@ export function Pickable({
                     0.3 * timeSec,
                     "XYZ"),
                 true),
-            _v3s[1].set(0.5, 0.5, 0.5),
+            _v3s[1].set(0.4, 0.4, 0.4),
         ).premultiply(rootMatrixWorld));
     });
 }
@@ -52,7 +66,7 @@ export function PickablePick({
         pickable.setMatrix(_m4s[1].compose(
             _v3s[0].set(
                 0,
-                0.5 + t1 * t1 * 20,
+                0.45 + t1 * t1 * 20,
                 0),
             _qs[0].setFromEuler(
                 _es[0].set(
@@ -62,7 +76,7 @@ export function PickablePick({
                     "XYZ"),
                 true),
             _v3s[1]
-                .set(0.5, 0.5, 0.5)
+                .set(0.4, 0.4, 0.4)
                 .multiplyScalar(Math.max(0, 1 - timeSec * 2)),
         ).premultiply(rootMatrixWorld));
     });

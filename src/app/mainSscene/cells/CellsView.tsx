@@ -75,12 +75,14 @@ const createCellView = ({
 
         const pos = sight.playerPosition;
         const [px, pt] = pos;
+        const cx = px;
+        const ct = pt + Math.floor(tc * 0.30);
 
-        const t1 = Math.round(pt / tc) * tc + st;
-        const t = t1 + (pt > (t1 - tc / 2) ? 0 : -tc);
+        const t1 = Math.round(ct / tc) * tc + st;
+        const t = t1 + (ct > (t1 - tc / 2) ? 0 : -tc);
 
-        const x1 = Math.round(px / xc) * xc + sx;
-        const x = x1 + (px > (x1 - xc / 2) ? 0 : -xc);
+        const x1 = Math.round(cx / xc) * xc + sx;
+        const x = x1 + (cx > (x1 - xc / 2) ? 0 : -xc);
 
         const isInBounds = t >= 0 && x >= 0 && x < dropzone.width;
         if (isInBounds) {

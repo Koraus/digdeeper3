@@ -11,7 +11,8 @@ import { useMemo } from "react";
 export function MainScene() {
     const lightTarget = useMemo(() => new Object3D(), []);
     return <>
-        <color attach="background" args={["#1f0128"]} />
+        <color attach="background" args={["#6b008c"]} />
+        <fog attach="fog" args={["#6b008c", 45, 51]} />
 
         <ambientLight intensity={0.5} />
 
@@ -25,7 +26,7 @@ export function MainScene() {
 
         <PerspectiveCamera
             makeDefault
-            fov={45}
+            fov={40}
             near={0.1}
             far={1000}
             rotation={[0, 0, 0]}
@@ -58,7 +59,7 @@ export function MainScene() {
             <GroupSync
                 onFrame={(g, { camera }, delta) => {
 
-                    const p = new Vector3(2, 36, 20);
+                    const p = new Vector3(12.5, 32, 20);
                     g.localToWorld(p);
                     camera.parent?.worldToLocal(p);
 
@@ -75,8 +76,9 @@ export function MainScene() {
                         const z = new Vector3(0, 0, 0);
                         g.localToWorld(z);
                         camera.parent?.worldToLocal(z);
-                        z.x += 5;
-                        z.y += 4;
+                        z.x += 14;
+                        z.y += 10;
+                        z.z += 6;
                         camera.lookAt(z);
                     }
                 }} />
@@ -85,6 +87,6 @@ export function MainScene() {
 
         <StopLine />
 
-        <CellsView tCellsPerScreen={61} xCellsPerScreen={51} />
+        <CellsView tCellsPerScreen={71} xCellsPerScreen={51} />
     </>;
 }

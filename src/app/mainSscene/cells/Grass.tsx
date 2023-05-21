@@ -14,9 +14,9 @@ export function Grass({
     const grass1 = abuseBox();
     grass1.setColor(grassColor);
     grass1.setMatrix(_m4s[0].compose(
-        _v3s[0].set(0, 0.1, 0),
+        _v3s[0].set(0, 0.075, 0),
         _qs[0].identity(),
-        _v3s[1].set(1.05, 0.2, 1.05),
+        _v3s[1].set(1.05, 0.15, 1.05),
     ).premultiply(rootMatrixWorld));
 
     const grass2 = abuseRandom() < 0.8 ? abuseBox() : undefined;
