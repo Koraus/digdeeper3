@@ -65,10 +65,9 @@ export function App() {
                 transitionDuration: "0.2s",
                 overflowX: "hidden",
                 position: "absolute",
-                background:"rgba(0, 0, 0, 0.84)",
+                background: "rgba(0, 0, 0, 0.8)",
                 pointerEvents: isBasecampShown ? "all" : "none",
                 opacity: isBasecampShown ? 1 : 0,
-                
             }} />
             <button // bascamp 
                 css={{
@@ -103,6 +102,10 @@ export function App() {
                 textAlign: "right",
                 fontSize: "1.4vmin",
                 lineHeight: "90%",
+                textShadow: "0 0 0.2vmin black",
+                color: "black",
+                filter: "invert(1)",
+                mixBlendMode: "difference",
             }}>
                 {appVersion.split("+")[0]}<br />
                 <span css={{ fontSize: "0.8em" }}>

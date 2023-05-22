@@ -1,6 +1,6 @@
 import { getComposition } from "../ca/calculateComposition";
 import { LehmerPrng } from "../utils/LehmerPrng";
-import { CaState, World, generateRandomWorld } from "./World";
+import { CaState, World } from "./World";
 
 
 export type Dropzone = {

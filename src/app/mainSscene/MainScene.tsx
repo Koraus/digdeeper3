@@ -57,9 +57,15 @@ export function MainScene() {
                 target={lightTarget}
             />
             <GroupSync
-                onFrame={(g, { camera }, delta) => {
+                onFrame={(g, { camera, size }, delta) => {
+                    const aspect = size.width / size.height;
 
-                    const p = new Vector3(12.5, 32, 20);
+                    const aspectOffset = aspect > 1
+                        ? new Vector3(-2 - aspect, 0, 0)
+                        : new Vector3(-7 / Math.sqrt(aspect), 0, 0);
+
+                    const p = new Vector3(12.5, 32, 20)
+                        .add(aspectOffset);
                     g.localToWorld(p);
                     camera.parent?.worldToLocal(p);
 
@@ -76,9 +82,8 @@ export function MainScene() {
                         const z = new Vector3(0, 0, 0);
                         g.localToWorld(z);
                         camera.parent?.worldToLocal(z);
-                        z.x += 14;
-                        z.y += 10;
-                        z.z += 6;
+                        z.add(aspectOffset)
+                            .add(new Vector3(14, 10, 6));
                         camera.lookAt(z);
                     }
                 }} />
