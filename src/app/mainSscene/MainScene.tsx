@@ -7,6 +7,7 @@ import { GroupSync } from "../../utils/GroupSync";
 import { Object3D, Vector3 } from "three";
 import { dampVector3 } from "../../utils/dampVector3";
 import { useMemo } from "react";
+import { StartingCamp } from "./StartingCamp";
 
 export function MainScene() {
     const lightTarget = useMemo(() => new Object3D(), []);
@@ -93,5 +94,7 @@ export function MainScene() {
         <StopLine />
 
         <CellsView tCellsPerScreen={71} xCellsPerScreen={51} />
+
+        <StartingCamp />
     </>;
 }

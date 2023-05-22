@@ -56,13 +56,14 @@ export function NewDropzones({
                     marginRight: "0.6vmin",
                 }]} />Generate </h3>
             <label>
-                Generator: <select>
+                Generator: <select
+                    value={generator}
+                    onChange={e =>
+                        setGenerator(e.target.value as keyof typeof generators)}
+                >
                     {Object.keys(generators).map((key) => <option
                         key={key}
                         value={key}
-                        selected={key === generator}
-                        onClick={() =>
-                            setGenerator(key as keyof typeof generators)}
                     >{key}</option>)}
                 </select>
             </label>
