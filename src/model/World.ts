@@ -1,8 +1,6 @@
 import { version } from "./version";
 import { Code, keyProjectCode } from "../ca";
 import { getComposition } from "../ca/calculateComposition";
-import { buildFullTransitionLookupTable, version as caVersion } from "../ca";
-import { getNumberFromDigits } from "../ca/digits";
 
 
 export const caStateCount = 3;
@@ -15,20 +13,11 @@ export type World = {
     stateEnergyGain: [number, number, number],
 };
 
-export const generateRandomWorld = () => {
-    const caCode =  {
-        version: caVersion,
-        stateCount: caStateCount,
-        rule: (() => {
-            return getNumberFromDigits(
-                buildFullTransitionLookupTable(
-                    caStateCount,
-                    () => Math.floor(Math.random() * caStateCount)),
-                caStateCount,
-            ).toString();
-        })(),
-    };
-
+export const generateRandomWorld = ({
+    ca: caCode,
+}: {
+    ca: Code,
+}) => {
     const composition = getComposition(caCode);
 
     const [stone, grass, energy] = composition

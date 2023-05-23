@@ -1,6 +1,6 @@
 import { getComposition } from "../ca/calculateComposition";
 import { LehmerPrng } from "../utils/LehmerPrng";
-import { CaState, World, generateRandomWorld } from "./World";
+import { CaState, World } from "./World";
 
 
 export type Dropzone = {
@@ -10,9 +10,11 @@ export type Dropzone = {
     startFillState: CaState,
 };
 
-export const generateRandomDropzone = (
-    world: World = generateRandomWorld(),
-): Dropzone => ({
+export const generateRandomDropzone = ({
+    world,
+}: {
+    world: World,
+}): Dropzone => ({
     world,
     seed: Math.floor(Math.random() * LehmerPrng.MAX_INT32),
     width: 51,

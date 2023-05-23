@@ -7,11 +7,13 @@ import { GroupSync } from "../../utils/GroupSync";
 import { Object3D, Vector3 } from "three";
 import { dampVector3 } from "../../utils/dampVector3";
 import { useMemo } from "react";
+import { StartingCamp } from "./StartingCamp";
 
 export function MainScene() {
     const lightTarget = useMemo(() => new Object3D(), []);
     return <>
-        <color attach="background" args={["#1f0128"]} />
+        <color attach="background" args={["#6b008c"]} />
+        <fog attach="fog" args={["#6b008c", 45, 51]} />
 
         <ambientLight intensity={0.5} />
 
@@ -25,7 +27,7 @@ export function MainScene() {
 
         <PerspectiveCamera
             makeDefault
-            fov={45}
+            fov={40}
             near={0.1}
             far={1000}
             rotation={[0, 0, 0]}
@@ -56,9 +58,15 @@ export function MainScene() {
                 target={lightTarget}
             />
             <GroupSync
-                onFrame={(g, { camera }, delta) => {
+                onFrame={(g, { camera, size }, delta) => {
+                    const aspect = size.width / size.height;
 
-                    const p = new Vector3(2, 36, 20);
+                    const aspectOffset = aspect > 1
+                        ? new Vector3(-2 - aspect, 0, 0)
+                        : new Vector3(-7 / Math.sqrt(aspect), 0, 0);
+
+                    const p = new Vector3(12.5, 32, 20)
+                        .add(aspectOffset);
                     g.localToWorld(p);
                     camera.parent?.worldToLocal(p);
 
@@ -66,7 +74,7 @@ export function MainScene() {
                         camera.position.copy(p);
                     } else if (camera.position.distanceTo(p) > 0.1) {
                         dampVector3(
-                            camera.position, camera.position, p, 3, delta);
+                            camera.position, camera.position, p, 10, delta);
                     } else {
                         // 
                     }
@@ -75,8 +83,8 @@ export function MainScene() {
                         const z = new Vector3(0, 0, 0);
                         g.localToWorld(z);
                         camera.parent?.worldToLocal(z);
-                        z.x += 5;
-                        z.y += 4;
+                        z.add(aspectOffset)
+                            .add(new Vector3(14, 10, 6));
                         camera.lookAt(z);
                     }
                 }} />
@@ -85,6 +93,8 @@ export function MainScene() {
 
         <StopLine />
 
-        <CellsView tCellsPerScreen={61} xCellsPerScreen={51} />
+        <CellsView tCellsPerScreen={71} xCellsPerScreen={51} />
+
+        <StartingCamp />
     </>;
 }

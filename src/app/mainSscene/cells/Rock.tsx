@@ -14,9 +14,9 @@ export function Rock({
     const rock1 = abuseBox();
     rock1.setColor(rockColor);
     rock1.setMatrix(_m4s[1].compose(
-        _v3s[0].set(0, 0.4, 0),
+        _v3s[0].set(0, 0.25, 0),
         _qs[0].identity(),
-        _v3s[1].set(1, 0.8, 1),
+        _v3s[1].set(1, 0.5, 1),
     ).premultiply(rootMatrixWorld));
 
     if (abuseRandom() < 0.5) {
@@ -25,13 +25,13 @@ export function Rock({
         rock2.setMatrix(_m4s[0].compose(
             _v3s[0].set(
                 0.5 * (abuseRandom() - 0.5),
-                0.8 * abuseRandom(),
+                0.7 * abuseRandom(),
                 0.5 * (abuseRandom() - 0.5)),
             _qs[0].identity(),
             _v3s[1].set(
-                0.4 + 0.8 * abuseRandom(),
-                0.4 + 0.8 * abuseRandom(),
-                0.4 + 0.8 * abuseRandom()),
+                0.4 + 0.5 * abuseRandom(),
+                0.4 + 0.5 * abuseRandom(),
+                0.4 + 0.5 * abuseRandom()),
         ).premultiply(rootMatrixWorld));
     }
 }
