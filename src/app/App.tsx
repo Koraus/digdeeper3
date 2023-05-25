@@ -10,6 +10,7 @@ import { useRef, useState } from "react";
 import { useGrabFocusFromBody } from "../utils/useGrabFocusFromBody";
 import { Menu as MenuIcon } from "@emotion-icons/boxicons-regular/Menu";
 import { X as XIcon } from "@emotion-icons/boxicons-regular/X";
+import { СurrentWorldMap } from "./lobby/СurrentWorldMap";
 
 
 export function App() {
@@ -46,6 +47,7 @@ export function App() {
         >
             <MainScene />
         </Canvas>
+        <СurrentWorldMap/>
         <div css={{
             position: "absolute",
             inset: 0,
