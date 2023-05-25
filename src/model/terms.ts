@@ -3,6 +3,7 @@ import memoize from "memoizee";
 import { ca } from "./ca";
 import { version as sightVersion } from "./version";
 import { Dropzone } from "./Dropzone";
+import { evacuationLineProgress } from "./evacuation";
 
 
 export { sightVersion };
@@ -33,6 +34,7 @@ export type SightBody = {
     visitedCells: v2[],
     collectedCells: v2[],
     depth: number,
+    lastCrossedEvacuationLine: number,
     log: string,
     ok: boolean,
 };
@@ -85,6 +87,7 @@ export const initSight = ({ dropzone, equipment }: TrekStart): SightBody => ({
     collectedCells: neighborhoods[equipment.pickNeighborhoodIndex]
         .map(x => v2.add(x, [Math.floor(dropzone.width / 2), 0]))
         .filter((x) => x[1] >= 0),
+    lastCrossedEvacuationLine: 0,
     depth: 0,
     log: "init",
     ok: true,
@@ -106,7 +109,7 @@ export const applyStep = (
     start: TrekStart,
     prevSight: SightBody,
     trek: TrekStep,
-) => {
+): SightBody => {
     const {
         dropzone,
         depthLeftBehind,
@@ -135,6 +138,7 @@ export const applyStep = (
             visitedCells: prevSight.visitedCells,
             collectedCells: prevSight.collectedCells,
             depth: prevSight.depth,
+            lastCrossedEvacuationLine: prevSight.lastCrossedEvacuationLine,
             log: isOutOfSpace ? "out of space bounds" : "cannot return back",
             ok: false,
         };
@@ -155,6 +159,7 @@ export const applyStep = (
             visitedCells: prevSight.visitedCells,
             collectedCells: prevSight.collectedCells,
             depth: prevSight.depth,
+            lastCrossedEvacuationLine: prevSight.lastCrossedEvacuationLine,
             log: `insufficient energy ${moveCost - prevSight.playerEnergy}`,
             ok: false,
         };
@@ -199,6 +204,9 @@ export const applyStep = (
         visitedCells: newVisitedCells,
         collectedCells: newcCollectedCells,
         depth: newDepth,
+        lastCrossedEvacuationLine: Math.max(
+            prevSight.lastCrossedEvacuationLine,
+            Math.floor(evacuationLineProgress(p1[1]))),
         log: `delta ${energyGain - moveCost}:`
             + ((theDirectionEnergyDrain > 0)
                 ? ` move ${-theDirectionEnergyDrain}`
