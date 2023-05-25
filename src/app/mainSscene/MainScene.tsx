@@ -6,12 +6,24 @@ import { StopLine } from "./StopLine";
 import { GroupSync } from "../../utils/GroupSync";
 import { Object3D, Vector3 } from "three";
 import { dampVector3 } from "../../utils/dampVector3";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { StartingCamp } from "./StartingCamp";
+import { EvacuationLine } from "./EvacuationLine";
+import { FrameLimiter } from "../../utils/FrameLimiter";
+import { useThree } from "@react-three/fiber";
+import { setup as setupShaderSourceHooker } from "../../utils/glsl/hookShaderSource";
+
 
 export function MainScene() {
+    const gl = useThree(({ gl }) => gl);
+    useEffect(() => setupShaderSourceHooker(gl.getContext()), [gl]);
+
+    const lowFpsMode = false;
+
     const lightTarget = useMemo(() => new Object3D(), []);
     return <>
+        {lowFpsMode && <FrameLimiter fps={6} />}
+
         <color attach="background" args={["#6b008c"]} />
         <fog attach="fog" args={["#6b008c", 45, 51]} />
 
@@ -96,5 +108,7 @@ export function MainScene() {
         <CellsView tCellsPerScreen={71} xCellsPerScreen={51} />
 
         <StartingCamp />
+
+        <EvacuationLine />
     </>;
 }

@@ -43,6 +43,7 @@ export function App() {
                 antialias: true,
             }}
             shadows="percentage"
+            frameloop="demand"
         >
             <MainScene />
         </Canvas>

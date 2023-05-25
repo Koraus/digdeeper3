@@ -28,6 +28,7 @@
     "emotion-icons": "^3.27.0",
     "eslint": "^8.38.0",
     "eslint-plugin-react": "^7.32.2",
+    "glsl-easings": "^1.0.0",
     "immutability-helper": "^3.1.1",
     "io-ts": "^2.2.20",
     "lodash": "^4.17.21",
@@ -43,6 +44,7 @@
     "ts-toolbelt": "^9.6.0",
     "typescript": "^5.0.4",
     "vite": "^4.2.1",
+    "vite-plugin-glsl": "^1.1.2",
     "vite-plugin-html": "^3.2.0",
     "vite-plugin-info": "^0.4.0"
   }
