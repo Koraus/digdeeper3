@@ -22,7 +22,7 @@ export function MainScene() {
 
     const lightTarget = useMemo(() => new Object3D(), []);
     return <>
-        {lowFpsMode && <FrameLimiter fps={6} />}
+        <FrameLimiter fps={lowFpsMode ? 6 : Infinity} />
 
         <color attach="background" args={["#6b008c"]} />
         <fog attach="fog" args={["#6b008c", 45, 51]} />
