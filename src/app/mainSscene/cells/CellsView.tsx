@@ -1,9 +1,7 @@
 import { RenderCallback, ThreeElements, useFrame } from "@react-three/fiber";
-import { v2 } from "../../../utils/v";
 import { useRecoilValue } from "recoil";
 import { trekRecoil } from "../../trekRecoil";
-import { Trek, sightAt } from "../../../model/terms";
-import { trekDropzone } from "../../../model/terms";
+import { Trek, sightAt, startForTrek } from "../../../model/terms";
 import { caForDropzone } from "../../../model/terms";
 import { useMemo } from "react";
 import { BoxGeometry, Euler, Group, Matrix4, MeshPhongMaterial, Quaternion, Vector3 } from "three";
@@ -12,6 +10,8 @@ import { InstancedMeshHost, zeroScaleMatrix } from "../../../utils/InstancedMesh
 import { ParentState } from "./LayoutContext";
 import { Cell } from "./Cell";
 import { Dropzone } from "../../../model/Dropzone";
+import memoize from "memoizee";
+import { getComposition } from "../../../ca/calculateComposition";
 
 
 export const _m4s = Array.from({ length: 10 }, () => new Matrix4());
@@ -40,6 +40,35 @@ const getReducedNeighborhoodState = (
 
     return (t * dropzone.width + x) ^ s1;
 };
+
+export const epxandedSight = memoize((trek: Trek) => {
+    const sight = sightAt(trek);
+    const drop = startForTrek(trek);
+    const visitedCells = {} as Record<number, Record<number, true>>;
+    for (const [x, t] of sight.visitedCells) {
+        (visitedCells[t] ??= {})[x] = true;
+    }
+    const collectedCells = {} as Record<number, Record<number, true>>;
+    for (const [x, t] of sight.collectedCells) {
+        (collectedCells[t] ??= {})[x] = true;
+    }
+    const composition = getComposition(drop.dropzone.world.ca);
+
+    const [rock, grass, energy] = composition
+        .map((p, i) => [p, i])
+        .sort(([a], [b]) => b - a)
+        .map(([_, i]) => i);
+
+    return {
+        sight,
+        drop,
+        visitedCells,
+        collectedCells,
+        composition,
+        visualStateMap: { rock, grass, energy },
+    };
+});
+
 
 const createCellView = ({
     tc, xc, sx, st,
@@ -70,8 +99,9 @@ const createCellView = ({
     let parentState = undefined as ParentState | undefined;
 
     onTrek(trek => {
-        const sight = sightAt(trek);
-        const dropzone = trekDropzone(trek);
+        const expSight = epxandedSight(trek);
+        const sight = expSight.sight;
+        const dropzone = expSight.drop.dropzone;
 
         const pos = sight.playerPosition;
         const [px, pt] = pos;
@@ -86,10 +116,8 @@ const createCellView = ({
 
         const isInBounds = t >= 0 && x >= 0 && x < dropzone.width;
         if (isInBounds) {
-            const isVisited = sight.visitedCells
-                .some(p => v2.eqStrict(p, [x, t]));
-            const isCollected = sight.collectedCells
-                .some(p => v2.eqStrict(p, [x, t]));
+            const isVisited = expSight.visitedCells[t]?.[x] ?? false;
+            const isCollected = expSight.collectedCells[t]?.[x] ?? false;
 
             const stateChanged =
                 !parentState
@@ -107,7 +135,7 @@ const createCellView = ({
                     parentState = {
                         rootMatrixWorld,
                         prevState: undefined,
-                        state: { t, x, isVisited, isCollected, dropzone },
+                        state: { trek, t, x, isVisited, isCollected, dropzone },
                     };
                 } else {
                     parentState.prevState =
@@ -115,7 +143,7 @@ const createCellView = ({
                             ? undefined
                             : parentState.state;
                     parentState.state = {
-                        t, x, isVisited, isCollected, dropzone,
+                        trek, t, x, isVisited, isCollected, dropzone,
                     };
                 }
 
