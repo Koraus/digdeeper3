@@ -5,6 +5,7 @@ import { Rock } from "./Rock";
 import { Bricks } from "./Bricks";
 import { Pickable, PickablePick } from "./Pickable";
 import { Color, Matrix4, Quaternion, Vector3 } from "three";
+import { getComposition } from "../../../ca/calculateComposition";
 
 
 const _m4s = Array.from({ length: 3 }, () => new Matrix4());
@@ -42,11 +43,18 @@ export function Cell(ctx: LayoutContext) {
         }
     }
 
+    const composition = getComposition(dropzone.world.ca)
+        .map((p, i) => [p, i])
+        .sort(([a], [b]) => b - a)
+        .map(([_, i]) => i);
+
+    const [visualСontent0, visualСontent1] = composition;
+
     if (!isVisited) {
-        if (caState === dropzone.startFillState) {
+        if (caState === visualСontent1) {
             Grass(ctx);
         }
-        if (caState === 0) {
+        if (caState === visualСontent0) {
             Rock(ctx);
         }
     } else {
