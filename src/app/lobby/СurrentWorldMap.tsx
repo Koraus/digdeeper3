@@ -4,10 +4,11 @@ import { caForDropzone, sightAt, startForTrek } from "../../model/terms";
 import { Color } from "three";
 import { useRecoilValue } from "recoil";
 import { trekRecoil } from "../trekRecoil";
+import { getComposition } from "../../ca/calculateComposition";
 
 export function СurrentWorldMap() {
 
-    const [isMapShown, setIsMapShown] = useState(false);
+    const [isMapShown, setIsMapShown] = useState(true);
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -28,50 +29,65 @@ export function СurrentWorldMap() {
         const ctx = canvasEl.getContext("2d");
         if (!ctx) { return; }
 
-        const colorMap = [
-            new Color("#8d8d8d"),
-            new Color("#000000"),
-            new Color("#ff6ff5"),
-        ];
+
+        const composition = getComposition(dropzone.world.ca);
+
+        const [stone, grass, energy] = composition
+            .map((p, i) => [p, i])
+            .sort(([a], [b]) => b - a)
+            .map(([_, i]) => i);
+
+        const colorMap = [];
+        colorMap[stone] = new Color("#8d8d8d");
+        colorMap[grass] = new Color("#000000");
+        colorMap[energy] = new Color("#ff6ff5");
 
         const theCa = caForDropzone(dropzone);
 
-        const w = 30; // pt * 4
-        const h = 30;
+        const w = 51;
+        const h = dropzone.width;
 
+        const px = pos[0];
+        const pt = pos[1];
 
-
-        const px = pos[0]; // UP/DOWN
-        const pt = pos[1]; 
-        const pPos = (pt + px * w) * 4;
-
-        const cell1 = [0, 1 , 2, 3]; 
+        const pPos = (px * w * 4) + pt * 4;
 
         const myImageData = ctx.createImageData(w, h);
 
+        // старт карти має бути з нуля, 
+        // при досягненні точки неповернення > 0, має стартувати з неї
+
+        const mapStart = sight.depth > 0 ? sight.depth : 0;
+        // const mapY = 
+
+        console.log(mapStart);
+
+        // які з комірок візуалізувати на краті рядок/ствпчик
+        // віхуалізувати всі рядки, до яких можна повернутися 
+
         for (let y = 0; y < h; y++) {
-            for (let x = 0; x < w; x++) {
+            for (let x = mapStart; x < w ; x++) {
                 const i = (y * w + x) * 4;
                 const color = colorMap[theCa._at(x, y)];
                 myImageData.data[i + 0] = Math.floor(color.r * 256);
                 myImageData.data[i + 1] = Math.floor(color.g * 256);
                 myImageData.data[i + 2] = Math.floor(color.b * 256);
-                myImageData.data[i + 3] = 255;
+                myImageData.data[i + 3] = theCa._at(x, y) === energy ? 99 : 255;
+                sight.collectedCells.map(v => {
+                    if (v[1] === x && v[0] === y) {
+                        myImageData.data[i + 0] = 255;
+                        myImageData.data[i + 1] = 100;
+                        myImageData.data[i + 2] = 0;
+                        myImageData.data[i + 3] = 255;
+                    }
+                });
             }
         }
-        // const [px, pt] = pos;
 
-
-        // px i pt - абсолютні координати в світі 
-        console.log(pt * 4 )
-        // console.log("arr " + myImageData.data);
-        // віднсоні координати на зображенні
-        const p = (pt * 4) + px *4 ;
-        myImageData.data[p  + 0] = 256;
-        myImageData.data[p + 1] = 100;
-        myImageData.data[p + 2] = 100;
-        myImageData.data[p + 3] = 255;
-
+        myImageData.data[pPos + 0] = 215;
+        myImageData.data[pPos + 1] = 53;
+        myImageData.data[pPos + 2] = 53;
+        myImageData.data[pPos + 3] = 255;
 
         const scale = 1;
         canvasEl.width = w * scale;
@@ -92,18 +108,17 @@ export function СurrentWorldMap() {
         transitionDuration: "0.2s",
         overflowX: "hidden",
         position: "absolute",
-        background: "rgba(0, 0, 143, 0.8)",
         pointerEvents: isMapShown ? "all" : "none",
         opacity: isMapShown ? 1 : 0,
     }}
     >
         <div css={[{
-            textAlign: "center"
+            textAlign: "center",
         }]}> MAP </div>
         <canvas ref={canvasRef} css={[{
             imageRendering: "pixelated",
             // width: "90%",
-            height: "80%"
+            height: "60%",
         }]}>
         </canvas>
     </ div>;
