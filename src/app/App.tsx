@@ -10,10 +10,12 @@ import { useRef, useState } from "react";
 import { useGrabFocusFromBody } from "../utils/useGrabFocusFromBody";
 import { Menu as MenuIcon } from "@emotion-icons/boxicons-regular/Menu";
 import { X as XIcon } from "@emotion-icons/boxicons-regular/X";
+import { СurrentWorldMap } from "./lobby/СurrentWorldMap";
 
 
 export function App() {
     const [isBasecampShown, setIsBasecampShown] = useState(false);
+    const [isMapShown, setIsMapShown] = useState(false);
 
     const focusRootRef = useRef<HTMLDivElement>(null);
     useGrabFocusFromBody(focusRootRef);
@@ -33,6 +35,10 @@ export function App() {
                 setIsBasecampShown(!isBasecampShown);
                 return;
             }
+            if(ev.code === "KeyM"){
+                setIsMapShown(!isMapShown);
+                return;
+            }
         }}
     >
         <Canvas
@@ -47,6 +53,7 @@ export function App() {
         >
             <MainScene />
         </Canvas>
+        <СurrentWorldMap css={{opacity: isMapShown ? 1 : 0}}/>
         <div css={{
             position: "absolute",
             inset: 0,
