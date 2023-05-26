@@ -15,7 +15,7 @@ import { СurrentWorldMap } from "./lobby/СurrentWorldMap";
 
 export function App() {
     const [isBasecampShown, setIsBasecampShown] = useState(false);
-    const [isMapShown, setIsMapShown] = useState(true);
+    const [isMapShown, setIsMapShown] = useState(false);
 
     const focusRootRef = useRef<HTMLDivElement>(null);
     useGrabFocusFromBody(focusRootRef);
