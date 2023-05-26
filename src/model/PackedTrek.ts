@@ -1,4 +1,4 @@
-import { Trek, TrekStart, TrekStep } from "./terms";
+import { Trek, TrekStart, TrekStep } from "./trek";
 
 
 export type FlatTrek = {

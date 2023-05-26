@@ -3,7 +3,7 @@ import { GroupSync } from "../../utils/GroupSync";
 import { jsx } from "@emotion/react";
 import { useRecoilValue } from "recoil";
 import { trekRecoil } from "../trekRecoil";
-import { startForTrek } from "../../model/terms";
+import { startForTrek } from "../../model/sightAtTrek";
 
 
 export function StartingCamp({

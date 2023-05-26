@@ -1,5 +1,5 @@
 import { useRecoilState } from "recoil";
-import { sightAt } from "../../model/terms";
+import { sightAt } from "../../model/sightAtTrek";
 import { trekRecoil } from "../trekRecoil";
 import { offer } from "../../copilot";
 import { ThreeElements } from "@react-three/fiber";

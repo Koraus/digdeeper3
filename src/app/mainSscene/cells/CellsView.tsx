@@ -1,8 +1,9 @@
 import { RenderCallback, ThreeElements, useFrame } from "@react-three/fiber";
 import { useRecoilValue } from "recoil";
 import { trekRecoil } from "../../trekRecoil";
-import { Trek, sightAt, startForTrek } from "../../../model/terms";
-import { caForDropzone } from "../../../model/terms";
+import { Trek } from "../../../model/trek";
+import { sightAt, startForTrek } from "../../../model/sightAtTrek";
+import { caForDropzone } from "../../../model/trek";
 import { useMemo } from "react";
 import { BoxGeometry, Euler, Group, Matrix4, MeshPhongMaterial, Quaternion, Vector3 } from "three";
 import { LehmerPrng } from "../../../utils/LehmerPrng";

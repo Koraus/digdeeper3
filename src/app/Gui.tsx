@@ -1,5 +1,5 @@
 import { useRecoilValue } from "recoil";
-import { sightAt, startForTrek } from "../model/terms";
+import { sightAt, startForTrek } from "../model/sightAtTrek";
 import { trekRecoil } from "./trekRecoil";
 import { RestartAlt } from "@emotion-icons/material/RestartAlt";
 import { PinDrop } from "@emotion-icons/material-outlined/PinDrop";

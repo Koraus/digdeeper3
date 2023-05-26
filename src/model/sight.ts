@@ -1,33 +1,8 @@
 import { v2 } from "../utils/v";
-import memoize from "memoizee";
-import { ca } from "./ca";
-import { version as sightVersion } from "./version";
-import { Dropzone } from "./Dropzone";
 import { evacuationLineProgress } from "./evacuation";
 import update from "immutability-helper";
+import { TrekStart, TrekStep, directionVec, caForDropzone, directionEnergyDrain } from "./trek";
 
-
-export { sightVersion };
-
-export type MoveAction =
-    "forward" // t++
-    | "backward" // t--
-    | "left" // x--
-    | "right"; // x++
-
-export type DropEquipment = {
-    pickNeighborhoodIndex: number,
-};
-
-export type Drop = {
-    dropzone: Dropzone,
-    equipment: DropEquipment,
-    depthLeftBehind: number,
-}
-
-export type TrekStart = Drop;
-export type TrekStep = { action: MoveAction };
-export type Trek = TrekStart | (TrekStep & { prev: Trek });
 
 export type SightBody = {
     playerPosition: v2,
@@ -40,41 +15,17 @@ export type SightBody = {
     ok: boolean,
 };
 
-export type Sight = SightBody & { trek: Trek };
-
-export function _startForTrek(trek: Trek): TrekStart {
-    if (!("prev" in trek)) { return trek; }
-    return startForTrek(trek.prev);
-}
-export const startForTrek = memoize(_startForTrek);
-
-export const directionEnergyDrain = {
-    left: 1,
-    right: 1,
-    backward: 9,
-    forward: 0,
-} as const;
-export const directionVec = {
-    left: [-1, 0],
-    right: [1, 0],
-    backward: [0, -1],
-    forward: [0, 1],
-} as const;
-
-export const caForDropzone = memoize((dropzone: Dropzone) => ca({
-    ca: dropzone.world.ca,
-    spaceSize: dropzone.width,
-    startFillState: dropzone.startFillState,
-    seed: dropzone.seed,
-}));
-
-function getLastOkSight(sight: Sight): Sight {
-    if (sight.ok) { return sight; }
-    if ("prev" in sight.trek) {
-        return getLastOkSight(sightAt(sight.trek.prev));
-    }
-    return sight; // init sight is always ok
-}
+export const neighborhoods = [[
+    [0, 0],
+], [
+    [-1, 0],
+    [0, -1], [0, 0], [0, 1],
+    [1, 0],
+], [
+    [-1, -1], [-1, 0], [-1, 1],
+    [0, -1], [0, 0], [0, 1],
+    [1, -1], [1, 0], [1, 1],
+]] as v2[][];
 
 export const initSight = ({ dropzone, equipment }: TrekStart): SightBody => ({
     playerPosition: [Math.floor(dropzone.width / 2), 0],
@@ -89,35 +40,19 @@ export const initSight = ({ dropzone, equipment }: TrekStart): SightBody => ({
     ok: true,
 });
 
-const neighborhoods = [[
-    [0, 0],
-], [
-    [-1, 0],
-    [0, -1], [0, 0], [0, 1],
-    [1, 0],
-], [
-    [-1, -1], [-1, 0], [-1, 1],
-    [0, -1], [0, 0], [0, 1],
-    [1, -1], [1, 0], [1, 1],
-]] as v2[][];
-
 export const applyStep = (
     start: TrekStart,
     prevSight: SightBody,
     trek: TrekStep,
 ): SightBody => {
     const {
-        dropzone,
-        depthLeftBehind,
-        equipment,
+        dropzone, depthLeftBehind, equipment,
     } = start;
     const {
-        world,
-        width,
+        world, width,
     } = dropzone;
     const {
-        stateEnergyDrain,
-        stateEnergyGain,
+        stateEnergyDrain, stateEnergyGain,
     } = world;
 
     const p1 = v2.add(
@@ -156,14 +91,12 @@ export const applyStep = (
         });
     }
 
-    const stepCollectedCells =
-        neighborhoods[equipment.pickNeighborhoodIndex]
-            .map(x => v2.add(x, p1))
-            .filter((x) =>
-                x[0] >= 0
-                && x[0] < width
-                && x[1] >= 0
-                && !prevSight.collectedCells.some(y => v2.eqStrict(x, y)));
+    const stepCollectedCells = neighborhoods[equipment.pickNeighborhoodIndex]
+        .map(x => v2.add(x, p1))
+        .filter((x) => x[0] >= 0
+            && x[0] < width
+            && x[1] >= 0
+            && !prevSight.collectedCells.some(y => v2.eqStrict(x, y)));
 
 
 
@@ -173,11 +106,13 @@ export const applyStep = (
     const energyDelta = energyGain - moveCost;
     const newPlayerEnergy = prevSight.playerEnergy + energyDelta;
 
-    const newVisitedCells =
-        (isP1Visited ? prevSight.visitedCells : [p1, ...prevSight.visitedCells])
+    const newVisitedCells = (isP1Visited
+        ? prevSight.visitedCells
+        : [p1, ...prevSight.visitedCells]
+    )
 
-            // 2x depthLeftBehind
-            .filter(([, t]) => t >= prevSight.depth - depthLeftBehind);
+        // 2x depthLeftBehind
+        .filter(([, t]) => t >= prevSight.depth - depthLeftBehind);
 
     const newcCollectedCells = [
         ...stepCollectedCells,
@@ -211,15 +146,3 @@ export const applyStep = (
         ok: true,
     };
 };
-
-export const sightAt = memoize((trek: Trek): Sight => {
-    let sight;
-    if (!("prev" in trek)) {
-        sight = initSight(trek);
-    } else {
-        const prevSight = getLastOkSight(sightAt(trek.prev));
-        sight = applyStep(startForTrek(trek), prevSight, trek);
-    }
-
-    return { ...sight, trek };
-});

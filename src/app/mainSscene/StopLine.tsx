@@ -1,5 +1,5 @@
 import { useRecoilValue } from "recoil";
-import { sightAt } from "../../model/terms";
+import { sightAt } from "../../model/sightAtTrek";
 import { trekRecoil } from "../trekRecoil";
 
 export function StopLine() {

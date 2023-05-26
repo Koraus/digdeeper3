@@ -1,7 +1,9 @@
 import { Dropzone } from "../model/Dropzone";
 import { PackedTrek, actionIndices, getPackedStepAt, indexedActions, indexedActionsLength, unpackTrekStep } from "../model/PackedTrek";
 import { World, keyProjectWorld } from "../model/World";
-import { Trek, caForDropzone, initSight, applyStep, sightAt, SightBody, startForTrek } from "../model/terms";
+import { Trek, caForDropzone } from "../model/trek";
+import { sightAt, startForTrek } from "../model/sightAtTrek";
+import { applyStep, initSight, SightBody } from "../model/sight";
 import { v2 } from "../utils/v";
 import memoize from "memoizee";
 import { loadPackedTreks } from "./saver";

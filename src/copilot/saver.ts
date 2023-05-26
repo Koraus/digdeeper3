@@ -1,5 +1,5 @@
 import { World, keyProjectWorld } from "../model/World";
-import { Trek } from "../model/terms";
+import { Trek } from "../model/trek";
 import { _throw } from "../utils/_throw";
 import { PackedTrek, flattenTrek, packTrek } from "../model/PackedTrek";
 
