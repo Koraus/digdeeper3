@@ -2,11 +2,13 @@ import { RenderCallback } from "@react-three/fiber";
 import { InstancedMeshHost } from "../../../utils/InstancedMeshHost";
 import { Matrix4 } from "three";
 import { Dropzone } from "../../../model/Dropzone";
+import { Trek } from "../../../model/terms";
 
 
 export type ParentState = {
     rootMatrixWorld: Matrix4,
     prevState: {
+        trek: Trek,
         t: number,
         x: number,
         isVisited: boolean,
@@ -14,6 +16,7 @@ export type ParentState = {
         dropzone: Dropzone,
     } | undefined,
     state: {
+        trek: Trek,
         t: number,
         x: number,
         isVisited: boolean,

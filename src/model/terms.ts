@@ -3,6 +3,8 @@ import memoize from "memoizee";
 import { ca } from "./ca";
 import { version as sightVersion } from "./version";
 import { Dropzone } from "./Dropzone";
+import { evacuationLineProgress } from "./evacuation";
+import update from "immutability-helper";
 
 
 export { sightVersion };
@@ -33,6 +35,7 @@ export type SightBody = {
     visitedCells: v2[],
     collectedCells: v2[],
     depth: number,
+    lastCrossedEvacuationLine: number,
     log: string,
     ok: boolean,
 };
@@ -45,10 +48,11 @@ export type Sight = SightBody & { trek: Trek };
 export const trekDropzone = (trek: Trek): Dropzone =>
     startForTrek(trek).dropzone;
 
-export function startForTrek(trek: Trek): TrekStart {
+export function _startForTrek(trek: Trek): TrekStart {
     if (!("prev" in trek)) { return trek; }
     return startForTrek(trek.prev);
 }
+export const startForTrek = memoize(_startForTrek);
 
 export const directionEnergyDrain = {
     left: 1,
@@ -85,6 +89,7 @@ export const initSight = ({ dropzone, equipment }: TrekStart): SightBody => ({
     collectedCells: neighborhoods[equipment.pickNeighborhoodIndex]
         .map(x => v2.add(x, [Math.floor(dropzone.width / 2), 0]))
         .filter((x) => x[1] >= 0),
+    lastCrossedEvacuationLine: 0,
     depth: 0,
     log: "init",
     ok: true,
@@ -106,7 +111,7 @@ export const applyStep = (
     start: TrekStart,
     prevSight: SightBody,
     trek: TrekStep,
-) => {
+): SightBody => {
     const {
         dropzone,
         depthLeftBehind,
@@ -125,19 +130,18 @@ export const applyStep = (
         prevSight.playerPosition,
         directionVec[trek.action]);
 
-    const isOutOfSpace = p1[0] < 0 || p1[0] >= width;
-    const isOutOfGoBack = p1[1] < prevSight.depth;
+    if (p1[0] < 0 || p1[0] >= width) {
+        return update(prevSight, {
+            log: { $set: "out of space bounds" },
+            ok: { $set: false },
+        });
+    }
 
-    if (isOutOfSpace || isOutOfGoBack) {
-        return {
-            playerPosition: prevSight.playerPosition,
-            playerEnergy: prevSight.playerEnergy,
-            visitedCells: prevSight.visitedCells,
-            collectedCells: prevSight.collectedCells,
-            depth: prevSight.depth,
-            log: isOutOfSpace ? "out of space bounds" : "cannot return back",
-            ok: false,
-        };
+    if (p1[1] < prevSight.depth) {
+        return update(prevSight, {
+            log: { $set: "cannot return back" },
+            ok: { $set: false },
+        });
     }
 
     const isP1Visited = prevSight.visitedCells.some(x => v2.eqStrict(x, p1));
@@ -149,15 +153,13 @@ export const applyStep = (
     const moveCost = theStateEnergyDrain + theDirectionEnergyDrain;
 
     if (prevSight.playerEnergy < moveCost) {
-        return {
-            playerPosition: prevSight.playerPosition,
-            playerEnergy: prevSight.playerEnergy,
-            visitedCells: prevSight.visitedCells,
-            collectedCells: prevSight.collectedCells,
-            depth: prevSight.depth,
-            log: `insufficient energy ${moveCost - prevSight.playerEnergy}`,
-            ok: false,
-        };
+        return update(prevSight, {
+            log: {
+                $set:
+                    `insufficient energy ${moveCost - prevSight.playerEnergy}`,
+            },
+            ok: { $set: false },
+        });
     }
 
     const stepCollectedCells =
@@ -199,6 +201,9 @@ export const applyStep = (
         visitedCells: newVisitedCells,
         collectedCells: newcCollectedCells,
         depth: newDepth,
+        lastCrossedEvacuationLine: Math.max(
+            prevSight.lastCrossedEvacuationLine,
+            Math.floor(evacuationLineProgress(p1[1]))),
         log: `delta ${energyGain - moveCost}:`
             + ((theDirectionEnergyDrain > 0)
                 ? ` move ${-theDirectionEnergyDrain}`
