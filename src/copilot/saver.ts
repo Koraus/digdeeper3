@@ -2,8 +2,9 @@ import { World, keyProjectWorld } from "../model/World";
 import { Trek } from "../model/terms";
 import { _throw } from "../utils/_throw";
 import { FlatTrek, flattenTrek } from "./FlatTrek";
+import { PackedTrek, packTrek, unpackTrek } from "./PackedTrek";
 
-export const saverVersion = "digdeeper3/copilot/saver@2";
+export const saverVersion = "digdeeper3/copilot/saver@3";
 
 export function saveFlatTrek(flatTrek: FlatTrek) {
     const countKey = JSON.stringify({
@@ -22,7 +23,7 @@ export function saveFlatTrek(flatTrek: FlatTrek) {
         trekId,
     });
 
-    localStorage.setItem(trekKey, JSON.stringify(flatTrek));
+    localStorage.setItem(trekKey, JSON.stringify(packTrek(flatTrek)));
     localStorage.setItem(countKey, JSON.stringify(count + 1));
 }
 
@@ -44,9 +45,9 @@ export function loadFlatTreks(world: World) {
                 key: "trek",
                 trekId: i,
             });
-            return JSON.parse(
+            return unpackTrek(JSON.parse(
                 localStorage.getItem(trekKey)
                 ?? _throw("Unexpectedly missing saved trek"),
-            ) as FlatTrek;
+            ) as PackedTrek);
         });
 }
