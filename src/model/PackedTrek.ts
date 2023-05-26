@@ -1,5 +1,22 @@
-import { TrekStart, TrekStep } from "../model/terms";
-import { FlatTrek } from "./FlatTrek";
+import { Trek, TrekStart, TrekStep } from "./terms";
+
+
+export type FlatTrek = {
+    start: TrekStart;
+    array: TrekStep[];
+};
+
+
+export function flattenTrek(trek: Trek): FlatTrek {
+    let t = trek;
+    const array = [] as TrekStep[];
+    while ("prev" in t) {
+        array.push({ action: t.action });
+        t = t.prev;
+    }
+    array.reverse();
+    return { start: t, array };
+}
 
 
 export type PackedTrek = {
@@ -8,18 +25,20 @@ export type PackedTrek = {
     arrayBase64: string;
 }
 
-const indexedActions = [
+export const indexedActions = [
     "forward",
     "backward",
     "left",
     "right",
 ] as const;
-const actionIndices = indexedActions.reduce(
+export const actionIndices = indexedActions.reduce(
     (acc, action, i) => ({ ...acc, [action]: i }),
     {} as Record<typeof indexedActions[number], number>,
 );
 
-const actionBitSize = 2; // 0..3
+export const indexedActionsLength = indexedActions.length;
+export const actionBitSize = Math.ceil(Math.log2(indexedActionsLength));
+export const actionsPerUnit = Math.floor(6 / actionBitSize);
 
 export const packTrekStep = (trekStep: TrekStep) => {
     return actionIndices[trekStep.action];
@@ -34,7 +53,6 @@ const base64Digits =
 
 export const packTrek = (trek: FlatTrek): PackedTrek => {
     const { start, array } = trek;
-    const actionsPerUnit = Math.floor(6 / actionBitSize);
     const arrayBase64 = new Uint8Array(
         Math.ceil(array.length * actionBitSize / 6));
     for (let i = 0; i < array.length; i++) {
@@ -54,17 +72,21 @@ export const packTrek = (trek: FlatTrek): PackedTrek => {
     };
 };
 
+export const getPackedStepAt = (trek: PackedTrek, index: number) => {
+    const { arrayBase64 } = trek;
+    const packedIndex = Math.floor(index / actionsPerUnit);
+    const packedOffset = (index % actionsPerUnit) * actionBitSize;
+    const byteBase64 = arrayBase64.charCodeAt(packedIndex);
+    const byte = base64Digits.indexOf(byteBase64);
+    const packed = (byte >> packedOffset) & ((1 << actionBitSize) - 1);
+    return packed;
+};
+
 export const unpackTrek = (trek: PackedTrek): FlatTrek => {
-    const { start, unpackedArrayLength, arrayBase64 } = trek;
-    const actionsPerUnit = Math.floor(6 / actionBitSize);
+    const { start, unpackedArrayLength } = trek;
     const unpackedArray = new Array(unpackedArrayLength);
     for (let i = 0; i < unpackedArrayLength; i++) {
-        const packedIndex = Math.floor(i / actionsPerUnit);
-        const packedOffset = (i % actionsPerUnit) * actionBitSize;
-        const byteBase64 = arrayBase64.charCodeAt(packedIndex);
-        const byte = base64Digits.indexOf(byteBase64);
-        const packed = (byte >> packedOffset) & ((1 << actionBitSize) - 1);
-        unpackedArray[i] = unpackTrekStep(packed);
+        unpackedArray[i] = unpackTrekStep(getPackedStepAt(trek, i));
     }
     return {
         start,

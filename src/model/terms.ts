@@ -42,12 +42,6 @@ export type SightBody = {
 
 export type Sight = SightBody & { trek: Trek };
 
-/**
- * @deprecated use `startForTrek(trek).dropzone`
- */
-export const trekDropzone = (trek: Trek): Dropzone =>
-    startForTrek(trek).dropzone;
-
 export function _startForTrek(trek: Trek): TrekStart {
     if (!("prev" in trek)) { return trek; }
     return startForTrek(trek.prev);

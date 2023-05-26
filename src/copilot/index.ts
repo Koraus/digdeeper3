@@ -1,13 +1,13 @@
 import { Dropzone } from "../model/Dropzone";
+import { PackedTrek, actionIndices, getPackedStepAt, indexedActions, indexedActionsLength, unpackTrekStep } from "../model/PackedTrek";
 import { World, keyProjectWorld } from "../model/World";
-import { Trek, caForDropzone, initSight, applyStep, sightAt, SightBody, trekDropzone } from "../model/terms";
+import { Trek, caForDropzone, initSight, applyStep, sightAt, SightBody, startForTrek } from "../model/terms";
 import { v2 } from "../utils/v";
-import { FlatTrek } from "./FlatTrek";
-import { loadFlatTreks } from "./saver";
 import memoize from "memoizee";
+import { loadPackedTreks } from "./saver";
 
 
-const offerVersion = "digdeeper3/copilot/offer@12";
+const offerVersion = "digdeeper3/copilot/offer@13";
 
 const windowLengths = [6, 5, 4, 3];
 const neighborhoods = [[
@@ -65,20 +65,6 @@ function loadAccumulatedMap(
     }
     return JSON.parse(str);
 }
-
-
-
-export const indexedActions = [
-    "forward",
-    "backward",
-    "left",
-    "right",
-] as const;
-const actionIndices = indexedActions.reduce(
-    (acc, action, i) => ({ ...acc, [action]: i }),
-    {} as Record<typeof indexedActions[number], number>,
-);
-
 
 
 const getLeafIndex = (
@@ -148,32 +134,32 @@ const getReducedState = (
 
 export const processTrek = (
     map: LeafMap,
-    flatTrek: FlatTrek,
+    packedTrek: PackedTrek,
     windowLength: number,
     neighborhood: v2[],
 ) => {
-    let sight = initSight(flatTrek.start);
+    let sight = initSight(packedTrek.start);
 
     const rns = getReducedNeighborhoodState(
-        flatTrek.start.dropzone, sight, neighborhood);
+        packedTrek.start.dropzone, sight, neighborhood);
     const states = [rns * (indexedActions.length + 1) + indexedActions.length];
-    for (let i = 0; i < flatTrek.array.length; i++) {
-        const step = flatTrek.array[i];
+    for (let i = 0; i < packedTrek.unpackedArrayLength; i++) {
+        const packedStep = getPackedStepAt(packedTrek, i);
         if (states.length >= windowLength) {
             const key = JSON.stringify(states);
             const mapActions = map[key] ?? (map[key] = [0, 0, 0, 0]);
             for (let ai = 0; ai < indexedActions.length; ai++) {
                 mapActions[ai] *= 0.95;
-                if (ai === actionIndices[step.action]) {
+                if (ai === packedStep) {
                     mapActions[ai] += 1;
                 }
             }
         }
 
-        sight = applyStep(flatTrek.start, sight, step);
+        sight = applyStep(packedTrek.start, sight, unpackTrekStep(packedStep));
         const rns = getReducedNeighborhoodState(
-            flatTrek.start.dropzone, sight, neighborhood);
-        states.push(rns + actionIndices[step.action]);
+            packedTrek.start.dropzone, sight, neighborhood);
+        states.push(rns * (indexedActionsLength + 1) + packedStep);
         states.splice(0, states.length - windowLength);
     }
 
@@ -186,7 +172,7 @@ const mapForWorld = memoize((world: World) => {
 
     const map = _map ?? [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}];
 
-    const treks = loadFlatTreks(world);
+    const treks = loadPackedTreks(world);
     for (let i = accumulatedOverTrekCount; i < treks.length; i++) {
         for (let wi = 0; wi < windowLengths.length; wi++) {
             for (let ni = 0; ni < neighborhoods.length; ni++) {
@@ -223,7 +209,7 @@ const mapForWorld = memoize((world: World) => {
 // }
 
 export const offer = (trek: Trek) => {
-    const dropzone = trekDropzone(trek);
+    const dropzone = startForTrek(trek).dropzone;
     const loadedMap = mapForWorld(dropzone.world);
 
     const treks = [trek];

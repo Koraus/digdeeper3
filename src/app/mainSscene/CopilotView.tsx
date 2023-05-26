@@ -1,8 +1,9 @@
 import { useRecoilState } from "recoil";
 import { sightAt } from "../../model/terms";
 import { trekRecoil } from "../trekRecoil";
-import { indexedActions, offer } from "../../copilot";
+import { offer } from "../../copilot";
 import { ThreeElements } from "@react-three/fiber";
+import { indexedActions } from "../../model/PackedTrek";
 
 
 export function CopilotView({

@@ -1,15 +1,14 @@
 import { World, keyProjectWorld } from "../model/World";
 import { Trek } from "../model/terms";
 import { _throw } from "../utils/_throw";
-import { FlatTrek, flattenTrek } from "./FlatTrek";
-import { PackedTrek, packTrek, unpackTrek } from "./PackedTrek";
+import { PackedTrek, flattenTrek, packTrek } from "../model/PackedTrek";
 
 export const saverVersion = "digdeeper3/copilot/saver@3";
 
-export function saveFlatTrek(flatTrek: FlatTrek) {
+export function savePackedTrek(trek: PackedTrek) {
     const countKey = JSON.stringify({
         saverVersion,
-        world: keyProjectWorld(flatTrek.start.dropzone.world),
+        world: keyProjectWorld(trek.start.dropzone.world),
         key: "count",
     });
 
@@ -18,18 +17,19 @@ export function saveFlatTrek(flatTrek: FlatTrek) {
     const trekId = count;
     const trekKey = JSON.stringify({
         saverVersion,
-        world: keyProjectWorld(flatTrek.start.dropzone.world),
+        world: keyProjectWorld(trek.start.dropzone.world),
         key: "trek",
         trekId,
     });
 
-    localStorage.setItem(trekKey, JSON.stringify(packTrek(flatTrek)));
+    localStorage.setItem(trekKey, JSON.stringify(trek));
     localStorage.setItem(countKey, JSON.stringify(count + 1));
 }
 
-export const saveTrek = (trek: Trek) => saveFlatTrek(flattenTrek(trek));
+export const saveTrek = (trek: Trek) =>
+    savePackedTrek(packTrek(flattenTrek(trek)));
 
-export function loadFlatTreks(world: World) {
+export function loadPackedTreks(world: World) {
     const countKey = JSON.stringify({
         saverVersion,
         world: keyProjectWorld(world),
@@ -45,9 +45,9 @@ export function loadFlatTreks(world: World) {
                 key: "trek",
                 trekId: i,
             });
-            return unpackTrek(JSON.parse(
+            return JSON.parse(
                 localStorage.getItem(trekKey)
                 ?? _throw("Unexpectedly missing saved trek"),
-            ) as PackedTrek);
+            ) as PackedTrek;
         });
 }
