@@ -1,11 +1,12 @@
 import { useRef } from "react";
 import { useEffect } from "react";
-import { caForDropzone, sightAt, startForTrek } from "../../model/terms";
+import { caForDropzone, sightAt, startForTrek } from "../model/terms";
 import { Color } from "three";
 import { useRecoilValue } from "recoil";
-import { trekRecoil } from "../trekRecoil";
-import { getComposition } from "../../ca/calculateComposition";
+import { trekRecoil } from "./trekRecoil";
+import { getComposition } from "../ca/calculateComposition";
 import { jsx } from "@emotion/react";
+import { v2 } from "../utils/v";
 
 
 export function СurrentWorldMap({
@@ -77,6 +78,19 @@ export function СurrentWorldMap({
                 });
             }
         }
+
+
+        const isVisited = ( cell: v2[] , ) => {
+            return;
+        }
+        // const mapStart = ((px - (w / 2) - 1) * w * 4);
+
+        // const mapEnd = ((px + (w / 2)) * w * 4);
+
+        // const playerPos = (px * w * 4) + pt * 4;
+
+        // const elBefore = sight.depth > 0 ? pt * h * 4 : 0;
+
 
         // player on map
         const pPos = (px * w * 4) + pt * 4;
