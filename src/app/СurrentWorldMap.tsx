@@ -1,7 +1,8 @@
 import { useRef } from "react";
 import { useEffect } from "react";
-import { caForDropzone, sightAt, startForTrek } from "../model/terms";
-import { Color, ColorRepresentation } from "three";
+import { caForDropzone } from "../../model/trek";
+import { sightAt, startForTrek } from "../../model/sightAtTrek";
+import { Color } from "three";
 import { useRecoilValue } from "recoil";
 import { trekRecoil } from "./trekRecoil";
 import { getComposition } from "../ca/calculateComposition";

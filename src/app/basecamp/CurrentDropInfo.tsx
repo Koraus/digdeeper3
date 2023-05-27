@@ -1,5 +1,5 @@
 import { DropzonePreview } from "./DropzonePreview";
-import { startForTrek } from "../../model/terms";
+import { startForTrek } from "../../model/sightAtTrek";
 import { useRecoilValue } from "recoil";
 import { trekRecoil } from "../trekRecoil";
 

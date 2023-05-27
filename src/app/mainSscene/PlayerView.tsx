@@ -2,8 +2,9 @@ import { ThreeElements } from "@react-three/fiber";
 import { useWindowEvent } from "../../utils/useWindowEvent";
 import { useRecoilState } from "recoil";
 import { trekRecoil } from "../trekRecoil";
-import { sightAt } from "../../model/terms";
-import { indexedActions, offer } from "../../copilot";
+import { sightAt } from "../../model/sightAtTrek";
+import { offer } from "../../copilot";
+import { indexedActions } from "../../model/PackedTrek";
 
 export function PlayerView({
     children, ...props
