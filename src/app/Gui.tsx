@@ -24,8 +24,10 @@ export function Gui({
     return <div {...props}>
 
         <div>WASD / Arrows to move</div>
-        <div>С to accept hint</div>
+        <div>C to accept hint</div>
         <div>Z to undo</div>
+        <div>M to toggle map</div>
+        <div>Esc to toggle basecamp</div>
         <div>---</div>
         {world.sightVersion}<br />
         -- ca rule: {world.ca.rule}<br />

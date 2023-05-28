@@ -10,7 +10,8 @@ import { useRef, useState } from "react";
 import { useGrabFocusFromBody } from "../utils/useGrabFocusFromBody";
 import { Menu as MenuIcon } from "@emotion-icons/boxicons-regular/Menu";
 import { X as XIcon } from "@emotion-icons/boxicons-regular/X";
-import { СurrentWorldMap } from "./СurrentWorldMap";
+import { OverlayMap } from "./OverlayMap";
+import { MiniMap } from "./MiniMap";
 
 
 export function App() {
@@ -35,7 +36,7 @@ export function App() {
                 setIsBasecampShown(!isBasecampShown);
                 return;
             }
-            if(ev.code === "KeyM"){
+            if (ev.code === "KeyM") {
                 setIsMapShown(!isMapShown);
                 return;
             }
@@ -53,13 +54,13 @@ export function App() {
         >
             <MainScene />
         </Canvas>
-        <СurrentWorldMap css={{opacity: isMapShown ? 1 : 0}}/>
         <div css={{
             position: "absolute",
             inset: 0,
             pointerEvents: "none",
             display: "flex",
             flex: "row",
+            overflow: "hidden",
         }}>
             <Gui css={{
                 pointerEvents: "all",
@@ -67,6 +68,28 @@ export function App() {
                 left: "1vmin",
                 top: "1vmin",
             }} />
+            <div css={{
+                transitionDuration: "0.5s",
+                position: "absolute",
+                bottom: isMapShown ? "50vh" : "0",
+                left: isMapShown ? "35vw" : "100vw",
+                opacity: isMapShown ? 1 : 0,
+                transformOrigin: "center left",
+                scale: isMapShown ? "2" : "0",
+                translate: isMapShown ? "0 50%" : "0 100%",
+                // mixBlendMode: "color-dodge",
+            }} >
+                <OverlayMap />
+            </div>
+
+            <div css={{
+                transitionDuration: "0.5s",
+                position: "absolute",
+                bottom: "1vmin",
+                right: "1vmin",
+            }} >
+                <MiniMap />
+            </div>
             <WorldSelectionPanel css={{
                 height: "100%",
                 inset: 0,
@@ -105,8 +128,8 @@ export function App() {
             </button>
             <div css={{ // appVersion panel
                 position: "absolute",
-                right: "1vmin",
-                bottom: "1vmin",
+                right: "6vmin",
+                top: "1vmin",
                 textAlign: "right",
                 fontSize: "1.4vmin",
                 lineHeight: "90%",

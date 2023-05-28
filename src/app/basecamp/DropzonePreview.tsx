@@ -9,6 +9,12 @@ import { Color } from "three";
 import { getComposition } from "../../ca/calculateComposition";
 
 
+export const colorMap = [
+    "#8d8d8d",
+    "#000000",
+    "#ff6ff5",
+];
+
 export function DropzonePreview({
     dropzone, ...props
 }: {
@@ -31,22 +37,18 @@ export function DropzonePreview({
         const ctx = canvasEl.getContext("2d");
         if (!ctx) { return; }
 
-        const colorMap = [
-            new Color("#8d8d8d"),
-            new Color("#000000"),
-            new Color("#ff6ff5"),
-        ];
-
         const theCa = caForDropzone(dropzone);
 
         const w = 200;
         const h = dropzone.width;
 
+        const _colorMap = colorMap.map(c => new Color(c));
+
         const myImageData = ctx.createImageData(w, h);
         for (let y = 0; y < h; y++) {
             for (let x = 0; x < w; x++) {
                 const i = (y * w + x) * 4;
-                const color = colorMap[theCa._at(x, y)];
+                const color = _colorMap[theCa._at(x, y)];
                 myImageData.data[i + 0] = Math.floor(color.r * 256);
                 myImageData.data[i + 1] = Math.floor(color.g * 256);
                 myImageData.data[i + 2] = Math.floor(color.b * 256);
