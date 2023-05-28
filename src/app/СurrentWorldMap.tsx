@@ -1,11 +1,11 @@
 import { useRef } from "react";
 import { useEffect } from "react";
-import { caForDropzone } from "../../model/trek";
-import { sightAt, startForTrek } from "../../model/sightAtTrek";
+import { caForDropzone } from "../model/trek";
+import { sightAt, startForTrek } from "../model/sightAtTrek";
 import { Color } from "three";
 import { useRecoilValue } from "recoil";
-import { trekRecoil } from "../trekRecoil";
-import { getComposition } from "../../ca/calculateComposition";
+import { trekRecoil } from "./trekRecoil";
+import { getComposition } from "../ca/calculateComposition";
 import { jsx } from "@emotion/react";
 
 
@@ -17,10 +17,6 @@ export function СurrentWorldMap({
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     const trek = useRecoilValue(trekRecoil);
-    const dropzone = startForTrek(trek).dropzone;
-    const sight = sightAt(trek);
-    const pos = sight.playerPosition;
-
     useEffect(() => {
 
         const canvasEl = canvasRef.current;
@@ -28,6 +24,11 @@ export function СurrentWorldMap({
 
         const ctx = canvasEl.getContext("2d");
         if (!ctx) { return; }
+
+        const dropzone = startForTrek(trek).dropzone;
+        const sight = sightAt(trek);
+        const pos = sight.playerPosition;
+        const depth = sight.depth;
 
         //colors
         const composition = getComposition(dropzone.world.ca);
@@ -39,52 +40,60 @@ export function СurrentWorldMap({
         colorMap[stone] = new Color("#8d8d8d");
         colorMap[grass] = new Color("#000000");
         colorMap[energy] = new Color("#ff6ff5");
-
+        const alphaMap = [];
+        alphaMap[stone] = 0.8;
+        alphaMap[grass] = 0.1;
+        alphaMap[energy] = 0.5;
 
         const theCa = caForDropzone(dropzone);
 
         //map(canvas) size
         const w = 60;
         const h = dropzone.width;
-        //player position
-        const px = pos[0];
-        const pt = pos[1];
-
-
         const myImageData = ctx.createImageData(w, h);
-        //painting the canvas
-        for (let x = 0; x < w; x++) { // row
+        const setColorAt = (
+            wt: number,
+            wx: number,
+            color: ColorRepresentation,
+            alpha = 1,
+        ) => {
+            const x = wt - depth;
+            const y = wx;
 
-            for (let y = 0; y < h; y++) { // line
+            if (x < 0 || x >= w) { return; }
+            if (y < 0 || y >= h) { return; }
 
-                const i = ((y * w + x) * 4);
+            const i = ((y * w + x) * 4);
+            const c = new Color(color);
+            myImageData.data[i + 0] = Math.floor(c.r * 256);
+            myImageData.data[i + 1] = Math.floor(c.g * 256);
+            myImageData.data[i + 2] = Math.floor(c.b * 256);
+            myImageData.data[i + 3] = Math.floor(alpha * 256);
+        };
 
-                //color for canvas pixel
-                const color = colorMap[theCa._at(x, y)];
-
-                myImageData.data[i + 0] = Math.floor(color.r * 256);
-                myImageData.data[i + 1] = Math.floor(color.g * 256);
-                myImageData.data[i + 2] = Math.floor(color.b * 256);
-                myImageData.data[i + 3] = theCa._at(x, y) === energy ? 99 : 255;
-
-                // painting collectedCells 
-                sight.collectedCells.map(v => {
-                    if (v[1] === x && v[0] === y) {
-                        myImageData.data[i + 0] = 255;
-                        myImageData.data[i + 1] = 100;
-                        myImageData.data[i + 2] = 0;
-                        myImageData.data[i + 3] = 255;
-                    }
-                });
+        for (let wt = depth; wt < depth + w; wt++) {
+            for (let wx = 0; wx < h; wx++) {
+                const state = theCa._at(wt, wx);
+                setColorAt(wt, wx, colorMap[state], alphaMap[state]);
             }
         }
 
+        for (const cell of sight.collectedCells) {
+            const [wx, wt] = cell;
+            const isEnergy = theCa._at(wt, wx) === energy;
+            if (isEnergy) {
+                setColorAt(wt, wx, colorMap[energy], 0.05);
+            }
+        }
+
+        for (const cell of sight.visitedCells) {
+            const [wx, wt] = cell;
+            setColorAt(wt, wx, "rgb(255, 100, 0)", 0.2);
+        }
+
         // player on map
-        const pPos = (px * w * 4) + pt * 4;
-        myImageData.data[pPos + 0] = 215;
-        myImageData.data[pPos + 1] = 53;
-        myImageData.data[pPos + 2] = 53;
-        myImageData.data[pPos + 3] = 255;
+        const [px, pt] = pos;
+        setColorAt(pt, px, "rgb(255, 255, 255)");
 
         const scale = 1;
         canvasEl.width = w * scale;
@@ -93,7 +102,7 @@ export function СurrentWorldMap({
         ctx.putImageData(myImageData, 0, 0);
         ctx.imageSmoothingEnabled = false;
         ctx.drawImage(canvasEl, 0, 0, w, h, 0, 0, w * scale, h * scale);
-    }, [canvasRef.current, dropzone, pos]);
+    }, [canvasRef.current, trek]);
 
     return <div css={[{
         display: "flex",
