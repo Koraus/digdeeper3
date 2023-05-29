@@ -66,22 +66,14 @@ export function App() {
             flex: "row",
             overflow: "hidden",
         }}>
-            <Gui css={{
-                pointerEvents: "all",
-                position: "absolute",
-                left: "1vmin",
-                top: "1vmin",
-            }} />
             <div css={{
-                transitionDuration: "0.5s",
                 position: "absolute",
-                bottom: isMapShown ? "50vh" : "0",
-                left: isMapShown ? "35vw" : "100vw",
+                top: "50vh",
+                left: "35vw",
                 opacity: isMapShown ? 1 : 0,
-                transformOrigin: "center left",
-                scale: isMapShown ? "2" : "0",
-                translate: isMapShown ? "0 50%" : "0 100%",
-                // mixBlendMode: "color-dodge",
+                transformOrigin: "0 50%",
+                scale: "2",
+                translate: "0 -50%",
                 padding: "0.2vmin",
                 background: isMapBackShown
                     ? "#505050ff"
@@ -91,17 +83,32 @@ export function App() {
             </div>
 
             <div css={{
-                transitionDuration: "0.5s",
                 position: "absolute",
-                bottom: "1vmin",
-                right: "1vmin",
+                top: "1vmin",
+                left: "1vmin",
             }} >
                 <MiniMap />
+                <Gui css={{
+                    pointerEvents: "all",
+                }} />
             </div>
+
+
+            <div css={{
+                position: "absolute",
+                bottom: "1vmin",
+                left: "1vmin",
+            }} >
+                <div>WASD / Arrows to move</div>
+                <div>C to accept hint</div>
+                <div>Z to undo</div>
+                <div>M to toggle map</div>
+                <div>Esc to toggle basecamp</div>
+            </div>
+
             <WorldSelectionPanel css={{
                 height: "100%",
                 inset: 0,
-                transitionDuration: "0.2s",
                 overflowX: "hidden",
                 position: "absolute",
                 background: "rgba(0, 0, 0, 0.8)",

@@ -12,11 +12,12 @@ export function WorldSelectionPanel({
 
     return <div
         css={[{
-            //
+            padding: "1vmin",
         }, cssProp]}
         {...props}
     >
         <CurrentDropInfo />
+        <br />
         <DropEquipmentSelector />
         <NewDropzones />
         <FavoriteDropzones />
