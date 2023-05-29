@@ -4,12 +4,9 @@ import { _throw } from "../../src/utils/_throw";
 import { clientifyRoutedStub } from "./RoutedDurableObject";
 import { hidFor } from "./hidFor";
 import { Chainer } from "./Chainer";
-import { PackedTrek, keyProjectPackedTrek } from "../../src/model/terms/PackedTrek";
+import { keyProjectPackedTrek } from "../../src/model/terms/PackedTrek";
+import { assertEvacuation } from "../../src/model/assertEvacuation";
 
-
-const assertEvacuated = (_trek: PackedTrek) => {
-    throw new Error("Not implemented");
-};
 
 function getChainerStub(
     name: string,
@@ -41,7 +38,7 @@ router
         const content = await req.json();
 
         const trek = keyProjectPackedTrek(content);
-        assertEvacuated(trek);
+        assertEvacuation(trek);
 
         const trekStr = JSON.stringify(trek);
         const hid = hidFor(trekStr);

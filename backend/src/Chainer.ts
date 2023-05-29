@@ -35,9 +35,10 @@ export class Chainer extends RoutedDurableObject {
         return openBlock;
     }
 
-    getOpenBlock() {
-        return this.state.storage.get<OpenBlock>(
+    async getOpenBlock() {
+        return (await this.state.storage.get<OpenBlock>(
             "openBlock",
-            { allowConcurrency: true });
+            { allowConcurrency: true },
+        )) ?? { hids: [] };
     }
 }

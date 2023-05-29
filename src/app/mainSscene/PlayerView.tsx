@@ -4,7 +4,10 @@ import { useRecoilState } from "recoil";
 import { trekRecoil } from "../trekRecoil";
 import { sightAt } from "../../model/sightChain";
 import { offer } from "../../copilot";
-import { instructions } from "../../model/terms/PackedTrek";
+import { instructionIndices, instructions } from "../../model/terms/PackedTrek";
+import { packTrekChain } from "../../model/trekChain";
+import { submitTrek } from "../submitTrek";
+
 
 export function PlayerView({
     children, ...props
@@ -12,39 +15,39 @@ export function PlayerView({
     const [trek, setTrek] = useRecoilState(trekRecoil);
     const sight = sightAt(trek);
     const pos = sight.playerPosition;
+    const makeStep = (instruction: keyof typeof instructionIndices) => {
+        const nextTrek = { prev: trek, instruction };
+        const nextSight = sightAt(nextTrek);
+        if (
+            nextSight.lastCrossedEvacuationLine
+            !== sight.lastCrossedEvacuationLine
+        ) {
+            // evacuation line crossed
+            submitTrek(packTrekChain(nextTrek)); //no await
+        }
+        setTrek(nextTrek);
+    };
 
     useWindowEvent("keydown", ev => {
         switch (ev.code) {
             case "ArrowLeft":
             case "KeyA": {
-                setTrek({
-                    prev: trek,
-                    instruction: "backward",
-                });
+                makeStep("backward");
                 break;
             }
             case "ArrowRight":
             case "KeyD": {
-                setTrek({
-                    prev: trek,
-                    instruction: "forward",
-                });
+                makeStep("forward");
                 break;
             }
             case "ArrowUp":
             case "KeyW": {
-                setTrek({
-                    prev: trek,
-                    instruction: "left",
-                });
+                makeStep("left");
                 break;
             }
             case "ArrowDown":
             case "KeyS": {
-                setTrek({
-                    prev: trek,
-                    instruction: "right",
-                });
+                makeStep("right");
                 break;
             }
             case "KeyC": {
@@ -54,10 +57,7 @@ export function PlayerView({
                     .map((v, i) => [i, v])
                     .sort((a, b) => (b[1] ?? 0) - (a[1] ?? 0))[0]?.[0];
                 const action = instructions[actionIndex];
-                setTrek({
-                    prev: trek,
-                    instruction: action,
-                });
+                makeStep(action);
                 break;
             }
             case "KeyZ": {

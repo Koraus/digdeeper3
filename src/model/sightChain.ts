@@ -12,7 +12,11 @@ export function _startForTrek(trek: TrekChain): Drop {
 export const startForTrek = memoize(_startForTrek);
 
 
-export type Sight = SightBody & { trek: TrekChain };
+export type Sight = SightBody & {
+    trek: TrekChain,
+    ok: boolean,
+    log: string,
+};
 
 function getLastOkSight(sight: Sight): Sight {
     if (sight.ok) { return sight; }
@@ -24,16 +28,22 @@ function getLastOkSight(sight: Sight): Sight {
 
 
 export const sightAt = memoize((trek: TrekChain): Sight => {
-    let sight;
     if (!("prev" in trek)) {
-        sight = initSight(trek);
-    } else {
-        const prevSight = getLastOkSight(sightAt(trek.prev));
-        sight = applyStep(
-            startForTrek(trek),
-            prevSight,
-            instructionIndices[trek.instruction]);
+        const sight = initSight(trek);
+        return { ...sight, trek, ok: true, log: "init" };
     }
 
-    return { ...sight, trek };
+    const prevSight = getLastOkSight(sightAt(trek.prev));
+    const [sight, log] = applyStep(
+        startForTrek(trek),
+        prevSight,
+        instructionIndices[trek.instruction],
+        true);
+
+    return {
+        ...(sight ?? prevSight),
+        trek,
+        ok: sight !== undefined,
+        log,
+    };
 });

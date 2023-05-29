@@ -20,3 +20,6 @@ bindings = [{name = "CHAINER", class_name = "Chainer"}]
 [[migrations]]
 tag = "v1" # Should be unique for each entry
 new_classes = ["Chainer"]
+
+[placement]
+mode = "smart"

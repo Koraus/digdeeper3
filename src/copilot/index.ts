@@ -7,6 +7,7 @@ import { v2 } from "../utils/v";
 import memoize from "memoizee";
 import { loadPackedTreks } from "./saver";
 import { PackedTrek, getInstructionAt, instructionIndices, instructions } from "../model/terms/PackedTrek";
+import { _never } from "../utils/_never";
 
 
 const offerVersion = "digdeeper3/copilot/offer@14";
@@ -146,22 +147,25 @@ export const processTrek = (
         packedTrek.drop.zone, sight, neighborhood);
     const states = [rns * (instructions.length + 1) + instructions.length];
     for (let i = 0; i < packedTrek.bytecodeLength; i++) {
-        const packedStep = getInstructionAt(packedTrek, i);
+        const instruction = getInstructionAt(packedTrek, i);
         if (states.length >= windowLength) {
             const key = JSON.stringify(states);
             const mapActions = map[key] ?? (map[key] = [0, 0, 0, 0]);
             for (let ai = 0; ai < instructions.length; ai++) {
                 mapActions[ai] *= 0.95;
-                if (ai === packedStep) {
+                if (ai === instruction) {
                     mapActions[ai] += 1;
                 }
             }
         }
 
-        sight = applyStep(packedTrek.drop, sight, packedStep);
+        const _sight = applyStep(packedTrek.drop, sight, instruction)[0];
+        if (!_sight) { return _never(); }
+        sight = _sight;
+
         const rns = getReducedNeighborhoodState(
             packedTrek.drop.zone, sight, neighborhood);
-        states.push(rns * (instructions.length + 1) + packedStep);
+        states.push(rns * (instructions.length + 1) + instruction);
         states.splice(0, states.length - windowLength);
     }
 

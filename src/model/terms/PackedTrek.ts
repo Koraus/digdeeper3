@@ -6,17 +6,38 @@ import { decode } from "../../utils/keyifyUtils";
 import { getValueAt } from "../../utils/base64Array";
 
 
-export const PackedTrekDecoder = D.struct({
-    v: D.literal(version),
-    drop: DropDecoder,
+const asIdGuard = <T>(fn: (x: T) => boolean) => fn as (x: T) => x is typeof x;
 
-    // expect long treks, let trek assertion fail if data is invalid
-    bytecodeLength: pipe(
-        D.number,
-        D.refine(Number.isInteger as (x: unknown) => x is number, "integer"),
+export const PackedTrekDecoder = pipe(
+    D.struct({
+        v: D.literal(version),
+        drop: DropDecoder,
+
+        // expect long treks, let trek assertion fail if data is invalid
+        bytecodeLength: pipe(
+            D.number,
+            D.refine(
+                Number.isInteger as (x: unknown) => x is number,
+                "integer"),
+        ),
+        bytecodeBase64: D.string,
+    }),
+    D.refine(
+        asIdGuard(({ bytecodeLength, bytecodeBase64 }) => {
+            for (
+                let i = bytecodeLength;
+                i < bytecodeBase64.length * (6 / instructionBitSize);
+                i++
+            ) {
+                if (getValueAt(instructionBitSize, bytecodeBase64, i) !== 0) {
+                    return false;
+                }
+            }
+            return true;
+        }),
+        "extra base64 bits are zeroed",
     ),
-    bytecodeBase64: D.string,
-});
+);
 
 export type PackedTrek = D.TypeOf<typeof PackedTrekDecoder>;
 export const keyProjectPackedTrek = decode(PackedTrekDecoder);
