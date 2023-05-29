@@ -7,7 +7,7 @@ import { appVersion } from "./appVersion";
 import { Gui } from "./Gui";
 import { WorldSelectionPanel } from "./basecamp/BasecampPanel";
 import { useRef, useState } from "react";
-import { useGrabFocusFromBody } from "../utils/useGrabFocusFromBody";
+import { useGrabFocusFromBody } from "../utils/reactish/useGrabFocusFromBody";
 import { Menu as MenuIcon } from "@emotion-icons/boxicons-regular/Menu";
 import { X as XIcon } from "@emotion-icons/boxicons-regular/X";
 import { OverlayMap } from "./OverlayMap";

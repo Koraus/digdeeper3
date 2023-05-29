@@ -1,5 +1,5 @@
 import { ThreeElements } from "@react-three/fiber";
-import { useWindowEvent } from "../../utils/useWindowEvent";
+import { useWindowEvent } from "../../utils/reactish/useWindowEvent";
 import { useRecoilState } from "recoil";
 import { trekRecoil } from "../trekRecoil";
 import { sightAt } from "../../model/sightChain";

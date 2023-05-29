@@ -1,5 +1,5 @@
 import { atom } from "recoil";
-import { localStorageAtomEffect } from "../../utils/localStorageAtomEffect";
+import { localStorageAtomEffect } from "../../utils/reactish/localStorageAtomEffect";
 import { version as sightVersion } from "../../model/version";
 import { Dropzone } from "../../model/terms/Dropzone";
 
