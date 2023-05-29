@@ -1,8 +1,30 @@
 import { v2 } from "../utils/v";
 import { evacuationLineProgress } from "./evacuation";
 import update from "immutability-helper";
-import { TrekStart, TrekStep, directionVec, caForDropzone, directionEnergyDrain } from "./trek";
+import { TrekStart, TrekStep } from "./trek";
+import memoize from "memoizee";
+import { ca } from "./ca";
+import { Dropzone } from "./terms/Dropzone";
 
+export const caForDropzone = memoize((dropzone: Dropzone) => ca({
+    ca: dropzone.world.ca,
+    spaceSize: dropzone.width,
+    startFillState: dropzone.startFillState,
+    seed: dropzone.seed,
+}));
+
+export const directionEnergyDrain = {
+    left: 1,
+    right: 1,
+    backward: 9,
+    forward: 0,
+} as const;
+export const directionVec = {
+    left: [-1, 0],
+    right: [1, 0],
+    backward: [0, -1],
+    forward: [0, 1],
+} as const;
 
 export type SightBody = {
     playerPosition: v2,
@@ -27,7 +49,10 @@ export const neighborhoods = [[
     [1, -1], [1, 0], [1, 1],
 ]] as v2[][];
 
-export const initSight = ({ dropzone, equipment }: TrekStart): SightBody => ({
+export const initSight = ({ 
+    zone: dropzone, 
+    equipment,
+ }: TrekStart): SightBody => ({
     playerPosition: [Math.floor(dropzone.width / 2), 0],
     playerEnergy: 81 * 3,
     visitedCells: [[Math.floor(dropzone.width / 2), 0]],
@@ -46,7 +71,7 @@ export const applyStep = (
     trek: TrekStep,
 ): SightBody => {
     const {
-        dropzone, depthLeftBehind, equipment,
+        zone: dropzone, depthLeftBehind, equipment,
     } = start;
     const {
         world, width,
@@ -57,7 +82,7 @@ export const applyStep = (
 
     const p1 = v2.add(
         prevSight.playerPosition,
-        directionVec[trek.action]);
+        directionVec[trek.instruction]);
 
     if (p1[0] < 0 || p1[0] >= width) {
         return update(prevSight, {
@@ -77,7 +102,7 @@ export const applyStep = (
     const ca = caForDropzone(dropzone);
     const caState = caForDropzone(dropzone)._at(p1[1], p1[0]);
 
-    const theStateEnergyDrain = directionEnergyDrain[trek.action];
+    const theStateEnergyDrain = directionEnergyDrain[trek.instruction];
     const theDirectionEnergyDrain = isP1Visited ? 0 : stateEnergyDrain[caState];
     const moveCost = theStateEnergyDrain + theDirectionEnergyDrain;
 

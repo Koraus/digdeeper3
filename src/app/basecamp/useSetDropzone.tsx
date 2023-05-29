@@ -10,7 +10,7 @@ export function useSetDropzone() {
     const equipment = useRecoilValue(dropEquipmentRecoil);
     return (dropzone: Dropzone) => setDrop({
         v: version,
-        dropzone,
+        zone: dropzone,
         depthLeftBehind: 10,
         equipment,
     });

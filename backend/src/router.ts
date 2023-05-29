@@ -4,11 +4,9 @@ import { _throw } from "../../src/utils/_throw";
 import { clientifyRoutedStub } from "./RoutedDurableObject";
 import { hidFor } from "./hidFor";
 import { Chainer } from "./Chainer";
-import { PackedTrek } from "../../src/model/PackedTrek";
+import { PackedTrek, keyProjectPackedTrek } from "../../src/model/terms/PackedTrek";
 
-const keyProjectTrek = (_trek: unknown): PackedTrek => {
-    throw new Error("Not implemented");
-};
+
 const assertEvacuated = (_trek: PackedTrek) => {
     throw new Error("Not implemented");
 };
@@ -42,7 +40,7 @@ router
     .post("/trek/", async (req, env: Env) => {
         const content = await req.json();
 
-        const trek = keyProjectTrek(content);
+        const trek = keyProjectPackedTrek(content);
         assertEvacuated(trek);
 
         const trekStr = JSON.stringify(trek);

@@ -1,4 +1,4 @@
-import { caForDropzone } from "../../../model/trek";
+import { caForDropzone } from "../../../model/sight";
 import { LayoutContext } from "./LayoutContext";
 import { Grass } from "./Grass";
 import { Rock } from "./Rock";

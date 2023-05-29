@@ -12,7 +12,7 @@ export function EvacuationLine({
     isPrev?: boolean;
 }) {
     const trek = useRecoilValue(trekRecoil);
-    const dropzone = startForTrek(trek).dropzone;
+    const dropzone = startForTrek(trek).zone;
     const sight = sightAt(trek);
     const pos = sight.playerPosition;
 

@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { useEffect } from "react";
-import { caForDropzone } from "../model/trek";
+import { caForDropzone } from "../model/sight";
 import { sightAt, startForTrek } from "../model/sightAtTrek";
 import { useRecoilValue } from "recoil";
 import { trekRecoil } from "./trekRecoil";
@@ -17,7 +17,7 @@ export function MiniMap() {
         const canvasEl = canvasRef.current;
         if (!canvasEl) { return; }
 
-        const dropzone = startForTrek(trek).dropzone;
+        const dropzone = startForTrek(trek).zone;
         const w = 150;
         const h = dropzone.width;
         const pixelsPerCell = 2;

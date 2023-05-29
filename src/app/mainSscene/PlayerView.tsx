@@ -4,7 +4,7 @@ import { useRecoilState } from "recoil";
 import { trekRecoil } from "../trekRecoil";
 import { sightAt } from "../../model/sightAtTrek";
 import { offer } from "../../copilot";
-import { indexedActions } from "../../model/PackedTrek";
+import { instructions } from "../../model/terms/PackedTrek";
 
 export function PlayerView({
     children, ...props
@@ -19,7 +19,7 @@ export function PlayerView({
             case "KeyA": {
                 setTrek({
                     prev: trek,
-                    action: "backward",
+                    instruction: "backward",
                 });
                 break;
             }
@@ -27,7 +27,7 @@ export function PlayerView({
             case "KeyD": {
                 setTrek({
                     prev: trek,
-                    action: "forward",
+                    instruction: "forward",
                 });
                 break;
             }
@@ -35,7 +35,7 @@ export function PlayerView({
             case "KeyW": {
                 setTrek({
                     prev: trek,
-                    action: "left",
+                    instruction: "left",
                 });
                 break;
             }
@@ -43,7 +43,7 @@ export function PlayerView({
             case "KeyS": {
                 setTrek({
                     prev: trek,
-                    action: "right",
+                    instruction: "right",
                 });
                 break;
             }
@@ -53,10 +53,10 @@ export function PlayerView({
                 const actionIndex = theOffer
                     .map((v, i) => [i, v])
                     .sort((a, b) => (b[1] ?? 0) - (a[1] ?? 0))[0]?.[0];
-                const action = indexedActions[actionIndex];
+                const action = instructions[actionIndex];
                 setTrek({
                     prev: trek,
-                    action,
+                    instruction: action,
                 });
                 break;
             }

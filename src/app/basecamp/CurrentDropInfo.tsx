@@ -8,10 +8,10 @@ export function CurrentDropInfo() {
     const trek = useRecoilValue(trekRecoil);
     const drop = startForTrek(trek);
 
-    const world = drop.dropzone.world;
+    const world = drop.zone.world;
 
     return <div css={[{ display: "flex", flexDirection: "column" }]}>
-        <DropzonePreview dropzone={drop.dropzone} />
+        <DropzonePreview dropzone={drop.zone} />
         <div>
             <div>{world.v}</div>
             <div>-- ca rule:
@@ -20,11 +20,11 @@ export function CurrentDropInfo() {
                 &nbsp;/ gain: {world.stateEnergyGain.join(" ")}
             </div>
             <div>- startFillState:
-                &nbsp;{drop.dropzone.startFillState}</div>
+                &nbsp;{drop.zone.startFillState}</div>
             <div>- seed:
-                &nbsp;{drop.dropzone.seed}</div>
+                &nbsp;{drop.zone.seed}</div>
             <div>- width:
-                &nbsp;{drop.dropzone.width}</div>
+                &nbsp;{drop.zone.width}</div>
             <div>depthLeftBehind:
                 &nbsp;{drop.depthLeftBehind}</div>
             <div>equipment:

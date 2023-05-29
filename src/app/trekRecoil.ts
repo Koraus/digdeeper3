@@ -11,7 +11,7 @@ export const trekRecoil = atom<Trek>({
     key: "trek",
     default: {
         v: sightVersion,
-        dropzone: generateRandomDropzone({
+        zone: generateRandomDropzone({
             world: {
                 v: sightVersion,
                 ca: {

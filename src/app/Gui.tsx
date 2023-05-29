@@ -19,7 +19,7 @@ export function Gui({
     const progression = useRecoilValue(trekRecoil);
     const sight = sightAt(progression);
     const drop = startForTrek(progression);
-    const world = drop.dropzone.world;
+    const world = drop.zone.world;
 
     const setDrop = useSetDrop();
 
@@ -29,9 +29,9 @@ export function Gui({
         -- drain: {world.stateEnergyDrain.join(" ")}
         &nbsp;/ gain: {world.stateEnergyGain.join(" ")}<br />
 
-        - startFillState: {drop.dropzone.startFillState}<br />
-        - seed: {drop.dropzone.seed}<br />
-        - width: {drop.dropzone.width}<br />
+        - startFillState: {drop.zone.startFillState}<br />
+        - seed: {drop.zone.seed}<br />
+        - width: {drop.zone.width}<br />
         depthLeftBehind:{drop.depthLeftBehind} <br />
         equipment:{JSON.stringify(drop.equipment)}<br />
         <div>---</div>
@@ -64,8 +64,8 @@ export function Gui({
                 }]}
                 onClick={() => setDrop({
                     v: version,
-                    dropzone: generateRandomDropzone({
-                        world: drop.dropzone.world,
+                    zone: generateRandomDropzone({
+                        world: drop.zone.world,
                     }),
                     depthLeftBehind: 10,
                     equipment: {
@@ -87,7 +87,7 @@ export function Gui({
                 }]}
                 onClick={() => setDrop({
                     v: version,
-                    dropzone: generateRandomDropzone({
+                    zone: generateRandomDropzone({
                         world: generateRandomWorld({
                             // todo use gen rules from "NewDropzones" here
                             ca: generateRandomSymmetricalRule(caStateCount),

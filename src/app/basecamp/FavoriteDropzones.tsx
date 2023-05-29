@@ -54,7 +54,7 @@ export function FavoriteDropzones({
                     <button
                         onClick={() => setDrop({
                             v: version,
-                            dropzone,
+                            zone: dropzone,
                             depthLeftBehind: 10,
                             equipment: {
                                 pickNeighborhoodIndex: 0,

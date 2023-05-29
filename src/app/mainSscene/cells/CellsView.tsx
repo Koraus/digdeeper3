@@ -3,7 +3,7 @@ import { useRecoilValue } from "recoil";
 import { trekRecoil } from "../../trekRecoil";
 import { Trek } from "../../../model/trek";
 import { sightAt, startForTrek } from "../../../model/sightAtTrek";
-import { caForDropzone } from "../../../model/trek";
+import { caForDropzone } from "../../../model/sight";
 import { useMemo } from "react";
 import { BoxGeometry, Euler, Group, Matrix4, MeshPhongMaterial, Quaternion, Vector3 } from "three";
 import { LehmerPrng } from "../../../utils/LehmerPrng";
@@ -53,7 +53,7 @@ export const epxandedSight = memoize((trek: Trek) => {
     for (const [x, t] of sight.collectedCells) {
         (collectedCells[t] ??= {})[x] = true;
     }
-    const composition = getComposition(drop.dropzone.world.ca);
+    const composition = getComposition(drop.zone.world.ca);
 
     const [rock, grass, energy] = composition
         .map((p, i) => [p, i])
@@ -102,7 +102,7 @@ const createCellView = ({
     onTrek(trek => {
         const expSight = epxandedSight(trek);
         const sight = expSight.sight;
-        const dropzone = expSight.drop.dropzone;
+        const dropzone = expSight.drop.zone;
 
         const pos = sight.playerPosition;
         const [px, pt] = pos;

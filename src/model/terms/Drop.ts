@@ -6,7 +6,7 @@ import { DropzoneDecoder } from "./Dropzone";
 
 export const DropDecoder = D.struct({
     v: D.literal(version),
-    dropzone: DropzoneDecoder,
+    zone: DropzoneDecoder,
     equipment: D.struct({
         pickNeighborhoodIndex: D.union(
             D.literal(0),

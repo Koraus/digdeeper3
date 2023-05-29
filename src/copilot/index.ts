@@ -1,15 +1,15 @@
 import { Dropzone } from "../model/terms/Dropzone";
-import { PackedTrek, actionIndices, getPackedStepAt, indexedActions, indexedActionsLength, unpackTrekStep } from "../model/PackedTrek";
 import { World, keyProjectWorld } from "../model/terms/World";
-import { Trek, caForDropzone } from "../model/trek";
+import { Trek } from "../model/trek";
 import { sightAt, startForTrek } from "../model/sightAtTrek";
-import { applyStep, initSight, SightBody } from "../model/sight";
+import { applyStep, caForDropzone, initSight, SightBody } from "../model/sight";
 import { v2 } from "../utils/v";
 import memoize from "memoizee";
 import { loadPackedTreks } from "./saver";
+import { PackedTrek, getInstructionAt, instructionIndices, instructions } from "../model/terms/PackedTrek";
 
 
-const offerVersion = "digdeeper3/copilot/offer@13";
+const offerVersion = "digdeeper3/copilot/offer@14";
 
 const windowLengths = [6, 5, 4, 3];
 const neighborhoods = [[
@@ -108,9 +108,9 @@ const getReducedNeighborhoodState = (
         const [dx, dt] = neighborhood[i];
         s *= sc;
         s += getCell(
-            dropzone, 
-            sight, 
-            sight.playerPosition[1] + dt, 
+            dropzone,
+            sight,
+            sight.playerPosition[1] + dt,
             sight.playerPosition[0] + dx);
     }
     return s;
@@ -129,8 +129,8 @@ const getReducedState = (
             const sight = sightAt(trek);
             const rns = getReducedNeighborhoodState(
                 dropzone, sight, neighborhood);
-            return rns * (indexedActions.length + 1)
-                + actionIndices[trek.action];
+            return rns * (instructions.length + 1)
+                + instructionIndices[trek.instruction];
         }),
 );
 
@@ -140,17 +140,17 @@ export const processTrek = (
     windowLength: number,
     neighborhood: v2[],
 ) => {
-    let sight = initSight(packedTrek.start);
+    let sight = initSight(packedTrek.drop);
 
     const rns = getReducedNeighborhoodState(
-        packedTrek.start.dropzone, sight, neighborhood);
-    const states = [rns * (indexedActions.length + 1) + indexedActions.length];
-    for (let i = 0; i < packedTrek.unpackedArrayLength; i++) {
-        const packedStep = getPackedStepAt(packedTrek, i);
+        packedTrek.drop.zone, sight, neighborhood);
+    const states = [rns * (instructions.length + 1) + instructions.length];
+    for (let i = 0; i < packedTrek.bytecodeLength; i++) {
+        const packedStep = getInstructionAt(packedTrek, i);
         if (states.length >= windowLength) {
             const key = JSON.stringify(states);
             const mapActions = map[key] ?? (map[key] = [0, 0, 0, 0]);
-            for (let ai = 0; ai < indexedActions.length; ai++) {
+            for (let ai = 0; ai < instructions.length; ai++) {
                 mapActions[ai] *= 0.95;
                 if (ai === packedStep) {
                     mapActions[ai] += 1;
@@ -158,10 +158,15 @@ export const processTrek = (
             }
         }
 
-        sight = applyStep(packedTrek.start, sight, unpackTrekStep(packedStep));
+        sight = applyStep(
+            packedTrek.drop, 
+            sight, 
+            {
+                instruction: instructions[packedStep],
+            });
         const rns = getReducedNeighborhoodState(
-            packedTrek.start.dropzone, sight, neighborhood);
-        states.push(rns * (indexedActionsLength + 1) + packedStep);
+            packedTrek.drop.zone, sight, neighborhood);
+        states.push(rns * (instructions.length + 1) + packedStep);
         states.splice(0, states.length - windowLength);
     }
 
@@ -211,7 +216,7 @@ const mapForWorld = memoize((world: World) => {
 // }
 
 export const offer = (trek: Trek) => {
-    const dropzone = startForTrek(trek).dropzone;
+    const dropzone = startForTrek(trek).zone;
     const loadedMap = mapForWorld(dropzone.world);
 
     const treks = [trek];

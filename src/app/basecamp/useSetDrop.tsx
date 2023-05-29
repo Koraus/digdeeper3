@@ -12,9 +12,9 @@ export function useSetDrop() {
     return (drop: Drop) => {
         saveTrek(trek);
         setHistoricalWorlds([
-            drop.dropzone,
+            drop.zone,
             ...historicalWorlds
-                .filter(p => !eqDropzone(p, drop.dropzone)),
+                .filter(p => !eqDropzone(p, drop.zone)),
         ]);
         setTrek(drop);
     };

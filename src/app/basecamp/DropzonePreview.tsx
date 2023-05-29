@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import type { jsx } from "@emotion/react";
-import { caForDropzone } from "../../model/trek";
+import { caForDropzone } from "../../model/sight";
 import { Star } from "@emotion-icons/ionicons-solid/Star";
 import { useRecoilState } from "recoil";
 import { favoriteDropzonesRecoil } from "./favoriteDropzonesRecoil";

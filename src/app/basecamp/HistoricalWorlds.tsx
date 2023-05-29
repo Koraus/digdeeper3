@@ -68,7 +68,7 @@ export function HistoricalWorlds({
                             }]}
                             onClick={() => setDrop({
                                 v: version,
-                                dropzone: p,
+                                zone: p,
                                 depthLeftBehind: 10,
                                 equipment: {
                                     pickNeighborhoodIndex: 0,

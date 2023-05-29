@@ -3,7 +3,7 @@ import { sightAt } from "../../model/sightAtTrek";
 import { trekRecoil } from "../trekRecoil";
 import { offer } from "../../copilot";
 import { ThreeElements } from "@react-three/fiber";
-import { indexedActions } from "../../model/PackedTrek";
+import { instructions } from "../../model/terms/PackedTrek";
 
 
 export function CopilotView({
@@ -25,10 +25,10 @@ export function CopilotView({
                 const actionIndex = theOffer
                     .map((v, i) => [i, v])
                     .sort((a, b) => (b[1] ?? 0) - (a[1] ?? 0))[0]?.[0];
-                const action = indexedActions[actionIndex];
+                const action = instructions[actionIndex];
                 pr = {
                     prev: pr,
-                    action,
+                    instruction: action,
                 };
                 const w = sightAt(pr);
                 yield w.playerPosition;
