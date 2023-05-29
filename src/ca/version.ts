@@ -1,1 +1,1 @@
-export const version = "digdeeper3/ca@1" as const;
+export const version = "digdeeper3/ca@2" as const;

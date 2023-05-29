@@ -1,4 +1,5 @@
-import { sightVersion, DropEquipment } from "../../model/trek";
+import { DropEquipment } from "../../model/terms/Drop";
+import { version as sightVersion } from "../../model/version";
 import { localStorageAtomEffect } from "../../utils/localStorageAtomEffect";
 import { atom } from "recoil";
 

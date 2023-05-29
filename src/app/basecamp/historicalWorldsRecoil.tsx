@@ -1,7 +1,7 @@
 import { atom } from "recoil";
 import { localStorageAtomEffect } from "../../utils/localStorageAtomEffect";
-import { sightVersion } from "../../model/trek";
-import { Dropzone } from "../../model/Dropzone";
+import { version as sightVersion } from "../../model/version";
+import { Dropzone } from "../../model/terms/Dropzone";
 
 
 export const historicalWorldsRecoil = atom({

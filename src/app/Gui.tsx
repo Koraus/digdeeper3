@@ -4,11 +4,13 @@ import { trekRecoil } from "./trekRecoil";
 import { RestartAlt } from "@emotion-icons/material/RestartAlt";
 import { PinDrop } from "@emotion-icons/material-outlined/PinDrop";
 import { World } from "@emotion-icons/boxicons-regular/World";
-import { generateRandomDropzone } from "../model/Dropzone";
+import { generateRandomDropzone } from "../model/generate";
 import { useSetDrop } from "./basecamp/useSetDrop";
 import { jsx } from "@emotion/react";
-import { caStateCount, generateRandomWorld } from "../model/World";
+import { caStateCount } from "../model/terms/World";
+import { generateRandomWorld } from "../model/generate";
 import { generateRandomSymmetricalRule } from "../ca/generateRandomSymmetricalRule";
+import { version } from "../model/version";
 
 
 export function Gui({
@@ -22,7 +24,7 @@ export function Gui({
     const setDrop = useSetDrop();
 
     return <div {...props}>
-        {world.sightVersion}<br />
+        {world.v}<br />
         -- ca rule: {world.ca.rule}<br />
         -- drain: {world.stateEnergyDrain.join(" ")}
         &nbsp;/ gain: {world.stateEnergyGain.join(" ")}<br />
@@ -61,6 +63,7 @@ export function Gui({
                     alignItems: "center",
                 }]}
                 onClick={() => setDrop({
+                    v: version,
                     dropzone: generateRandomDropzone({
                         world: drop.dropzone.world,
                     }),
@@ -83,6 +86,7 @@ export function Gui({
                     alignItems: "center",
                 }]}
                 onClick={() => setDrop({
+                    v: version,
                     dropzone: generateRandomDropzone({
                         world: generateRandomWorld({
                             // todo use gen rules from "NewDropzones" here

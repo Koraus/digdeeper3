@@ -36,21 +36,6 @@ export const buildFullTransitionLookupTable = (
     return table;
 };
 
-export type Code = {
-    version: typeof version;
-    stateCount: number;
-    rule: string; // BigInt base 10
-};
-
-
-export const keyProjectCode = ({
-    version, stateCount, rule,
-}: Code) => ({
-    version, stateCount, rule,
-});
-
-export const keyifyCode = (code: Code) => JSON.stringify(keyProjectCode(code));
-
 export const parseFullTransitionLookupTable = ({
     stateCount, rule,
 }: {

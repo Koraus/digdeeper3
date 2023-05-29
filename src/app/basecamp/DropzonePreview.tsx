@@ -4,7 +4,7 @@ import { caForDropzone } from "../../model/trek";
 import { Star } from "@emotion-icons/ionicons-solid/Star";
 import { useRecoilState } from "recoil";
 import { favoriteDropzonesRecoil } from "./favoriteDropzonesRecoil";
-import { eqDropzone, Dropzone } from "../../model/Dropzone";
+import { eqDropzone, Dropzone } from "../../model/terms/Dropzone";
 import { Color } from "three";
 import { getComposition } from "../../ca/calculateComposition";
 

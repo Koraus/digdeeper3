@@ -34,7 +34,7 @@ export function DropEquipmentSelector({
                 value={dropEquipment.pickNeighborhoodIndex}
                 onChange={ev => setDropEquipment(update(dropEquipment, {
                     pickNeighborhoodIndex: {
-                        $set: Number(ev.target.value),
+                        $set: Number(ev.target.value) as 0 | 1 | 2,
                     },
                 }))}
             ></input>

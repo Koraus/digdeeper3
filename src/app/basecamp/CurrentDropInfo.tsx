@@ -13,7 +13,7 @@ export function CurrentDropInfo() {
     return <div css={[{ display: "flex", flexDirection: "column" }]}>
         <DropzonePreview dropzone={drop.dropzone} />
         <div>
-            <div>{world.sightVersion}</div>
+            <div>{world.v}</div>
             <div>-- ca rule:
                 &nbsp;{world.ca.rule} </div>
             <div>-- drain: {world.stateEnergyDrain.join(" ")}

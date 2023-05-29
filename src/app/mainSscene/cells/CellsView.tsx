@@ -10,7 +10,7 @@ import { LehmerPrng } from "../../../utils/LehmerPrng";
 import { InstancedMeshHost, zeroScaleMatrix } from "../../../utils/InstancedMeshHost";
 import { ParentState } from "./LayoutContext";
 import { Cell } from "./Cell";
-import { Dropzone } from "../../../model/Dropzone";
+import { Dropzone } from "../../../model/terms/Dropzone";
 import memoize from "memoizee";
 import { getComposition } from "../../../ca/calculateComposition";
 

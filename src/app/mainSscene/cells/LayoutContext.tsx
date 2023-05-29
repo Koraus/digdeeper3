@@ -1,7 +1,7 @@
 import { RenderCallback } from "@react-three/fiber";
 import { InstancedMeshHost } from "../../../utils/InstancedMeshHost";
 import { Matrix4 } from "three";
-import { Dropzone } from "../../../model/Dropzone";
+import { Dropzone } from "../../../model/terms/Dropzone";
 import { Trek } from "../../../model/trek";
 
 

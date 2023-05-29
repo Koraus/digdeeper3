@@ -1,20 +1,8 @@
 import memoize from "memoizee";
 import { ca } from "./ca";
-import { version as sightVersion } from "./version";
-import { Dropzone } from "./Dropzone";
+import { Dropzone } from "./terms/Dropzone";
+import { Drop } from "./terms/Drop";
 
-
-export { sightVersion };
-
-export type DropEquipment = {
-    pickNeighborhoodIndex: number,
-};
-
-export type Drop = {
-    dropzone: Dropzone,
-    equipment: DropEquipment,
-    depthLeftBehind: number,
-}
 
 export type TrekStart = Drop;
 
