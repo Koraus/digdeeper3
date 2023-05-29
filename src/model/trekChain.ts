@@ -5,12 +5,15 @@ import { InstructionIndex, PackedTrek, instructionBitSize, instructionIndices } 
 import { version } from "./version";
 
 
-export type TrekStart = Drop;
-export type TrekStep = { instruction: keyof typeof instructionIndices };
-export type Trek = TrekStart | (TrekStep & { prev: Trek });
+export type TrekChain =
+    Drop
+    | {
+        instruction: keyof typeof instructionIndices,
+        prev: TrekChain,
+    };
 
 
-export const packTrek = (trek: Trek): PackedTrek => {
+export const packTrekChain = (trek: TrekChain): PackedTrek => {
     let t = trek;
     const array = [] as InstructionIndex[];
     while ("prev" in t) {

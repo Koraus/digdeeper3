@@ -2,7 +2,7 @@ import { jsx } from "@emotion/react";
 import { EvacuationLineParticles } from "./EvacuationLineParticles";
 import { useRecoilValue } from "recoil";
 import { trekRecoil } from "../trekRecoil";
-import { sightAt, startForTrek } from "../../model/sightAtTrek";
+import { sightAt, startForTrek } from "../../model/sightChain";
 import { evacuationLinePosition, evacuationLineProgress } from "../../model/evacuation";
 
 

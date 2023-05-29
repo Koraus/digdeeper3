@@ -38,5 +38,9 @@ export const instructionIndices = instructions.reduce(
     {} as Record<typeof instructions[number], InstructionIndex>,
 );
 
-export const getInstructionAt = (trek: PackedTrek, index: number) => 
-    getValueAt(instructionBitSize, trek.bytecodeBase64, index);
+export const getInstructionAt = (trek: PackedTrek, index: number) =>
+    getValueAt(
+        instructionBitSize,
+        trek.bytecodeBase64,
+        index,
+    ) as InstructionIndex;

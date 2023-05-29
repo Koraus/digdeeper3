@@ -1,5 +1,5 @@
 import { atom } from "recoil";
-import { Trek } from "../model/trek";
+import { TrekChain } from "../model/trekChain";
 import { version as sightVersion } from "../model/version";
 import { buildFullTransitionLookupTable, version as caVersion } from "../ca";
 import { getDigits, getNumberFromDigits } from "../ca/digits";
@@ -7,7 +7,7 @@ import { caStateCount } from "../model/terms/World";
 import { generateRandomDropzone } from "../model/generate";
 
 
-export const trekRecoil = atom<Trek>({
+export const trekRecoil = atom<TrekChain>({
     key: "trek",
     default: {
         v: sightVersion,

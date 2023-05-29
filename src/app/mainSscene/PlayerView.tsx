@@ -2,7 +2,7 @@ import { ThreeElements } from "@react-three/fiber";
 import { useWindowEvent } from "../../utils/useWindowEvent";
 import { useRecoilState } from "recoil";
 import { trekRecoil } from "../trekRecoil";
-import { sightAt } from "../../model/sightAtTrek";
+import { sightAt } from "../../model/sightChain";
 import { offer } from "../../copilot";
 import { instructions } from "../../model/terms/PackedTrek";
 

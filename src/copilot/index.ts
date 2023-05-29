@@ -1,7 +1,7 @@
 import { Dropzone } from "../model/terms/Dropzone";
 import { World, keyProjectWorld } from "../model/terms/World";
-import { Trek } from "../model/trek";
-import { sightAt, startForTrek } from "../model/sightAtTrek";
+import { TrekChain } from "../model/trekChain";
+import { sightAt, startForTrek } from "../model/sightChain";
 import { applyStep, caForDropzone, initSight, SightBody } from "../model/sight";
 import { v2 } from "../utils/v";
 import memoize from "memoizee";
@@ -118,7 +118,7 @@ const getReducedNeighborhoodState = (
 
 const getReducedState = (
     dropzone: Dropzone,
-    treksSteps: Trek[],
+    treksSteps: TrekChain[],
     windowLength: number,
     neighborhood: v2[],
 ) => JSON.stringify(
@@ -158,12 +158,7 @@ export const processTrek = (
             }
         }
 
-        sight = applyStep(
-            packedTrek.drop, 
-            sight, 
-            {
-                instruction: instructions[packedStep],
-            });
+        sight = applyStep(packedTrek.drop, sight, packedStep);
         const rns = getReducedNeighborhoodState(
             packedTrek.drop.zone, sight, neighborhood);
         states.push(rns * (instructions.length + 1) + packedStep);
@@ -215,7 +210,7 @@ const mapForWorld = memoize((world: World) => {
 //     ] as [number, number, number, number];
 // }
 
-export const offer = (trek: Trek) => {
+export const offer = (trek: TrekChain) => {
     const dropzone = startForTrek(trek).zone;
     const loadedMap = mapForWorld(dropzone.world);
 

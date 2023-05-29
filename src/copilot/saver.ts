@@ -1,6 +1,6 @@
 import { PackedTrek } from "../model/terms/PackedTrek";
 import { World, keyProjectWorld } from "../model/terms/World";
-import { Trek, packTrek } from "../model/trek";
+import { TrekChain, packTrekChain } from "../model/trekChain";
 import { _throw } from "../utils/_throw";
 
 export const saverVersion = "digdeeper3/copilot/saver@4";
@@ -26,7 +26,8 @@ export function savePackedTrek(trek: PackedTrek) {
     localStorage.setItem(countKey, JSON.stringify(count + 1));
 }
 
-export const saveTrek = (trek: Trek) => savePackedTrek(packTrek(trek));
+export const saveTrek = (trek: TrekChain) =>
+    savePackedTrek(packTrekChain(trek));
 
 export function loadPackedTreks(world: World) {
     const countKey = JSON.stringify({

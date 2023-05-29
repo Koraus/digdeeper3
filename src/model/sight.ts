@@ -1,10 +1,11 @@
 import { v2 } from "../utils/v";
 import { evacuationLineProgress } from "./evacuation";
 import update from "immutability-helper";
-import { TrekStart, TrekStep } from "./trek";
 import memoize from "memoizee";
 import { ca } from "./ca";
 import { Dropzone } from "./terms/Dropzone";
+import { Drop } from "./terms/Drop";
+import { InstructionIndex, instructionIndices } from "./terms/PackedTrek";
 
 export const caForDropzone = memoize((dropzone: Dropzone) => ca({
     ca: dropzone.world.ca,
@@ -14,16 +15,16 @@ export const caForDropzone = memoize((dropzone: Dropzone) => ca({
 }));
 
 export const directionEnergyDrain = {
-    left: 1,
-    right: 1,
-    backward: 9,
-    forward: 0,
+    [instructionIndices.left]: 1,
+    [instructionIndices.right]: 1,
+    [instructionIndices.backward]: 9,
+    [instructionIndices.forward]: 0,
 } as const;
 export const directionVec = {
-    left: [-1, 0],
-    right: [1, 0],
-    backward: [0, -1],
-    forward: [0, 1],
+    [instructionIndices.left]: [-1, 0],
+    [instructionIndices.right]: [1, 0],
+    [instructionIndices.backward]: [0, -1],
+    [instructionIndices.forward]: [0, 1],
 } as const;
 
 export type SightBody = {
@@ -50,14 +51,14 @@ export const neighborhoods = [[
 ]] as v2[][];
 
 export const initSight = ({ 
-    zone: dropzone, 
+    zone, 
     equipment,
- }: TrekStart): SightBody => ({
-    playerPosition: [Math.floor(dropzone.width / 2), 0],
+ }: Drop): SightBody => ({
+    playerPosition: [Math.floor(zone.width / 2), 0],
     playerEnergy: 81 * 3,
-    visitedCells: [[Math.floor(dropzone.width / 2), 0]],
+    visitedCells: [[Math.floor(zone.width / 2), 0]],
     collectedCells: neighborhoods[equipment.pickNeighborhoodIndex]
-        .map(x => v2.add(x, [Math.floor(dropzone.width / 2), 0]))
+        .map(x => v2.add(x, [Math.floor(zone.width / 2), 0]))
         .filter((x) => x[1] >= 0),
     lastCrossedEvacuationLine: 0,
     depth: 0,
@@ -66,9 +67,9 @@ export const initSight = ({
 });
 
 export const applyStep = (
-    start: TrekStart,
+    start: Drop,
     prevSight: SightBody,
-    trek: TrekStep,
+    instruction: InstructionIndex,
 ): SightBody => {
     const {
         zone: dropzone, depthLeftBehind, equipment,
@@ -82,7 +83,7 @@ export const applyStep = (
 
     const p1 = v2.add(
         prevSight.playerPosition,
-        directionVec[trek.instruction]);
+        directionVec[instruction]);
 
     if (p1[0] < 0 || p1[0] >= width) {
         return update(prevSight, {
@@ -102,7 +103,7 @@ export const applyStep = (
     const ca = caForDropzone(dropzone);
     const caState = caForDropzone(dropzone)._at(p1[1], p1[0]);
 
-    const theStateEnergyDrain = directionEnergyDrain[trek.instruction];
+    const theStateEnergyDrain = directionEnergyDrain[instruction];
     const theDirectionEnergyDrain = isP1Visited ? 0 : stateEnergyDrain[caState];
     const moveCost = theStateEnergyDrain + theDirectionEnergyDrain;
 
