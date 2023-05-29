@@ -6,8 +6,12 @@ import { useRecoilValue } from "recoil";
 import { trekRecoil } from "./trekRecoil";
 import { epxandedSight } from "./mainSscene/cells/CellsView";
 import { createImageData32 } from "../utils/createImageData32";
+import { jsx } from "@emotion/react";
 
-export function OverlayMap() {
+export function OverlayMap({
+    css: cssProp,
+    ...props
+}: jsx.JSX.IntrinsicElements["canvas"]) {
     const trek = useRecoilValue(trekRecoil);
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -178,6 +182,7 @@ export function OverlayMap() {
         css={[{
             imageRendering: "pixelated",
             height: "100%",
-        }]}
+        }, cssProp]}
+        {...props}
     />;
 }

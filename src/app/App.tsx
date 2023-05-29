@@ -16,7 +16,9 @@ import { MiniMap } from "./MiniMap";
 
 export function App() {
     const [isBasecampShown, setIsBasecampShown] = useState(false);
-    const [isMapShown, setIsMapShown] = useState(false);
+    const [mapShowState, setMapShowState] = useState(0);
+    const isMapShown = mapShowState > 0;
+    const isMapBackShown = mapShowState === 2;
 
     const focusRootRef = useRef<HTMLDivElement>(null);
     useGrabFocusFromBody(focusRootRef);
@@ -34,11 +36,13 @@ export function App() {
         onKeyDown={ev => {
             if (ev.code === "Escape") {
                 setIsBasecampShown(!isBasecampShown);
-                return;
             }
             if (ev.code === "KeyM") {
-                setIsMapShown(!isMapShown);
-                return;
+                if (ev.shiftKey) {
+                    setMapShowState((mapShowState + 3 - 1) % 3);
+                } else {
+                    setMapShowState((mapShowState + 1) % 3);
+                }
             }
         }}
     >
@@ -78,8 +82,12 @@ export function App() {
                 scale: isMapShown ? "2" : "0",
                 translate: isMapShown ? "0 50%" : "0 100%",
                 // mixBlendMode: "color-dodge",
+                padding: "0.2vmin",
+                background: isMapBackShown
+                    ? "#505050ff"
+                    : "transparent",
             }} >
-                <OverlayMap />
+                <OverlayMap css={{ display: "block" }} />
             </div>
 
             <div css={{
