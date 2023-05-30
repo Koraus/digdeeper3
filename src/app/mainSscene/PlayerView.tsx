@@ -16,7 +16,10 @@ export function PlayerView({
     const sight = sightAt(trek);
     const pos = sight.playerPosition;
     const makeStep = (instruction: keyof typeof instructionIndices) => {
-        const nextTrek = { prev: trek, instruction };
+        const nextTrek =
+            !("prev" in trek) || sight.ok 
+                ? { prev: trek, instruction }
+                : { ...trek, instruction };
         const nextSight = sightAt(nextTrek);
         if (
             nextSight.lastCrossedEvacuationLine
