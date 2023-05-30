@@ -6,6 +6,7 @@ import { favoriteDropzonesRecoil } from "./favoriteDropzonesRecoil";
 import { useRecoilValue } from "recoil";
 import { DropzonePreview } from "./DropzonePreview";
 import { useSetDrop } from "./useSetDrop";
+import { version } from "../../model/version";
 
 
 export function FavoriteDropzones({
@@ -52,7 +53,8 @@ export function FavoriteDropzones({
                         dropzone={dropzone} />
                     <button
                         onClick={() => setDrop({
-                            dropzone,
+                            v: version,
+                            zone: dropzone,
                             depthLeftBehind: 10,
                             equipment: {
                                 pickNeighborhoodIndex: 0,

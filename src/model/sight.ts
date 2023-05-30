@@ -1,8 +1,30 @@
 import { v2 } from "../utils/v";
 import { evacuationLineProgress } from "./evacuation";
-import update from "immutability-helper";
-import { TrekStart, TrekStep, directionVec, caForDropzone, directionEnergyDrain } from "./trek";
+import memoize from "memoizee";
+import { ca } from "./ca";
+import { Dropzone } from "./terms/Dropzone";
+import { Drop } from "./terms/Drop";
+import { InstructionIndex, instructionIndices } from "./terms/PackedTrek";
 
+export const caForDropzone = memoize((dropzone: Dropzone) => ca({
+    ca: dropzone.world.ca,
+    spaceSize: dropzone.width,
+    startFillState: dropzone.startFillState,
+    seed: dropzone.seed,
+}));
+
+export const directionEnergyDrain = {
+    [instructionIndices.left]: 1,
+    [instructionIndices.right]: 1,
+    [instructionIndices.backward]: 9,
+    [instructionIndices.forward]: 0,
+} as const;
+export const directionVec = {
+    [instructionIndices.left]: [-1, 0],
+    [instructionIndices.right]: [1, 0],
+    [instructionIndices.backward]: [0, -1],
+    [instructionIndices.forward]: [0, 1],
+} as const;
 
 export type SightBody = {
     playerPosition: v2,
@@ -11,8 +33,6 @@ export type SightBody = {
     collectedCells: v2[],
     depth: number,
     lastCrossedEvacuationLine: number,
-    log: string,
-    ok: boolean,
 };
 
 export const neighborhoods = [[
@@ -27,26 +47,40 @@ export const neighborhoods = [[
     [1, -1], [1, 0], [1, 1],
 ]] as v2[][];
 
-export const initSight = ({ dropzone, equipment }: TrekStart): SightBody => ({
-    playerPosition: [Math.floor(dropzone.width / 2), 0],
+export const initSight = ({
+    zone,
+    equipment,
+}: Drop): SightBody => ({
+    playerPosition: [Math.floor(zone.width / 2), 0],
     playerEnergy: 81 * 3,
-    visitedCells: [[Math.floor(dropzone.width / 2), 0]],
+    visitedCells: [[Math.floor(zone.width / 2), 0]],
     collectedCells: neighborhoods[equipment.pickNeighborhoodIndex]
-        .map(x => v2.add(x, [Math.floor(dropzone.width / 2), 0]))
+        .map(x => v2.add(x, [Math.floor(zone.width / 2), 0]))
         .filter((x) => x[1] >= 0),
     lastCrossedEvacuationLine: 0,
     depth: 0,
-    log: "init",
-    ok: true,
 });
 
-export const applyStep = (
-    start: TrekStart,
+export function applyStep(
+    start: Drop,
     prevSight: SightBody,
-    trek: TrekStep,
-): SightBody => {
+    instruction: InstructionIndex,
+    verbose?: false,
+): [SightBody, undefined] | [undefined, string];
+export function applyStep(
+    start: Drop,
+    prevSight: SightBody,
+    instruction: InstructionIndex,
+    verbose: true,
+): [SightBody, string] | [undefined, string];
+export function applyStep(
+    start: Drop,
+    prevSight: SightBody,
+    instruction: InstructionIndex,
+    verbose = false,
+): [SightBody, string | undefined] | [undefined, string] {
     const {
-        dropzone, depthLeftBehind, equipment,
+        zone: dropzone, depthLeftBehind, equipment,
     } = start;
     const {
         world, width,
@@ -57,38 +91,29 @@ export const applyStep = (
 
     const p1 = v2.add(
         prevSight.playerPosition,
-        directionVec[trek.action]);
+        directionVec[instruction]);
 
     if (p1[0] < 0 || p1[0] >= width) {
-        return update(prevSight, {
-            log: { $set: "out of space bounds" },
-            ok: { $set: false },
-        });
+        return [undefined, "out of space bounds"];
     }
 
     if (p1[1] < prevSight.depth) {
-        return update(prevSight, {
-            log: { $set: "cannot return back" },
-            ok: { $set: false },
-        });
+        return [undefined, "cannot return back"];
     }
 
     const isP1Visited = prevSight.visitedCells.some(x => v2.eqStrict(x, p1));
     const ca = caForDropzone(dropzone);
     const caState = caForDropzone(dropzone)._at(p1[1], p1[0]);
 
-    const theStateEnergyDrain = directionEnergyDrain[trek.action];
+    const theStateEnergyDrain = directionEnergyDrain[instruction];
     const theDirectionEnergyDrain = isP1Visited ? 0 : stateEnergyDrain[caState];
     const moveCost = theStateEnergyDrain + theDirectionEnergyDrain;
 
     if (prevSight.playerEnergy < moveCost) {
-        return update(prevSight, {
-            log: {
-                $set:
-                    `insufficient energy ${moveCost - prevSight.playerEnergy}`,
-            },
-            ok: { $set: false },
-        });
+        return [
+            undefined,
+            `insufficient energy ${moveCost - prevSight.playerEnergy}`,
+        ];
     }
 
     const stepCollectedCells = neighborhoods[equipment.pickNeighborhoodIndex]
@@ -123,26 +148,30 @@ export const applyStep = (
 
 
     const newDepth = Math.max(prevSight.depth, p1[1] - depthLeftBehind);
+    const log = verbose
+        ? `delta ${energyGain - moveCost}:`
+        + ((theDirectionEnergyDrain > 0)
+            ? ` move ${-theDirectionEnergyDrain}`
+            : "")
+        + ((theStateEnergyDrain > 0)
+            ? ` ruin ${-theStateEnergyDrain}`
+            : "")
+        + ((energyGain > 0)
+            ? ` gain ${energyGain}`
+            : "")
+        : undefined;
 
-    return {
-        playerPosition: p1,
-        playerEnergy: newPlayerEnergy,
-        visitedCells: newVisitedCells,
-        collectedCells: newcCollectedCells,
-        depth: newDepth,
-        lastCrossedEvacuationLine: Math.max(
-            prevSight.lastCrossedEvacuationLine,
-            Math.floor(evacuationLineProgress(p1[1]))),
-        log: `delta ${energyGain - moveCost}:`
-            + ((theDirectionEnergyDrain > 0)
-                ? ` move ${-theDirectionEnergyDrain}`
-                : "")
-            + ((theStateEnergyDrain > 0)
-                ? ` ruin ${-theStateEnergyDrain}`
-                : "")
-            + ((energyGain > 0)
-                ? ` gain ${energyGain}`
-                : ""),
-        ok: true,
-    };
-};
+    return [
+        {
+            playerPosition: p1,
+            playerEnergy: newPlayerEnergy,
+            visitedCells: newVisitedCells,
+            collectedCells: newcCollectedCells,
+            depth: newDepth,
+            lastCrossedEvacuationLine: Math.max(
+                prevSight.lastCrossedEvacuationLine,
+                Math.floor(evacuationLineProgress(p1[1]))),
+        },
+        log,
+    ];
+}

@@ -6,6 +6,7 @@ import { Time } from "@emotion-icons/ionicons-solid/Time";
 import { historicalWorldsRecoil } from "./historicalWorldsRecoil";
 import { ChevronForward } from "@emotion-icons/ionicons-solid/ChevronForward";
 import { useSetDrop } from "./useSetDrop";
+import { version } from "../../model/version";
 
 
 export function HistoricalWorlds({
@@ -66,7 +67,8 @@ export function HistoricalWorlds({
                                 transform: "translateX(-50%)",
                             }]}
                             onClick={() => setDrop({
-                                dropzone: p,
+                                v: version,
+                                zone: p,
                                 depthLeftBehind: 10,
                                 equipment: {
                                     pickNeighborhoodIndex: 0,

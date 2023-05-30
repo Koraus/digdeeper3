@@ -1,14 +1,16 @@
 import { useRecoilValue } from "recoil";
-import { sightAt, startForTrek } from "../model/sightAtTrek";
+import { sightAt, startForTrek } from "../model/sightChain";
 import { trekRecoil } from "./trekRecoil";
 import { RestartAlt } from "@emotion-icons/material/RestartAlt";
 import { PinDrop } from "@emotion-icons/material-outlined/PinDrop";
 import { World } from "@emotion-icons/boxicons-regular/World";
-import { generateRandomDropzone } from "../model/Dropzone";
+import { generateRandomDropzone } from "../model/generate";
 import { useSetDrop } from "./basecamp/useSetDrop";
 import { jsx } from "@emotion/react";
-import { caStateCount, generateRandomWorld } from "../model/World";
+import { caStateCount } from "../model/terms/World";
+import { generateRandomWorld } from "../model/generate";
 import { generateRandomSymmetricalRule } from "../ca/generateRandomSymmetricalRule";
+import { version } from "../model/version";
 
 
 export function Gui({
@@ -17,24 +19,19 @@ export function Gui({
     const progression = useRecoilValue(trekRecoil);
     const sight = sightAt(progression);
     const drop = startForTrek(progression);
-    const world = drop.dropzone.world;
+    const world = drop.zone.world;
 
     const setDrop = useSetDrop();
 
     return <div {...props}>
-
-        <div>WASD / Arrows to move</div>
-        <div>С to accept hint</div>
-        <div>Z to undo</div>
-        <div>---</div>
-        {world.sightVersion}<br />
+        {world.v}<br />
         -- ca rule: {world.ca.rule}<br />
         -- drain: {world.stateEnergyDrain.join(" ")}
         &nbsp;/ gain: {world.stateEnergyGain.join(" ")}<br />
 
-        - startFillState: {drop.dropzone.startFillState}<br />
-        - seed: {drop.dropzone.seed}<br />
-        - width: {drop.dropzone.width}<br />
+        - startFillState: {drop.zone.startFillState}<br />
+        - seed: {drop.zone.seed}<br />
+        - width: {drop.zone.width}<br />
         depthLeftBehind:{drop.depthLeftBehind} <br />
         equipment:{JSON.stringify(drop.equipment)}<br />
         <div>---</div>
@@ -66,8 +63,9 @@ export function Gui({
                     alignItems: "center",
                 }]}
                 onClick={() => setDrop({
-                    dropzone: generateRandomDropzone({
-                        world: drop.dropzone.world,
+                    v: version,
+                    zone: generateRandomDropzone({
+                        world: drop.zone.world,
                     }),
                     depthLeftBehind: 10,
                     equipment: {
@@ -88,7 +86,8 @@ export function Gui({
                     alignItems: "center",
                 }]}
                 onClick={() => setDrop({
-                    dropzone: generateRandomDropzone({
+                    v: version,
+                    zone: generateRandomDropzone({
                         world: generateRandomWorld({
                             // todo use gen rules from "NewDropzones" here
                             ca: generateRandomSymmetricalRule(caStateCount),

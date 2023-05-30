@@ -7,15 +7,18 @@ import { appVersion } from "./appVersion";
 import { Gui } from "./Gui";
 import { WorldSelectionPanel } from "./basecamp/BasecampPanel";
 import { useRef, useState } from "react";
-import { useGrabFocusFromBody } from "../utils/useGrabFocusFromBody";
+import { useGrabFocusFromBody } from "../utils/reactish/useGrabFocusFromBody";
 import { Menu as MenuIcon } from "@emotion-icons/boxicons-regular/Menu";
 import { X as XIcon } from "@emotion-icons/boxicons-regular/X";
-import { СurrentWorldMap } from "./СurrentWorldMap";
+import { OverlayMap } from "./OverlayMap";
+import { MiniMap } from "./MiniMap";
 
 
 export function App() {
     const [isBasecampShown, setIsBasecampShown] = useState(false);
-    const [isMapShown, setIsMapShown] = useState(false);
+    const [mapShowState, setMapShowState] = useState(0);
+    const isMapShown = mapShowState > 0;
+    const isMapBackShown = mapShowState === 2;
 
     const focusRootRef = useRef<HTMLDivElement>(null);
     useGrabFocusFromBody(focusRootRef);
@@ -33,11 +36,13 @@ export function App() {
         onKeyDown={ev => {
             if (ev.code === "Escape") {
                 setIsBasecampShown(!isBasecampShown);
-                return;
             }
-            if(ev.code === "KeyM"){
-                setIsMapShown(!isMapShown);
-                return;
+            if (ev.code === "KeyM") {
+                if (ev.shiftKey) {
+                    setMapShowState((mapShowState + 3 - 1) % 3);
+                } else {
+                    setMapShowState((mapShowState + 1) % 3);
+                }
             }
         }}
     >
@@ -53,24 +58,57 @@ export function App() {
         >
             <MainScene />
         </Canvas>
-        <СurrentWorldMap css={{opacity: isMapShown ? 1 : 0}}/>
         <div css={{
             position: "absolute",
             inset: 0,
             pointerEvents: "none",
             display: "flex",
             flex: "row",
+            overflow: "hidden",
         }}>
-            <Gui css={{
-                pointerEvents: "all",
+            <div css={{
                 position: "absolute",
-                left: "1vmin",
+                top: "50vh",
+                left: "35vw",
+                opacity: isMapShown ? 1 : 0,
+                transformOrigin: "0 50%",
+                scale: "2",
+                translate: "0 -50%",
+                padding: "0.2vmin",
+                background: isMapBackShown
+                    ? "#505050ff"
+                    : "transparent",
+            }} >
+                <OverlayMap css={{ display: "block" }} />
+            </div>
+
+            <div css={{
+                position: "absolute",
                 top: "1vmin",
-            }} />
+                left: "1vmin",
+            }} >
+                <MiniMap />
+                <Gui css={{
+                    pointerEvents: "all",
+                }} />
+            </div>
+
+
+            <div css={{
+                position: "absolute",
+                bottom: "1vmin",
+                left: "1vmin",
+            }} >
+                <div>WASD / Arrows to move</div>
+                <div>C to accept hint</div>
+                <div>Z to undo</div>
+                <div>M to toggle map</div>
+                <div>Esc to toggle basecamp</div>
+            </div>
+
             <WorldSelectionPanel css={{
                 height: "100%",
                 inset: 0,
-                transitionDuration: "0.2s",
                 overflowX: "hidden",
                 position: "absolute",
                 background: "rgba(0, 0, 0, 0.8)",
@@ -105,8 +143,8 @@ export function App() {
             </button>
             <div css={{ // appVersion panel
                 position: "absolute",
-                right: "1vmin",
-                bottom: "1vmin",
+                right: "6vmin",
+                top: "1vmin",
                 textAlign: "right",
                 fontSize: "1.4vmin",
                 lineHeight: "90%",

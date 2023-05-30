@@ -1,6 +1,7 @@
 import { LehmerPrng } from "../utils/LehmerPrng";
 import { fillSpace } from "../ca/fillSpace";
-import { Code, parseFullTransitionLookupTable } from "../ca";
+import { parseFullTransitionLookupTable } from "../ca";
+import { Code } from "../ca/Code";
 
 
 export function ca({

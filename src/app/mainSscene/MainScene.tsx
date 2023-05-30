@@ -9,7 +9,7 @@ import { dampVector3 } from "../../utils/dampVector3";
 import { useEffect, useMemo } from "react";
 import { StartingCamp } from "./StartingCamp";
 import { EvacuationLine } from "./EvacuationLine";
-import { FrameLimiter } from "../../utils/FrameLimiter";
+import { FrameLimiter } from "../../utils/reactish/FrameLimiter";
 import { useThree } from "@react-three/fiber";
 import { setup as setupShaderSourceHooker } from "../../utils/glsl/hookShaderSource";
 

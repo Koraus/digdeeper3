@@ -30,7 +30,7 @@ export const generateRandomSymmetricalRule = (
             (c * symStateCount + symmetryMap[n1][n2]) * stateCount + pc]);
 
     return {
-        version,
+        v: version,
         stateCount,
         rule: getNumberFromDigits(fullTable, stateCount).toString(),
     };

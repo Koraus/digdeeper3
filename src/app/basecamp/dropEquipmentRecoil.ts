@@ -1,5 +1,6 @@
-import { sightVersion, DropEquipment } from "../../model/trek";
-import { localStorageAtomEffect } from "../../utils/localStorageAtomEffect";
+import { DropEquipment } from "../../model/terms/Drop";
+import { version as sightVersion } from "../../model/version";
+import { localStorageAtomEffect } from "../../utils/reactish/localStorageAtomEffect";
 import { atom } from "recoil";
 
 export const dropEquipmentRecoil = atom<DropEquipment>({

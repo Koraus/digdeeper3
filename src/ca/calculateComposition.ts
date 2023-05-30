@@ -1,7 +1,8 @@
 import { LehmerPrng } from "../utils/LehmerPrng";
 import { fillSpace } from "./fillSpace";
-import { Code, parseFullTransitionLookupTable } from ".";
+import { parseFullTransitionLookupTable } from ".";
 import memoize from "memoizee";
+import { Code } from "./Code";
 
 
 const _calculateComposition = memoize((stateCount: number, rule: string) => {

@@ -1,19 +1,21 @@
 import { atom } from "recoil";
-import { Trek, sightVersion } from "../model/trek";
+import { TrekChain } from "../model/trekChain";
+import { version as sightVersion } from "../model/version";
 import { buildFullTransitionLookupTable, version as caVersion } from "../ca";
 import { getDigits, getNumberFromDigits } from "../ca/digits";
-import { caStateCount } from "../model/World";
-import { generateRandomDropzone } from "../model/Dropzone";
+import { caStateCount } from "../model/terms/World";
+import { generateRandomDropzone } from "../model/generate";
 
 
-export const trekRecoil = atom<Trek>({
+export const trekRecoil = atom<TrekChain>({
     key: "trek",
     default: {
-        dropzone: generateRandomDropzone({
+        v: sightVersion,
+        zone: generateRandomDropzone({
             world: {
-                sightVersion,
+                v: sightVersion,
                 ca: {
-                    version: caVersion,
+                    v: caVersion,
                     stateCount: caStateCount,
                     rule: (() => {
                         const pretable = getDigits(1815n, 3);

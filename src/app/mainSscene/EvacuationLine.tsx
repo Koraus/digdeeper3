@@ -2,7 +2,7 @@ import { jsx } from "@emotion/react";
 import { EvacuationLineParticles } from "./EvacuationLineParticles";
 import { useRecoilValue } from "recoil";
 import { trekRecoil } from "../trekRecoil";
-import { sightAt, startForTrek } from "../../model/sightAtTrek";
+import { sightAt, startForTrek } from "../../model/sightChain";
 import { evacuationLinePosition, evacuationLineProgress } from "../../model/evacuation";
 
 
@@ -12,7 +12,7 @@ export function EvacuationLine({
     isPrev?: boolean;
 }) {
     const trek = useRecoilValue(trekRecoil);
-    const dropzone = startForTrek(trek).dropzone;
+    const dropzone = startForTrek(trek).zone;
     const sight = sightAt(trek);
     const pos = sight.playerPosition;
 

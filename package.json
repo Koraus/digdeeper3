@@ -2,7 +2,7 @@
   "private": true,
   "name": "digdeeper3",
   "scripts": {
-    "check": "tsc --noEmit && eslint .",
+    "check": "tsc --noEmit && tsc --project ./backend/ --noEmit && eslint .",
     "start": "vite --config ./vite.config/vite.config.ts",
     "host": "vite --config ./vite.config/vite.config.ts --host",
     "build": "vite --config ./vite.config/vite.config.ts build"
@@ -15,6 +15,7 @@
     "@rauschma/iterator-helpers-polyfill": "^0.7.0",
     "@react-three/drei": "^9.68.2",
     "@react-three/fiber": "^8.13.0",
+    "@types/color": "^3.0.3",
     "@types/crypto-js": "^4.1.1",
     "@types/d3-ease": "^3.0.0",
     "@types/lodash": "^4.14.192",
@@ -23,6 +24,7 @@
     "@typescript-eslint/eslint-plugin": "^5.58.0",
     "@typescript-eslint/parser": "^5.58.0",
     "@vitejs/plugin-react": "^3.1.0",
+    "color": "^4.2.3",
     "crypto-js": "^4.1.1",
     "d3-ease": "^3.0.1",
     "emotion-icons": "^3.27.0",

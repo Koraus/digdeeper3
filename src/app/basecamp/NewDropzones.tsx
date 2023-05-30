@@ -3,9 +3,10 @@ import type { jsx } from "@emotion/react";
 import { DropzonePreview } from "./DropzonePreview";
 import { Dice } from "@emotion-icons/fa-solid/Dice";
 import { ChevronForward } from "@emotion-icons/ionicons-solid/ChevronForward";
-import { Dropzone, generateRandomDropzone } from "../../model/Dropzone";
+import { Dropzone } from "../../model/terms/Dropzone";
 import { useSetDropzone } from "./useSetDropzone";
-import { caStateCount, generateRandomWorld } from "../../model/World";
+import { caStateCount } from "../../model/terms/World";
+import { generateRandomDropzone, generateRandomWorld } from "../../model/generate";
 import { generateRandomSymmetricalRule } from "../../ca/generateRandomSymmetricalRule";
 import { generateRandomRule } from "../../ca/generateRandomRule";
 

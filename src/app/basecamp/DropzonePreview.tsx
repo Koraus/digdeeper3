@@ -1,13 +1,19 @@
 import { useEffect, useRef } from "react";
 import type { jsx } from "@emotion/react";
-import { caForDropzone } from "../../model/trek";
+import { caForDropzone } from "../../model/sight";
 import { Star } from "@emotion-icons/ionicons-solid/Star";
 import { useRecoilState } from "recoil";
 import { favoriteDropzonesRecoil } from "./favoriteDropzonesRecoil";
-import { eqDropzone, Dropzone } from "../../model/Dropzone";
+import { eqDropzone, Dropzone } from "../../model/terms/Dropzone";
 import { Color } from "three";
 import { getComposition } from "../../ca/calculateComposition";
 
+
+export const colorMap = [
+    "#8d8d8d",
+    "#000000",
+    "#ff6ff5",
+];
 
 export function DropzonePreview({
     dropzone, ...props
@@ -32,6 +38,7 @@ export function DropzonePreview({
         if (!ctx) { return; }
 
         const composition = getComposition(dropzone.world.ca);
+        
         const [stone, grass, energy] = composition
             .map((p, i) => [p, i])
             .sort(([a], [b]) => b - a)
@@ -46,11 +53,13 @@ export function DropzonePreview({
         const w = 200;
         const h = dropzone.width;
 
+        const _colorMap = colorMap.map(c => new Color(c));
+
         const myImageData = ctx.createImageData(w, h);
         for (let y = 0; y < h; y++) {
             for (let x = 0; x < w; x++) {
                 const i = (y * w + x) * 4;
-                const color = colorMap[theCa._at(x, y)];
+                const color = _colorMap[theCa._at(x, y)];
                 myImageData.data[i + 0] = Math.floor(color.r * 256);
                 myImageData.data[i + 1] = Math.floor(color.g * 256);
                 myImageData.data[i + 2] = Math.floor(color.b * 256);

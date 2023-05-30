@@ -6,7 +6,7 @@ export const generateRandomRule = (
     stateCount: number,
     random = Math.random,
 ) => ({
-    version,
+    v: version,
     stateCount,
     rule: getNumberFromDigits(
         buildFullTransitionLookupTable(

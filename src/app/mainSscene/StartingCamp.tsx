@@ -3,7 +3,7 @@ import { GroupSync } from "../../utils/GroupSync";
 import { jsx } from "@emotion/react";
 import { useRecoilValue } from "recoil";
 import { trekRecoil } from "../trekRecoil";
-import { startForTrek } from "../../model/sightAtTrek";
+import { startForTrek } from "../../model/sightChain";
 
 
 export function StartingCamp({
@@ -13,7 +13,7 @@ export function StartingCamp({
     const drop = startForTrek(trek);
 
     return <group
-        position={[-2.5, 0, (drop.dropzone.width - 1) / 2]}
+        position={[-2.5, 0, (drop.zone.width - 1) / 2]}
         {...props}
     >
         <Box

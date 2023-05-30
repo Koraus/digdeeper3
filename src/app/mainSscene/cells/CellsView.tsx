@@ -1,16 +1,16 @@
 import { RenderCallback, ThreeElements, useFrame } from "@react-three/fiber";
 import { useRecoilValue } from "recoil";
 import { trekRecoil } from "../../trekRecoil";
-import { Trek } from "../../../model/trek";
-import { sightAt, startForTrek } from "../../../model/sightAtTrek";
-import { caForDropzone } from "../../../model/trek";
+import { TrekChain } from "../../../model/trekChain";
+import { sightAt, startForTrek } from "../../../model/sightChain";
+import { caForDropzone } from "../../../model/sight";
 import { useMemo } from "react";
 import { BoxGeometry, Euler, Group, Matrix4, MeshPhongMaterial, Quaternion, Vector3 } from "three";
 import { LehmerPrng } from "../../../utils/LehmerPrng";
 import { InstancedMeshHost, zeroScaleMatrix } from "../../../utils/InstancedMeshHost";
 import { ParentState } from "./LayoutContext";
 import { Cell } from "./Cell";
-import { Dropzone } from "../../../model/Dropzone";
+import { Dropzone } from "../../../model/terms/Dropzone";
 import memoize from "memoizee";
 import { getComposition } from "../../../ca/calculateComposition";
 
@@ -42,7 +42,7 @@ const getReducedNeighborhoodState = (
     return (t * dropzone.width + x) ^ s1;
 };
 
-export const epxandedSight = memoize((trek: Trek) => {
+export const epxandedSight = memoize((trek: TrekChain) => {
     const sight = sightAt(trek);
     const drop = startForTrek(trek);
     const visitedCells = {} as Record<number, Record<number, true>>;
@@ -53,7 +53,7 @@ export const epxandedSight = memoize((trek: Trek) => {
     for (const [x, t] of sight.collectedCells) {
         (collectedCells[t] ??= {})[x] = true;
     }
-    const composition = getComposition(drop.dropzone.world.ca);
+    const composition = getComposition(drop.zone.world.ca);
 
     const [rock, grass, energy] = composition
         .map((p, i) => [p, i])
@@ -81,7 +81,7 @@ const createCellView = ({
     tc: number, xc: number, sx: number, st: number,
     parent: Group,
     boxHost: InstancedMeshHost,
-    onTrek: (callback: (trek: Trek) => void) => void,
+    onTrek: (callback: (trek: TrekChain) => void) => void,
     onFrame: (callback: RenderCallback) => void,
 }) => {
     const boxPool = Array.from(
@@ -102,7 +102,7 @@ const createCellView = ({
     onTrek(trek => {
         const expSight = epxandedSight(trek);
         const sight = expSight.sight;
-        const dropzone = expSight.drop.dropzone;
+        const dropzone = expSight.drop.zone;
 
         const pos = sight.playerPosition;
         const [px, pt] = pos;
@@ -219,7 +219,7 @@ export function CellsView({
         boxHost.frustumCulled = false;
         parent.add(boxHost);
         const frameSignal = [] as RenderCallback[];
-        const trekSignal = [] as ((trek: Trek) => void)[];
+        const trekSignal = [] as ((trek: TrekChain) => void)[];
         const disposeBag = Array.from({ length: tc * xc }, (_, i) =>
             createCellView({
                 tc,
@@ -230,7 +230,7 @@ export function CellsView({
                 boxHost,
                 onFrame: (callback: RenderCallback) =>
                     frameSignal.push(callback),
-                onTrek: (callback: (trek: Trek) => void) =>
+                onTrek: (callback: (trek: TrekChain) => void) =>
                     trekSignal.push(callback),
             }));
         return {

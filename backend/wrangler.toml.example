@@ -1,0 +1,25 @@
+name = "digdeeper3-backend"
+main = "./src/index.ts"
+
+compatibility_date = "2023-05-27"
+
+account_id = "<fill in>"
+route = "<fill in>"
+workers_dev = false
+
+node_compat = true
+
+kv_namespaces = [
+    # A public-read key-value store addressed by content hash (hid)
+    { binding = "KV1", id = "<fill in>" }
+]
+
+[durable_objects]
+bindings = [{name = "CHAINER", class_name = "Chainer"}]
+
+[[migrations]]
+tag = "v1" # Should be unique for each entry
+new_classes = ["Chainer"]
+
+[placement]
+mode = "smart"
