@@ -6,7 +6,7 @@ import { useRecoilValue } from "recoil";
 import { trekRecoil } from "./trekRecoil";
 import { epxandedSight } from "./mainSscene/cells/CellsView";
 import { createImageData32 } from "../utils/createImageData32";
-import { colorMap } from "./basecamp/DropzonePreview";
+import { mapEnergyColor, mapGrassColor, mapRockColor } from "./basecamp/DropzonePreview";
 
 export function MiniMap() {
     const trek = useRecoilValue(trekRecoil);
@@ -68,12 +68,12 @@ export function MiniMap() {
                 if (state === energy) {
                     const isCollected = collectedCells[wt]?.[wx];
                     if (!isCollected) {
-                        fillCell(wt, wx, colorMap[2]);
+                        fillCell(wt, wx, mapEnergyColor);
                     }
                 } else if (state === rock) {
-                    fillCell(wt, wx, colorMap[0]);
+                    fillCell(wt, wx, mapRockColor);
                 } else {
-                    fillCell(wt, wx, colorMap[1]);
+                    fillCell(wt, wx, mapGrassColor);
                 }
                 const isVisited = visitedCells[wt]?.[wx];
                 const isPlayer = pos[0] === wx && pos[1] === wt;

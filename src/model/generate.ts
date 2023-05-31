@@ -13,18 +13,18 @@ export function generateRandomWorld({
 }) {
     const composition = getComposition(caCode);
 
-    const [stone, grass, energy] = composition
+    const [rock, grass, energy] = composition
         .map((p, i) => [p, i])
         .sort(([a], [b]) => b - a)
         .map(([_, i]) => i);
 
     const stateEnergyDrain = [0, 0, 0];
-    stateEnergyDrain[stone] = 81 * 9;
+    stateEnergyDrain[rock] = 81 * 9;
     stateEnergyDrain[grass] = 1;
     stateEnergyDrain[energy] = 0;
 
     const stateEnergyGain = [0, 0, 0];
-    stateEnergyGain[stone] = 0;
+    stateEnergyGain[rock] = 0;
     stateEnergyGain[grass] = 0;
     stateEnergyGain[energy] = 81;
 
@@ -48,7 +48,7 @@ export const generateRandomDropzone = ({
     startFillState: (() => {
         const composition = getComposition(world.ca);
 
-        const [_stone, grass, _energy] = composition
+        const [_rock, grass, _energy] = composition
             .map((p, i) => [p, i])
             .sort(([a], [b]) => b - a)
             .map(([_, i]) => i);
