@@ -37,6 +37,17 @@ export function DropzonePreview({
         const ctx = canvasEl.getContext("2d");
         if (!ctx) { return; }
 
+        const composition = getComposition(dropzone.world.ca);
+        
+        const [stone, grass, energy] = composition
+            .map((p, i) => [p, i])
+            .sort(([a], [b]) => b - a)
+            .map(([_, i]) => i);
+        const colorMap = [];
+        colorMap[stone] = new Color("#8d8d8d");
+        colorMap[grass] = new Color("#000000");
+        colorMap[energy] = new Color("#ff6ff5");
+
         const theCa = caForDropzone(dropzone);
 
         const w = 200;
