@@ -12,26 +12,20 @@ const _m4s = Array.from({ length: 3 }, () => new Matrix4());
 const _v3s = Array.from({ length: 3 }, () => new Vector3());
 const _qs = Array.from({ length: 3 }, () => new Quaternion());
 
-export const floorColors = ({
-    rock: new Color("#576c6e"),
-    grass: new Color("#d8dd76"),
-    energy: new Color("#ffc57a"),
-} as const);
-
 const colorThemes = [{
     // earth-like vegetation of mideteranian climate
     rock: {
         mainColor: new Color("#2e444f"),
         snowColor: undefined,
     },
-    grass: new Color("#00ff00"),
+    grass: new Color("#90ea67"),
     pickable: new Color("#b635d3"),
     floor: {
         rock: new Color("#576c6e"),
         grass: new Color("#d8dd76"),
         energy: new Color("#ffc57a"),
     },
-    bricks: new Color("#fb9658"),
+    bricks: new Color("#ff8968"),
 }, {
     // [name]
     rock: {
