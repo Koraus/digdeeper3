@@ -1,8 +1,6 @@
 import { RenderCallback, ThreeElements, useFrame } from "@react-three/fiber";
 import { useRecoilValue } from "recoil";
-import { trekRecoil } from "../../trekRecoil";
-import { TrekChain } from "../../../model/trekChain";
-import { sightAt, startForTrek } from "../../../model/sightChain";
+import { TrekChain, sightAt, startForTrek, trekRecoil } from "../../trekRecoil";
 import { caForDropzone } from "../../../model/sight";
 import { useMemo } from "react";
 import { BoxGeometry, Euler, Group, Matrix4, MeshPhongMaterial, Quaternion, Vector3 } from "three";

@@ -1,13 +1,10 @@
 import { ThreeElements } from "@react-three/fiber";
 import { useWindowEvent } from "../../utils/reactish/useWindowEvent";
 import { useRecoilState } from "recoil";
-import { trekRecoil } from "../trekRecoil";
-import { sightAt } from "../../model/sightChain";
+import { sightAt, trekRecoil, useMakeStep } from "../trekRecoil";
 import { offer } from "../../copilot";
-import { instructionIndices, instructions } from "../../model/terms/PackedTrek";
-import { packTrekChain } from "../../model/trekChain";
-import { submitTrek } from "../submitTrek";
-import { evacuationLineProgress, isEvacuationLineCrossed } from "../../model/evacuation";
+import { instructions } from "../../model/terms/PackedTrek";
+
 
 
 export function PlayerView({
@@ -16,18 +13,7 @@ export function PlayerView({
     const [trek, setTrek] = useRecoilState(trekRecoil);
     const sight = sightAt(trek);
     const pos = sight.playerPosition;
-    const makeStep = (instruction: keyof typeof instructionIndices) => {
-        const nextTrek =
-            !("prev" in trek) || sight.ok
-                ? { prev: trek, instruction }
-                : { ...trek, instruction };
-        const nextSight = sightAt(nextTrek);
-
-        if (isEvacuationLineCrossed(sight.maxDepth, nextSight.maxDepth)) {
-            submitTrek(packTrekChain(nextTrek)); //no await
-        }
-        setTrek(nextTrek);
-    };
+    const makeStep = useMakeStep();
 
     useWindowEvent("keydown", ev => {
         switch (ev.code) {

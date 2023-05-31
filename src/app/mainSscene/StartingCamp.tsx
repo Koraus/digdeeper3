@@ -2,8 +2,7 @@ import { Box } from "@react-three/drei";
 import { GroupSync } from "../../utils/GroupSync";
 import { jsx } from "@emotion/react";
 import { useRecoilValue } from "recoil";
-import { trekRecoil } from "../trekRecoil";
-import { startForTrek } from "../../model/sightChain";
+import { startForTrek, trekRecoil } from "../trekRecoil";
 
 
 export function StartingCamp({

@@ -1,9 +1,8 @@
 import { useRef } from "react";
 import { useEffect } from "react";
 import { caForDropzone } from "../model/sight";
-import { sightAt, startForTrek } from "../model/sightChain";
 import { useRecoilValue } from "recoil";
-import { trekRecoil } from "./trekRecoil";
+import { sightAt, startForTrek, trekRecoil } from "./trekRecoil";
 import { epxandedSight } from "./mainSscene/cells/CellsView";
 import { createImageData32 } from "../utils/createImageData32";
 import { mapEnergyColor, mapGrassColor, mapRockColor } from "./basecamp/DropzonePreview";

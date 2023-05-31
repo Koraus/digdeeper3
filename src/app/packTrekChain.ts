@@ -1,16 +1,7 @@
-
 import { encode } from "../utils/base64Array";
-import { Drop } from "./terms/Drop";
-import { InstructionIndex, PackedTrek, instructionBitSize, instructionIndices } from "./terms/PackedTrek";
-import { version } from "./version";
-
-
-export type TrekChain =
-    Drop
-    | {
-        instruction: keyof typeof instructionIndices,
-        prev: TrekChain,
-    };
+import { InstructionIndex, PackedTrek, instructionBitSize, instructionIndices } from "../model/terms/PackedTrek";
+import { version } from "../model/version";
+import { TrekChain } from "./trekRecoil";
 
 
 export const packTrekChain = (trek: TrekChain): PackedTrek => {

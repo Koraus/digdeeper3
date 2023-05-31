@@ -1,13 +1,12 @@
 import { Dropzone } from "../model/terms/Dropzone";
 import { World, keyProjectWorld } from "../model/terms/World";
-import { TrekChain } from "../model/trekChain";
-import { sightAt, startForTrek } from "../model/sightChain";
 import { applyStep, caForDropzone, initSight, SightBody } from "../model/sight";
 import { v2 } from "../utils/v";
 import memoize from "memoizee";
 import { loadPackedTreks } from "./saver";
 import { PackedTrek, getInstructionAt, instructionIndices, instructions } from "../model/terms/PackedTrek";
 import { _never } from "../utils/_never";
+import { TrekChain, sightAt, startForTrek } from "../app/trekRecoil";
 
 
 const offerVersion = "digdeeper3/copilot/offer@14";
