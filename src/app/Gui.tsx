@@ -1,6 +1,5 @@
 import { useRecoilValue } from "recoil";
-import { sightAt, startForTrek } from "../model/sightChain";
-import { trekRecoil } from "./trekRecoil";
+import { sightAt, rawSightAt, startForTrek, trekRecoil } from "./trekRecoil";
 import { RestartAlt } from "@emotion-icons/material/RestartAlt";
 import { PinDrop } from "@emotion-icons/material-outlined/PinDrop";
 import { World } from "@emotion-icons/boxicons-regular/World";
@@ -16,9 +15,10 @@ import { version } from "../model/version";
 export function Gui({
     ...props
 }: jsx.JSX.IntrinsicElements["div"]) {
-    const progression = useRecoilValue(trekRecoil);
-    const sight = sightAt(progression);
-    const drop = startForTrek(progression);
+    const trek = useRecoilValue(trekRecoil);
+    const [, log] = rawSightAt(trek);
+    const sight = sightAt(trek);
+    const drop = startForTrek(trek);
     const world = drop.zone.world;
 
     const setDrop = useSetDrop();
@@ -37,7 +37,7 @@ export function Gui({
         <div>---</div>
         <div>p: {sight.playerPosition.join(",")}</div>
         <div>Energy: {sight.playerEnergy}</div>
-        <div>Last move: {sight.log}</div>
+        <div>Last move: {log}</div>
         <div css={{
             pointerEvents: "all",
             display: "flex",

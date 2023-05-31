@@ -2,7 +2,7 @@ import { RenderCallback } from "@react-three/fiber";
 import { InstancedMeshHost } from "../../../utils/InstancedMeshHost";
 import { Matrix4 } from "three";
 import { Dropzone } from "../../../model/terms/Dropzone";
-import { TrekChain } from "../../../model/trekChain";
+import { TrekChain } from "../../trekRecoil";
 
 
 export type ParentState = {

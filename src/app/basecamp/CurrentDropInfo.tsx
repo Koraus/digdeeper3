@@ -1,7 +1,6 @@
 import { DropzonePreview } from "./DropzonePreview";
-import { startForTrek } from "../../model/sightChain";
 import { useRecoilValue } from "recoil";
-import { trekRecoil } from "../trekRecoil";
+import { startForTrek, trekRecoil } from "../trekRecoil";
 
 
 export function CurrentDropInfo() {
