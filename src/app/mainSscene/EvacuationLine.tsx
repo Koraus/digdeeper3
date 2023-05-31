@@ -25,15 +25,15 @@ export function EvacuationLine({
     >
         <EvacuationLineParticles
             position={[
-                evacuationLinePosition(p1), 
-                0, 
+                evacuationLinePosition(p1),
+                0,
                 dropzone.width / 2]}
             width={dropzone.width}
         />
         <EvacuationLineParticles
             position={[
-                evacuationLinePosition(p2), 
-                0, 
+                evacuationLinePosition(p2),
+                0,
                 dropzone.width / 2]}
             width={dropzone.width}
         />

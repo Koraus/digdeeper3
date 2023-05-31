@@ -7,6 +7,7 @@ import { offer } from "../../copilot";
 import { instructionIndices, instructions } from "../../model/terms/PackedTrek";
 import { packTrekChain } from "../../model/trekChain";
 import { submitTrek } from "../submitTrek";
+import { evacuationLineProgress, isEvacuationLineCrossed } from "../../model/evacuation";
 
 
 export function PlayerView({
@@ -17,15 +18,12 @@ export function PlayerView({
     const pos = sight.playerPosition;
     const makeStep = (instruction: keyof typeof instructionIndices) => {
         const nextTrek =
-            !("prev" in trek) || sight.ok 
+            !("prev" in trek) || sight.ok
                 ? { prev: trek, instruction }
                 : { ...trek, instruction };
         const nextSight = sightAt(nextTrek);
-        if (
-            nextSight.lastCrossedEvacuationLine
-            !== sight.lastCrossedEvacuationLine
-        ) {
-            // evacuation line crossed
+
+        if (isEvacuationLineCrossed(sight.maxDepth, nextSight.maxDepth)) {
             submitTrek(packTrekChain(nextTrek)); //no await
         }
         setTrek(nextTrek);

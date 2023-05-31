@@ -1,5 +1,4 @@
 import { v2 } from "../utils/v";
-import { evacuationLineProgress } from "./evacuation";
 import memoize from "memoizee";
 import { ca } from "./ca";
 import { Dropzone } from "./terms/Dropzone";
@@ -32,7 +31,7 @@ export type SightBody = {
     visitedCells: v2[],
     collectedCells: v2[],
     depth: number,
-    lastCrossedEvacuationLine: number,
+    maxDepth: number,
 };
 
 export const neighborhoods = [[
@@ -57,7 +56,7 @@ export const initSight = ({
     collectedCells: neighborhoods[equipment.pickNeighborhoodIndex]
         .map(x => v2.add(x, [Math.floor(zone.width / 2), 0]))
         .filter((x) => x[1] >= 0),
-    lastCrossedEvacuationLine: 0,
+    maxDepth: 0,
     depth: 0,
 });
 
@@ -168,9 +167,7 @@ export function applyStep(
             visitedCells: newVisitedCells,
             collectedCells: newcCollectedCells,
             depth: newDepth,
-            lastCrossedEvacuationLine: Math.max(
-                prevSight.lastCrossedEvacuationLine,
-                Math.floor(evacuationLineProgress(p1[1]))),
+            maxDepth: Math.max(prevSight.maxDepth, p1[1]),
         },
         log,
     ];
