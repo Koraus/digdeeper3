@@ -1,18 +1,17 @@
 import { Color, Euler, Matrix4, Quaternion, Vector3 } from "three";
 import { LayoutContext } from "./LayoutContext";
 
-export const grassColor = new Color("#90ea67");
 
 const _m4s = Array.from({ length: 3 }, () => new Matrix4());
 const _v3s = Array.from({ length: 3 }, () => new Vector3());
 const _qs = Array.from({ length: 3 }, () => new Quaternion());
 const _es = Array.from({ length: 3 }, () => new Euler());
 
-export function Grass({
+export function Grass(color: Color, {
     rootMatrixWorld, abuseRandom, abuseBox, abuseFrame,
 }: LayoutContext) {
     const grass1 = abuseBox();
-    grass1.setColor(grassColor);
+    grass1.setColor(color);
     grass1.setMatrix(_m4s[0].compose(
         _v3s[0].set(0, 0.075, 0),
         _qs[0].identity(),
@@ -20,12 +19,12 @@ export function Grass({
     ).premultiply(rootMatrixWorld));
 
     const grass2 = abuseRandom() < 0.8 ? abuseBox() : undefined;
-    if (grass2) { grass2.setColor(grassColor); }
+    if (grass2) { grass2.setColor(color); }
     const grass2Postion = new Vector3(
         abuseRandom() - 0.5, 0.2, abuseRandom() - 0.5);
 
     const grass3 = abuseRandom() < 0.8 ? abuseBox() : undefined;
-    if (grass3) { grass3.setColor(grassColor); }
+    if (grass3) { grass3.setColor(color); }
     const grass3Postion = new Vector3(
         abuseRandom() - 0.5, 0.2, abuseRandom() - 0.5);
 

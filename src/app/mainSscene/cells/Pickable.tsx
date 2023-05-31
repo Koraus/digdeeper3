@@ -2,18 +2,16 @@ import { LayoutContext } from "./LayoutContext";
 import { Color, Euler, Matrix4, Quaternion, Vector3 } from "three";
 
 
-export const pickableColor = new Color("#b635d3");
-
 const _m4s = Array.from({ length: 3 }, () => new Matrix4());
 const _v3s = Array.from({ length: 3 }, () => new Vector3());
 const _qs = Array.from({ length: 3 }, () => new Quaternion());
 const _es = Array.from({ length: 3 }, () => new Euler());
 
-export function Pickable({
+export function Pickable(color: Color, {
     rootMatrixWorld, abuseBox, abuseFrame,
 }: LayoutContext) {
     const stand = abuseBox();
-    stand.setColor(pickableColor);
+    stand.setColor(color);
     stand.setMatrix(_m4s[0].compose(
         _v3s[0].set(0, 0.1, 0),
         _qs[0].setFromEuler(
@@ -27,7 +25,7 @@ export function Pickable({
     ).premultiply(rootMatrixWorld));
 
     const pickable = abuseBox();
-    pickable.setColor(pickableColor);
+    pickable.setColor(color);
     abuseFrame(({ rootMatrixWorld, state }, { clock }) => {
         const { t } = state;
 
@@ -50,11 +48,11 @@ export function Pickable({
     });
 }
 
-export function PickablePick({
+export function PickablePick(color: Color, {
     abuseBox, abuseFrame,
 }: LayoutContext) {
     const pickable = abuseBox();
-    pickable.setColor(pickableColor);
+    pickable.setColor(color);
 
     let iniitialTime = Infinity;
     abuseFrame(({ rootMatrixWorld }, { clock }) => {
