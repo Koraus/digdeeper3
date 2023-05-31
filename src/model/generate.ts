@@ -6,7 +6,7 @@ import { World } from "./terms/World";
 import { Dropzone } from "./terms/Dropzone";
 
 
-export function generateRandomWorld({
+export function generateWorld({
     ca: caCode,
 }: {
     ca: Code;

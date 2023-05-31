@@ -1,10 +1,8 @@
 import { atom } from "recoil";
 import { TrekChain } from "../model/trekChain";
 import { version as sightVersion } from "../model/version";
-import { buildFullTransitionLookupTable, version as caVersion } from "../ca";
-import { getDigits, getNumberFromDigits } from "../ca/digits";
-import { caStateCount } from "../model/terms/World";
 import { generateRandomDropzone } from "../model/generate";
+import { devChoiceWorlds } from "./basecamp/DevChoiceWorlds";
 
 
 export const trekRecoil = atom<TrekChain>({
@@ -12,23 +10,7 @@ export const trekRecoil = atom<TrekChain>({
     default: {
         v: sightVersion,
         zone: generateRandomDropzone({
-            world: {
-                v: sightVersion,
-                ca: {
-                    v: caVersion,
-                    stateCount: caStateCount,
-                    rule: (() => {
-                        const pretable = getDigits(1815n, 3);
-                        const table = buildFullTransitionLookupTable(
-                            /* stateCount: */ 3,
-                            (_stateCount, n1, c, n2, _pc) =>
-                                pretable[n1 + c + n2]);
-                        return getNumberFromDigits(table, 3).toString();
-                    })(),
-                },
-                stateEnergyDrain: [81 * 9, 1, 0],
-                stateEnergyGain: [0, 0, 81],
-            },
+            world: devChoiceWorlds[0],
         }),
         equipment: {
             pickNeighborhoodIndex: 0,

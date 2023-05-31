@@ -4,6 +4,7 @@ import { HistoricalWorlds } from "./HistoricalWorlds";
 import { NewDropzones } from "./NewDropzones";
 import { CurrentDropInfo } from "./CurrentDropInfo";
 import { DropEquipmentSelector } from "./DropEquipmentSelector";
+import { DevChoiceWorlds } from "./DevChoiceWorlds";
 
 export function WorldSelectionPanel({
     css: cssProp,
@@ -19,6 +20,7 @@ export function WorldSelectionPanel({
         <CurrentDropInfo />
         <br />
         <DropEquipmentSelector />
+        <DevChoiceWorlds />
         <NewDropzones />
         <FavoriteDropzones />
         <HistoricalWorlds />

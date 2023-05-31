@@ -7,31 +7,32 @@ import { Dropzone } from "../../model/terms/Dropzone";
 import { useSetDropzone } from "./useSetDropzone";
 import { caStateCount } from "../../model/terms/World";
 import { generateRandomDropzone, generateWorld } from "../../model/generate";
-import { generateRandomSymmetricalRule } from "../../ca/generateRandomSymmetricalRule";
-import { generateRandomRule } from "../../ca/generateRandomRule";
+import { version as caVersion } from "../../ca";
 
-const generators = {
-    "symmetrical": generateRandomSymmetricalRule,
-    "full": generateRandomRule,
-} as const;
+export const devChoiceWorlds = [
+    "418459516935405908508209846366493604693",
+    "353278173336238116464683288537109340634",
+    "125432894114651584386512079219058453323",
+    "375358561086232522799402423076844346150",
+].map((rule) => generateWorld({
+    ca: {
+        v: caVersion,
+        rule,
+        stateCount: caStateCount,
+    },
+}));
 
-export function NewDropzones({
+export function DevChoiceWorlds({
     ...props
 }: jsx.JSX.IntrinsicElements["div"]) {
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(true);
     const [dropzones, setDropzones] = useState<Dropzone[]>();
-
-    const [generator, setGenerator] =
-        useState<keyof typeof generators>("symmetrical");
 
     const setDropzone = useSetDropzone();
 
     if (!dropzones) {
-        setDropzones(Array.from({ length: 5 }, () => generateRandomDropzone({
-            world: generateWorld({
-                ca: generators[generator](caStateCount),
-            }),
-        })));
+        setDropzones(
+            devChoiceWorlds.map((world) => generateRandomDropzone({ world })));
     }
 
     return <div {...props}>
@@ -55,32 +56,16 @@ export function NewDropzones({
                 <Dice css={[{
                     width: "2vmin",
                     marginRight: "0.6vmin",
-                }]} />Generate </h3>
-            <label>
-                Generator: <select
-                    value={generator}
-                    onChange={e =>
-                        setGenerator(e.target.value as keyof typeof generators)}
-                >
-                    {Object.keys(generators).map((key) => <option
-                        key={key}
-                        value={key}
-                    >{key}</option>)}
-                </select>
-            </label>
-            <br />
+                }]} />Dev Choice Worlds</h3>
             <button
                 css={[{
                     margin: "0.9vmin 0",
                 }]}
-                onClick={() => setDropzones(
-                    Array.from(
-                        { length: 5 },
-                        () => generateRandomDropzone({
-                            world: generateWorld({
-                                ca: generators[generator](caStateCount),
-                            }),
-                        })))}> Reroll </button>
+                onClick={() =>
+                    setDropzones(
+                        devChoiceWorlds.map((world) =>
+                            generateRandomDropzone({ world })))
+                }> Reroll </button>
             {dropzones
                 && <div css={[{
                     listStyle: "none",
