@@ -8,7 +8,7 @@ import { generateRandomDropzone } from "../model/generate";
 import { useSetDrop } from "./basecamp/useSetDrop";
 import { jsx } from "@emotion/react";
 import { caStateCount } from "../model/terms/World";
-import { generateRandomWorld } from "../model/generate";
+import { generateWorld } from "../model/generate";
 import { generateRandomSymmetricalRule } from "../ca/generateRandomSymmetricalRule";
 import { version } from "../model/version";
 
@@ -88,7 +88,7 @@ export function Gui({
                 onClick={() => setDrop({
                     v: version,
                     zone: generateRandomDropzone({
-                        world: generateRandomWorld({
+                        world: generateWorld({
                             // todo use gen rules from "NewDropzones" here
                             ca: generateRandomSymmetricalRule(caStateCount),
                         }),
