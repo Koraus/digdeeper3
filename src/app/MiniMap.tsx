@@ -18,7 +18,7 @@ export function MiniMap() {
         if (!canvasEl) { return; }
 
         const dropzone = startForTrek(trek).zone;
-        const w = 150;
+        const w = 200;
         const h = dropzone.width;
         const pixelsPerCell = 2;
         canvasEl.width = w * pixelsPerCell;
@@ -64,6 +64,7 @@ export function MiniMap() {
 
         for (let wt = depth; wt < depth + w; wt++) {
             for (let wx = 0; wx < h; wx++) {
+                fillCell(wt, wx, "#000000"); // clear
                 const state = theCa._at(wt, wx);
                 if (state === energy) {
                     const isCollected = collectedCells[wt]?.[wx];

@@ -5,13 +5,13 @@ import { Star } from "@emotion-icons/ionicons-solid/Star";
 import { useRecoilState } from "recoil";
 import { favoriteDropzonesRecoil } from "./favoriteDropzonesRecoil";
 import { eqDropzone, Dropzone } from "../../model/terms/Dropzone";
-import { Color } from "three";
 import { getComposition } from "../../ca/calculateComposition";
+import Color from "color";
 
 
-export const mapRockColor = "#8d8d8d";
+export const mapRockColor = "#444444";
 export const mapGrassColor = "#000000";
-export const mapEnergyColor = "#ff6ff5";
+export const mapEnergyColor = "#ff28e9";
 
 export function DropzonePreview({
     dropzone, ...props
@@ -42,9 +42,9 @@ export function DropzonePreview({
             .sort(([a], [b]) => b - a)
             .map(([_, i]) => i);
         const colorMap = [];
-        colorMap[rock] = new Color(mapRockColor);
-        colorMap[grass] = new Color(mapGrassColor);
-        colorMap[energy] = new Color(mapEnergyColor);
+        colorMap[rock] = Color(mapRockColor);
+        colorMap[grass] = Color(mapGrassColor);
+        colorMap[energy] = Color(mapEnergyColor);
 
         const theCa = caForDropzone(dropzone);
 
@@ -56,9 +56,9 @@ export function DropzonePreview({
             for (let x = 0; x < w; x++) {
                 const i = (y * w + x) * 4;
                 const color = colorMap[theCa._at(x, y)];
-                myImageData.data[i + 0] = Math.floor(color.r * 256);
-                myImageData.data[i + 1] = Math.floor(color.g * 256);
-                myImageData.data[i + 2] = Math.floor(color.b * 256);
+                myImageData.data[i + 0] = color.red();
+                myImageData.data[i + 1] = color.green();
+                myImageData.data[i + 2] = color.blue();
                 myImageData.data[i + 3] = 255;
             }
         }
