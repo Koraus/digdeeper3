@@ -41,20 +41,48 @@ const colorThemes = [{
     },
     bricks: new Color("#bf4967"),
 }, {
-    // [name]
+//     // snowy -- tbd
+//     rock: {
+//         mainColor: new Color("#0b76ab"),
+//         snowColor: new Color("#cae0fb"),
+//     },
+//     rockSnow: new Color("#cae0fb"),
+//     grass: new Color("#e66ce8"),
+//     pickable: new Color("#5bef20"),
+//     floor: {
+//         rock: new Color("#576c6e"),
+//         grass: new Color("#d8dd76"),
+//         energy: new Color("#ffc57a"),
+//     },
+//     bricks: new Color("#fb9658"),
+// }, {
+    // cherry
     rock: {
-        mainColor: new Color("#0b76ab"),
-        snowColor: new Color("#cae0fb"),
+        mainColor: new Color("#670471"),
+        snowColor: undefined,
     },
-    rockSnow: new Color("#cae0fb"),
-    grass: new Color("#e66ce8"),
-    pickable: new Color("#5bef20"),
+    grass: new Color("#cb276c"),
+    pickable: new Color("#61C3EA"),
     floor: {
-        rock: new Color("#576c6e"),
-        grass: new Color("#d8dd76"),
-        energy: new Color("#ffc57a"),
+        rock: new Color("#66356b"),
+        grass: new Color("#ce6d95"),
+        energy: new Color("#ca7aa9"),
     },
-    bricks: new Color("#fb9658"),
+    bricks: new Color("#bf4967"),
+}, {
+    // mossy
+    rock: {
+        mainColor: new Color("#5a3b4d"),
+        snowColor: new Color("#0e8960"),
+    },
+    grass: new Color("#98d06d"),
+    pickable: new Color("#ff4a98"),
+    floor: {
+        rock: new Color("#97858f"),
+        grass: new Color("#c9cf79"),
+        energy: new Color("#cfc279"),
+    },
+    bricks: new Color("#938572"),
 }] as const;
 
 export function Cell(ctx: LayoutContext) {
@@ -65,9 +93,9 @@ export function Cell(ctx: LayoutContext) {
         abuseBox,
     } = ctx;
 
-    // const colors = colorThemes[Math.floor(t / 15) % colorThemes.length];
-    const colors = colorThemes[
-        Number(dropzone.world.ca.rule[0]) % colorThemes.length];
+    const colors = colorThemes[Math.floor(t / 15) % colorThemes.length];
+    // const colors = colorThemes[
+        // Number(dropzone.world.ca.rule[0]) % colorThemes.length];
 
     const expSight = epxandedSight(trek);
     const caState = caForDropzone(dropzone)._at(t, x);
