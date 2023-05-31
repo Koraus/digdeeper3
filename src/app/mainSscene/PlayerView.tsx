@@ -1,7 +1,8 @@
 import { ThreeElements } from "@react-three/fiber";
 import { useWindowEvent } from "../../utils/reactish/useWindowEvent";
 import { useRecoilState } from "recoil";
-import { sightAt, trekRecoil, useMakeStep } from "../trekRecoil";
+import { sightAt, trekRecoil } from "../trekRecoil";
+import { useMakeStep } from "../useMakeStep";
 import { offer } from "../../copilot";
 import { instructions } from "../../model/terms/PackedTrek";
 

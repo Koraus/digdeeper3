@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { jsx } from "@emotion/react";
 import { DropzonePreview } from "./DropzonePreview";
-import { Dice } from "@emotion-icons/fa-solid/Dice";
+import { Ribbon } from "@emotion-icons/ionicons-solid/Ribbon";
 import { ChevronForward } from "@emotion-icons/ionicons-solid/ChevronForward";
 import { Dropzone } from "../../model/terms/Dropzone";
 import { useSetDropzone } from "./useSetDropzone";
@@ -59,7 +59,7 @@ export function DevChoiceWorlds({
                     transform: isOpen
                         ? "rotate(90deg)" : "rotate(0deg)",
                 }]} />
-                <Dice css={[{
+                <Ribbon css={[{
                     width: "2vmin",
                     marginRight: "0.6vmin",
                 }]} />Dev Choice Worlds</h3>

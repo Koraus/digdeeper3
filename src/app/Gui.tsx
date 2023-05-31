@@ -10,6 +10,7 @@ import { caStateCount } from "../model/terms/World";
 import { generateWorld } from "../model/generate";
 import { generateRandomSymmetricalRule } from "../ca/generateRandomSymmetricalRule";
 import { version } from "../model/version";
+import { levelCap, levelProgress, playerProgressionRecoil } from "./playerProgressionRecoil";
 
 
 export function Gui({
@@ -20,8 +21,14 @@ export function Gui({
     const sight = sightAt(trek);
     const drop = startForTrek(trek);
     const world = drop.zone.world;
+    const { xp, level } = useRecoilValue(playerProgressionRecoil);
 
     const setDrop = useSetDrop();
+
+    const levelPercentText =
+        level < levelCap
+            ? ((levelProgress(xp) % 1) * 100).toFixed(0) + "%"
+            : "cap";
 
     return <div {...props}>
         {world.v}<br />
@@ -38,6 +45,12 @@ export function Gui({
         <div>p: {sight.playerPosition.join(",")}</div>
         <div>Energy: {sight.playerEnergy}</div>
         <div>Last move: {log}</div>
+        <div>---</div>
+        <div>XP: {xp}</div>
+        <div>
+            Level: {level} ({levelPercentText})
+        </div>
+
         <div css={{
             pointerEvents: "all",
             display: "flex",

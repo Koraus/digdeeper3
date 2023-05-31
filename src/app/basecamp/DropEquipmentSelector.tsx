@@ -1,7 +1,8 @@
 import { dropEquipmentRecoil } from "./dropEquipmentRecoil";
 import type { jsx } from "@emotion/react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import update from "immutability-helper";
+import { playerProgressionRecoil } from "../playerProgressionRecoil";
 
 
 export function DropEquipmentSelector({
@@ -9,8 +10,9 @@ export function DropEquipmentSelector({
 }: jsx.JSX.IntrinsicElements["div"]) {
     const [dropEquipment, setDropEquipment] =
         useRecoilState(dropEquipmentRecoil);
+    const { level } = useRecoilValue(playerProgressionRecoil);
 
-    const totalPointsAvailable = 1;
+    const totalPointsAvailable = level;
     const pointsUsed = dropEquipment.pickNeighborhoodIndex;
     const pointsRemaining = totalPointsAvailable - pointsUsed;
 
