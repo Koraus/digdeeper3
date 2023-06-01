@@ -1,4 +1,4 @@
-import { GizmoHelper, GizmoViewport, PerspectiveCamera } from "@react-three/drei";
+import { GizmoHelper, GizmoViewport, PerspectiveCamera, useTexture } from "@react-three/drei";
 import { CellsView } from "./cells/CellsView";
 import { PlayerView } from "./PlayerView";
 import { CopilotView } from "./CopilotView";
@@ -12,6 +12,8 @@ import { EvacuationLine } from "./EvacuationLine";
 import { FrameLimiter } from "../../utils/reactish/FrameLimiter";
 import { useThree } from "@react-three/fiber";
 import { setup as setupShaderSourceHooker } from "../../utils/glsl/hookShaderSource";
+import { RandomStarsParticles } from "./RandomStarsParticles";
+import { GalaxyStarsParticles } from "./GalaxyStarsParticles";
 
 
 export function MainScene() {
@@ -24,8 +26,11 @@ export function MainScene() {
     return <>
         <FrameLimiter fps={lowFpsMode ? 6 : Infinity} />
 
-        <color attach="background" args={["#6b008c"]} />
-        <fog attach="fog" args={["#6b008c", 45, 51]} />
+        <color attach="background" args={["#2b002c"]} />
+        <fog attach="fog" args={["#2b002c", 45, 51]} />
+
+        <GalaxyStarsParticles />
+        <RandomStarsParticles />
 
         <ambientLight intensity={0.5} />
 
@@ -41,7 +46,7 @@ export function MainScene() {
             makeDefault
             fov={40}
             near={0.1}
-            far={1000}
+            far={10000}
             rotation={[0, 0, 0]}
         />
 
