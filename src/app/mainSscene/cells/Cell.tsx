@@ -12,7 +12,20 @@ const _m4s = Array.from({ length: 3 }, () => new Matrix4());
 const _v3s = Array.from({ length: 3 }, () => new Vector3());
 const _qs = Array.from({ length: 3 }, () => new Quaternion());
 
+
 const colorThemes = [{
+    // floating world draft
+    rock: undefined,
+    grass: new Color("#90ea67"),
+    pickable: new Color("#b635d3"),
+    surface: {
+        rock: undefined,
+        grass: new Color("#d8dd76"),
+        energy: new Color("#ffc57a"),
+        thickness: 0.4,
+    },
+    bricks: new Color("#ff8968"),
+}, {
     // earth-like vegetation of mideteranian climate
     rock: {
         mainColor: new Color("#2e444f"),
@@ -20,10 +33,11 @@ const colorThemes = [{
     },
     grass: new Color("#90ea67"),
     pickable: new Color("#b635d3"),
-    floor: {
+    surface: {
         rock: new Color("#576c6e"),
         grass: new Color("#d8dd76"),
         energy: new Color("#ffc57a"),
+        thickness: 2,
     },
     bricks: new Color("#ff8968"),
 }, {
@@ -34,10 +48,11 @@ const colorThemes = [{
     },
     grass: new Color("#980843"),
     pickable: new Color("#61C3EA"),
-    floor: {
+    surface: {
         rock: new Color("#2d282e"),
         grass: new Color("#6a3e4f"),
         energy: new Color("#a947b4"),
+        thickness: 2,
     },
     bricks: new Color("#bf4967"),
 }, {
@@ -49,10 +64,11 @@ const colorThemes = [{
     //     rockSnow: new Color("#cae0fb"),
     //     grass: new Color("#e66ce8"),
     //     pickable: new Color("#5bef20"),
-    //     floor: {
+    //     surface: {
     //         rock: new Color("#576c6e"),
     //         grass: new Color("#d8dd76"),
     //         energy: new Color("#ffc57a"),
+    //  thickness: 2,
     //     },
     //     bricks: new Color("#fb9658"),
     // }, {
@@ -63,10 +79,11 @@ const colorThemes = [{
     },
     grass: new Color("#cb276c"),
     pickable: new Color("#61C3EA"),
-    floor: {
+    surface: {
         rock: new Color("#66356b"),
         grass: new Color("#ce6d95"),
         energy: new Color("#ca7aa9"),
+        thickness: 2,
     },
     bricks: new Color("#bf4967"),
 }, {
@@ -77,10 +94,11 @@ const colorThemes = [{
     },
     grass: new Color("#98d06d"),
     pickable: new Color("#ff4a98"),
-    floor: {
+    surface: {
         rock: new Color("#97858f"),
         grass: new Color("#c9cf79"),
         energy: new Color("#cfc279"),
+        thickness: 2,
     },
     bricks: new Color("#938572"),
 }, {
@@ -91,10 +109,11 @@ const colorThemes = [{
     },
     grass: new Color("#175051"),
     pickable: new Color("#5cf1f4"),
-    floor: {
+    surface: {
         rock: new Color("#151f3b"),
         grass: new Color("#2a3246"),
         energy: new Color("#3d4866"),
+        thickness: 2,
     },
     bricks: new Color("#155b84"),
 }] as const;
@@ -120,13 +139,16 @@ export function Cell(ctx: LayoutContext) {
     const isEnergy = caState === visualStateMap.energy;
     const visualKey = isGrass ? "grass" : isRock ? "rock" : "energy";
 
-    const floor = abuseBox();
-    floor.setColor(colors.floor[visualKey]);
-    floor.setMatrix(_m4s[1].compose(
-        _v3s[0].set(0, -1, 0),
-        _qs[0].identity(),
-        _v3s[1].set(1, 2, 1),
-    ).premultiply(rootMatrixWorld));
+    const surfaceColor = colors.surface[visualKey];
+    if (surfaceColor) {
+        const surface = abuseBox();
+        surface.setColor(surfaceColor);
+        surface.setMatrix(_m4s[1].compose(
+            _v3s[0].set(0, -colors.surface.thickness / 2, 0),
+            _qs[0].identity(),
+            _v3s[1].set(1, colors.surface.thickness, 1),
+        ).premultiply(rootMatrixWorld));
+    }
     if (isEnergy) {
         if (isCollected) {
             const isJustCollected = isCollected && !ctx.prevState?.isCollected;
@@ -142,10 +164,19 @@ export function Cell(ctx: LayoutContext) {
         if (isGrass) {
             Grass(colors.grass, ctx);
         }
-        if (isRock) {
+        if (isRock && colors.rock) {
             Rock(colors.rock, ctx);
         }
     } else {
+        if (isRock && !surfaceColor) {
+            const surface = abuseBox();
+            surface.setColor(colors.bricks);
+            surface.setMatrix(_m4s[1].compose(
+                _v3s[0].set(0, -colors.surface.thickness / 2, 0),
+                _qs[0].identity(),
+                _v3s[1].set(1, colors.surface.thickness, 1),
+            ).premultiply(rootMatrixWorld));
+        }
         Bricks(colors.bricks, ctx);
     }
 }
