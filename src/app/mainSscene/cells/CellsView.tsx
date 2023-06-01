@@ -105,7 +105,7 @@ const createCellView = ({
         const pos = sight.playerPosition;
         const [px, pt] = pos;
         const cx = px - Math.floor(xc * 0.10);
-        const ct = pt + Math.floor(tc * 0.30);
+        const ct = pt + Math.floor(tc * 0.25);
 
         const t1 = Math.round(ct / tc) * tc + st;
         const t = t1 + (ct > (t1 - tc / 2) ? 0 : -tc);

@@ -87,7 +87,6 @@ export function PlayerView({
                         <sphereGeometry args={[0.5]} />
                         <meshBasicMaterial color="#000000" />
                     </mesh>
-                    /
                 </group>
                 <mesh position={[-0.1, 0, 0]}>
                     <sphereGeometry args={[0.52]} />
