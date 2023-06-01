@@ -41,21 +41,21 @@ const colorThemes = [{
     },
     bricks: new Color("#bf4967"),
 }, {
-//     // snowy -- tbd
-//     rock: {
-//         mainColor: new Color("#0b76ab"),
-//         snowColor: new Color("#cae0fb"),
-//     },
-//     rockSnow: new Color("#cae0fb"),
-//     grass: new Color("#e66ce8"),
-//     pickable: new Color("#5bef20"),
-//     floor: {
-//         rock: new Color("#576c6e"),
-//         grass: new Color("#d8dd76"),
-//         energy: new Color("#ffc57a"),
-//     },
-//     bricks: new Color("#fb9658"),
-// }, {
+    //     // snowy -- tbd
+    //     rock: {
+    //         mainColor: new Color("#0b76ab"),
+    //         snowColor: new Color("#cae0fb"),
+    //     },
+    //     rockSnow: new Color("#cae0fb"),
+    //     grass: new Color("#e66ce8"),
+    //     pickable: new Color("#5bef20"),
+    //     floor: {
+    //         rock: new Color("#576c6e"),
+    //         grass: new Color("#d8dd76"),
+    //         energy: new Color("#ffc57a"),
+    //     },
+    //     bricks: new Color("#fb9658"),
+    // }, {
     // cherry
     rock: {
         mainColor: new Color("#670471"),
@@ -83,6 +83,20 @@ const colorThemes = [{
         energy: new Color("#cfc279"),
     },
     bricks: new Color("#938572"),
+}, {
+    // Alien Planet
+    rock: {
+        mainColor: new Color("#6c6356"),
+        snowColor: undefined,
+    },
+    grass: new Color("#175051"),
+    pickable: new Color("#5cf1f4"),
+    floor: {
+        rock: new Color("#151f3b"),
+        grass: new Color("#2a3246"),
+        energy: new Color("#3d4866"),
+    },
+    bricks: new Color("#155b84"),
 }] as const;
 
 export function Cell(ctx: LayoutContext) {
