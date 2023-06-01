@@ -93,9 +93,9 @@ export function Cell(ctx: LayoutContext) {
         abuseBox,
     } = ctx;
 
-    const colors = colorThemes[Math.floor(t / 15) % colorThemes.length];
-    // const colors = colorThemes[
-        // Number(dropzone.world.ca.rule[0]) % colorThemes.length];
+    // const colors = colorThemes[Math.floor(t / 15) % colorThemes.length];
+    const colors = colorThemes[
+        Number(dropzone.world.ca.rule[1]) % colorThemes.length];
 
     const expSight = epxandedSight(trek);
     const caState = caForDropzone(dropzone)._at(t, x);
