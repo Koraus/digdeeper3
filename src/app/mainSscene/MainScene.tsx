@@ -1,4 +1,4 @@
-import { GizmoHelper, GizmoViewport, PerspectiveCamera, useTexture } from "@react-three/drei";
+import { GizmoHelper, GizmoViewport, PerspectiveCamera } from "@react-three/drei";
 import { CellsView } from "./cells/CellsView";
 import { PlayerView } from "./PlayerView";
 import { CopilotView } from "./CopilotView";

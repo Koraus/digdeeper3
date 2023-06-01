@@ -10,7 +10,7 @@ export function StopLine() {
             <meshPhongMaterial
                 color={"white"} />
         </mesh>
-        {sight.depth > 0 && < mesh position={[-61 / 2 + 0.1, 0, 0]}>
+        {sight.depth > 0 && <mesh position={[-61 / 2 + 0.1, 0, 0]}>
             <boxGeometry args={[61, 1.09, 200]} />
             <meshBasicMaterial
                 color={"#6b008c"}
