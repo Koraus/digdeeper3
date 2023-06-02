@@ -14,6 +14,7 @@ import { OverlayMap } from "./OverlayMap";
 import { MiniMap } from "./MiniMap";
 import { InformationCircle } from "@emotion-icons/ionicons-solid/InformationCircle";
 import { Tutorial } from "./Tutorial";
+import "@fontsource/noto-sans-mono";
 
 
 export function App() {
@@ -38,7 +39,7 @@ export function App() {
             position: "fixed",
             inset: "0",
             overflow: "auto",
-            fontFamily: "monospace",
+            fontFamily: "'Noto Sans Mono', monospace",
         }}
         ref={focusRootRef}
         tabIndex={-1}
