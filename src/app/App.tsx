@@ -108,7 +108,27 @@ export function App() {
                     pointerEvents: "all",
                 }} />
             </div>
-
+            <button //Tutorial
+                css={{
+                    position: "absolute",
+                    left: "6vmin",
+                    bottom: "14vmin",
+                    padding: "0vmin 0vmin 0.4vmin 0vmin",
+                    pointerEvents: "all",
+                }}
+                onClick={() => setIsTutorial(!isTutorial)}
+            >
+                <InformationCircle css={{
+                    width: "3vmin",
+                    marginBottom: "0.6vmin",
+                    display: "block",
+                }}
+                />
+                <span css={{
+                    textDecoration: "underline",
+                    fontSize: "1.2vmin",
+                }} >K</span>
+            </button>
             <WorldSelectionPanel css={{
                 height: "100%",
                 inset: 0,
@@ -162,26 +182,7 @@ export function App() {
                 </span>
             </div>
         </div>
-        <button css={{
-            position: "absolute",
-            left: "6vmin",
-            bottom: "14vmin",
-            padding: "0vmin 0vmin 0.4vmin 0vmin",
-            zIndex: 1,
-        }}
-            onClick={() => setIsTutorial(!isTutorial)}
-        >
-            <InformationCircle css={{
-                width: "3vmin",
-                marginBottom: "0.6vmin",
-                display: "block",
-            }}
-            />
-            <span css={{
-                textDecoration: "underline",
-                fontSize: "1.2vmin",
-            }} >K</span>
-        </button>
+
         {<Tutorial css={[{
             opacity: isTutorial ? 1 : 0,
             position: "absolute",
@@ -192,6 +193,7 @@ export function App() {
                 : "translate(-50%,20%) scale(0.4)",
             transitionDuration: "800ms",
             owerflow: "hidden",
+            zIndex: isTutorial ? 1 : -1,
         }]} />}
     </div >;
 }
