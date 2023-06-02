@@ -4,19 +4,57 @@ import { Canvas } from "@react-three/fiber";
 import { MainScene } from "./mainSscene/MainScene";
 import { NoToneMapping } from "three";
 import { appVersion } from "./appVersion";
-import { Gui } from "./Gui";
-import { BasecampPanel } from "./basecamp/BasecampPanel";
-import { useEffect, useRef, useState } from "react";
+import { Gui as _Gui } from "./Gui";
+import { BasecampPanel as _BasecampPanel } from "./basecamp/BasecampPanel";
+import { memo, useEffect, useRef, useState } from "react";
 import { useGrabFocusFromBody } from "../utils/reactish/useGrabFocusFromBody";
 import { Tent as BasecampIcon } from "@emotion-icons/fluentui-system-regular/Tent";
 import { X as CloseIcon } from "@emotion-icons/boxicons-regular/X";
-import { OverlayMap } from "./OverlayMap";
-import { MiniMap } from "./MiniMap";
-import { ControlsPanel, ControlsPanelVisibility, controlsPanelVisibilityToggle, controlsPanelVisibilityToggleInverse } from "./ControlsPanel";
+import { OverlayMap as _OverlayMap } from "./OverlayMap";
+import { MiniMap as _MiniMap } from "./MiniMap";
+import { ControlsHelpPanel as _ContraolsPanel, ControlsPanelVisibility, controlsPanelVisibilityToggle, controlsPanelVisibilityToggleInverse } from "./ControlsHelpPanel";
 import "@fontsource/noto-sans-mono";
 import { useRecoilValue } from "recoil";
 import { playerProgressionRecoil } from "./playerProgressionRecoil";
 import { startForTrek, trekRecoil } from "./trekRecoil";
+
+
+const eqStringify = <T,>(p: T, n: T) =>
+    JSON.stringify(p) === JSON.stringify(n);
+
+const MainCanvas = memo(() => <Canvas
+    css={{ position: "absolute", inset: 0, zIndex: -1 }}
+    gl={{
+        useLegacyLights: true,
+        toneMapping: NoToneMapping,
+        antialias: true,
+    }}
+    shadows="percentage"
+    frameloop="demand"
+>
+    <MainScene />
+</Canvas>);
+
+const OverlayMap = memo(
+    (props: Parameters<typeof _OverlayMap>[0]) =>
+        <_OverlayMap {...props} />,
+    eqStringify);
+const BasecampPanel = memo(
+    (props: Parameters<typeof _BasecampPanel>[0]) =>
+        <_BasecampPanel {...props} />,
+    eqStringify);
+const MiniMap = memo(
+    (props: Parameters<typeof _MiniMap>[0]) =>
+        <_MiniMap {...props} />,
+    eqStringify);
+const Gui = memo(
+    (props: Parameters<typeof _Gui>[0]) =>
+        <_Gui {...props} />,
+    eqStringify);
+const ControlsPanel = memo(
+    (props: Parameters<typeof _ContraolsPanel>[0]) =>
+        <_ContraolsPanel {...props} />,
+    eqStringify);
 
 
 export function App() {
@@ -72,18 +110,7 @@ export function App() {
             }
         }}
     >
-        <Canvas
-            css={{ position: "absolute", inset: 0, zIndex: -1 }}
-            gl={{
-                useLegacyLights: true,
-                toneMapping: NoToneMapping,
-                antialias: true,
-            }}
-            shadows="percentage"
-            frameloop="demand"
-        >
-            <MainScene />
-        </Canvas>
+        <MainCanvas />
         <div css={{
             position: "absolute",
             inset: 0,
@@ -118,9 +145,8 @@ export function App() {
                     pointerEvents: "all",
                 }} />
             </div>
-            <ControlsPanel
-                visibility={controlsVisibility}
-                css={[{
+            <div
+                css={{
                     pointerEvents: "all",
                     cursor: "pointer",
                     position: "absolute",
@@ -132,12 +158,14 @@ export function App() {
                         : "translate(0, 0) scale(0.4)",
                     transitionDuration: "0ms",
                     owerflow: "hidden",
-                }]}
+                }}
                 onClick={(ev) => setControlsVisibility((ev.shiftKey
                     ? controlsPanelVisibilityToggleInverse
                     : controlsPanelVisibilityToggle
                 )[controlsVisibility])}
-            />
+            >
+                <ControlsPanel visibility={controlsVisibility} />
+            </div>
             <BasecampPanel css={{
                 height: "100%",
                 inset: 0,

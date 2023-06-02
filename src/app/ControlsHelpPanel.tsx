@@ -6,11 +6,6 @@ import { Robot } from "@emotion-icons/fa-solid/Robot";
 import { JoystickButton } from "@emotion-icons/boxicons-regular/JoystickButton";
 
 
-
-
-
-
-
 const keyStyle = {
     display: "inline-block",
     height: "1.1em",
@@ -39,7 +34,7 @@ export const controlsPanelVisibilityToggleInverse = {
     hint: "mini",
 } as const;
 
-export function ControlsPanel({
+export function ControlsHelpPanel({
     visibility,
     css: cssProp,
     ...props

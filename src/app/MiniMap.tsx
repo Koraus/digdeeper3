@@ -6,8 +6,11 @@ import { sightAt, startForTrek, trekRecoil } from "./trekRecoil";
 import { epxandedSight } from "./mainSscene/cells/CellsView";
 import { createImageData32 } from "../utils/createImageData32";
 import { mapEnergyColor, mapGrassColor, mapRockColor } from "./basecamp/DropzonePreview";
+import { jsx } from "@emotion/react";
 
-export function MiniMap() {
+export function MiniMap({
+    ...props
+}: jsx.JSX.IntrinsicElements["canvas"]) {
     const trek = useRecoilValue(trekRecoil);
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -96,5 +99,6 @@ export function MiniMap() {
             imageRendering: "pixelated",
             height: "100%",
         }]}
+        {...props}
     />;
 }
