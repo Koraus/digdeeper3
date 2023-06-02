@@ -121,6 +121,8 @@ export function App() {
             <ControlsPanel
                 visibility={controlsVisibility}
                 css={[{
+                    pointerEvents: "all",
+                    cursor: "pointer",
                     position: "absolute",
                     bottom: "1vmin",
                     left: isControlsOpen ? "50%" : "1vmin",
