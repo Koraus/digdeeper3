@@ -11,9 +11,11 @@ import { generateWorld } from "../model/generate";
 import { generateRandomSymmetricalRule } from "../ca/generateRandomSymmetricalRule";
 import { version } from "../model/version";
 import { levelCap, levelProgress, playerProgressionRecoil } from "./playerProgressionRecoil";
+import { dropShadow5 } from "../utils/dropShadow5";
 
 
 export function Gui({
+    css: cssProp,
     ...props
 }: jsx.JSX.IntrinsicElements["div"]) {
     const trek = useRecoilValue(trekRecoil);
@@ -30,7 +32,12 @@ export function Gui({
             ? ((levelProgress(xp) % 1) * 100).toFixed(0) + "%"
             : "cap";
 
-    return <div {...props}>
+    return <div
+        css={[{
+            filter: dropShadow5("0.2em", "0.1em", "rgb(0 0 0 / 0.8)"),
+        }, cssProp]}
+        {...props}
+    >
         {world.v}<br />
         -- ca rule: {world.ca.rule}<br />
         -- drain: {world.stateEnergyDrain.join(" ")}

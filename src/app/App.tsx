@@ -17,6 +17,7 @@ import "@fontsource/noto-sans-mono";
 import { useRecoilValue } from "recoil";
 import { playerProgressionRecoil } from "./playerProgressionRecoil";
 import { startForTrek, trekRecoil } from "./trekRecoil";
+import { dropShadow5 } from "../utils/dropShadow5";
 
 
 const eqStringify = <T,>(p: T, n: T) =>
@@ -88,6 +89,7 @@ export function App() {
             inset: "0",
             overflow: "auto",
             fontFamily: "'Noto Sans Mono', monospace",
+            fontSize: "1.15vmin",
         }}
         ref={focusRootRef}
         tabIndex={-1}
@@ -203,15 +205,12 @@ export function App() {
             </button>
             <div css={{ // appVersion panel
                 position: "absolute",
-                right: "6vmin",
-                top: "1vmin",
+                right: "1vmin",
+                bottom: "1vmin",
                 textAlign: "right",
                 fontSize: "1.4vmin",
                 lineHeight: "90%",
-                textShadow: "0 0 0.2vmin black",
-                color: "black",
-                filter: "invert(1)",
-                mixBlendMode: "difference",
+                filter: dropShadow5("0.2em", "0.2em", "#00000080"),
             }}>
                 {appVersion.split("+")[0]}<br />
                 <span css={{ fontSize: "0.8em" }}>

@@ -4,6 +4,7 @@ import { MapMarkedAlt } from "@emotion-icons/fa-solid/MapMarkedAlt";
 import { Undo } from "@emotion-icons/evaicons-solid/Undo";
 import { Robot } from "@emotion-icons/fa-solid/Robot";
 import { JoystickButton } from "@emotion-icons/boxicons-regular/JoystickButton";
+import { dropShadow5 } from "../utils/dropShadow5";
 
 
 const keyStyle = {
@@ -43,7 +44,7 @@ export function ControlsHelpPanel({
 }) {
 
     const wasd = <div css={{
-        fontSize: "3.5vmin",
+        fontSize: "3em",
     }}>
         <div>
             <div css={{ display: "inline-block" }}>
@@ -64,7 +65,7 @@ export function ControlsHelpPanel({
         </div>
     </div>;
     const others = <div css={{
-        fontSize: "2.5vmin",
+        fontSize: "2.2em",
     }}>
         <div>
             <span css={keyStyle}>C</span> - <Robot css={{
@@ -98,8 +99,8 @@ export function ControlsHelpPanel({
 
     const h = <div css={{
         fontSize: (visibility === "hint" || visibility === "mini")
-            ? "4.5vmin"
-            : "2.5vmin",
+            ? "4.2em"
+            : "2.2em",
     }}>
         <div>
             <span css={keyStyle}>H</span> - <JoystickButton css={{
@@ -117,10 +118,7 @@ export function ControlsHelpPanel({
             display: "flex",
             alignItems: "left",
             flexDirection: "column",
-            filter: "drop-shadow(0 -0.2vmin 0.6vmin rgb(0 0 0 / 0.5))"
-                + " drop-shadow(0 0.2vmin 0.6vmin rgb(0 0 0 / 0.5))"
-                + " drop-shadow(-0.2vmin 0 0.6vmin rgb(0 0 0 / 0.5))"
-                + " drop-shadow(0.2vmin 0 0.6vmin rgb(0 0 0 / 0.5))",
+            filter: dropShadow5("0.2em", "0.4em", "rgb(0 0 0 / 0.5)"),
         }, cssProp]}
         {...props}
     >
