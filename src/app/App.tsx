@@ -12,6 +12,7 @@ import { Menu as MenuIcon } from "@emotion-icons/boxicons-regular/Menu";
 import { X as XIcon } from "@emotion-icons/boxicons-regular/X";
 import { OverlayMap } from "./OverlayMap";
 import { MiniMap } from "./MiniMap";
+import "@fontsource/noto-sans-mono";
 
 
 export function App() {
@@ -29,7 +30,7 @@ export function App() {
             position: "fixed",
             inset: "0",
             overflow: "auto",
-            fontFamily: "monospace",
+            fontFamily: "'Noto Sans Mono', monospace",
         }}
         ref={focusRootRef}
         tabIndex={-1}
