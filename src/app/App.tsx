@@ -12,6 +12,8 @@ import { Menu as MenuIcon } from "@emotion-icons/boxicons-regular/Menu";
 import { X as XIcon } from "@emotion-icons/boxicons-regular/X";
 import { OverlayMap } from "./OverlayMap";
 import { MiniMap } from "./MiniMap";
+import { InformationCircle } from "@emotion-icons/ionicons-solid/InformationCircle";
+import { Tutorial } from "./Tutorial";
 
 
 export function App() {
@@ -19,9 +21,16 @@ export function App() {
     const [mapShowState, setMapShowState] = useState(0);
     const isMapShown = mapShowState > 0;
     const isMapBackShown = mapShowState === 2;
-
     const focusRootRef = useRef<HTMLDivElement>(null);
     useGrabFocusFromBody(focusRootRef);
+
+    const [isTutorial, setIsTutorial] = useState(false);
+
+    // const isFirstGame =  " condition for the first demonstration "
+    // if (isFirstGame) { setIsTutorial(true); }
+
+    const keyCodes = ["KeyW", "KeyS", "KeyD", "KeyA", "KeyZ",
+        "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"];
 
     return <div
         css={{
@@ -36,6 +45,12 @@ export function App() {
         onKeyDown={ev => {
             if (ev.code === "Escape") {
                 setIsBasecampShown(!isBasecampShown);
+            }
+            if (ev.code === "KeyK") {
+                setIsTutorial(!isTutorial);
+            }
+            if (isTutorial && keyCodes.some((code) => ev.code === code)) {
+                setIsTutorial(false);
             }
             if (ev.code === "KeyM") {
                 if (ev.shiftKey) {
@@ -93,19 +108,6 @@ export function App() {
                 }} />
             </div>
 
-
-            <div css={{
-                position: "absolute",
-                bottom: "1vmin",
-                left: "1vmin",
-            }} >
-                <div>WASD / Arrows to move</div>
-                <div>C to accept hint</div>
-                <div>Z to undo</div>
-                <div>M to toggle map</div>
-                <div>Esc to toggle basecamp</div>
-            </div>
-
             <WorldSelectionPanel css={{
                 height: "100%",
                 inset: 0,
@@ -159,6 +161,36 @@ export function App() {
                 </span>
             </div>
         </div>
-
+        <button css={{
+            position: "absolute",
+            left: "6vmin",
+            bottom: "14vmin",
+            padding: "0vmin 0vmin 0.4vmin 0vmin",
+        }}
+            onClick={() => setIsTutorial(!isTutorial)}
+        >
+            <InformationCircle css={{
+                width: "3vmin",
+                marginBottom: "0.6vmin",
+                display: "block",
+            }}
+            />
+            <span css={{
+                textDecoration: "underline",
+                fontSize: "1.2vmin",
+            }} >K</span>
+        </button>
+        {
+            <Tutorial css={[{
+                opacity: isTutorial ? 1 : 0,
+                position: "absolute",
+                left: isTutorial ? "50%" : "6vmin",
+                bottom: isTutorial ? "20%" : "14vmin",
+                transform: isTutorial
+                    ? "translate(-50%, 20%) scale(1)"
+                    : "translate(-50%,20%) scale(0.4)",
+                transitionDuration: "800ms",
+                owerflow: "hidden",
+            }]} />}
     </div>;
 }
