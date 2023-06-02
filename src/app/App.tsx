@@ -166,6 +166,7 @@ export function App() {
             left: "6vmin",
             bottom: "14vmin",
             padding: "0vmin 0vmin 0.4vmin 0vmin",
+            zIndex: 1,
         }}
             onClick={() => setIsTutorial(!isTutorial)}
         >
@@ -180,17 +181,16 @@ export function App() {
                 fontSize: "1.2vmin",
             }} >K</span>
         </button>
-        {
-            <Tutorial css={[{
-                opacity: isTutorial ? 1 : 0,
-                position: "absolute",
-                left: isTutorial ? "50%" : "6vmin",
-                bottom: isTutorial ? "20%" : "14vmin",
-                transform: isTutorial
-                    ? "translate(-50%, 20%) scale(1)"
-                    : "translate(-50%,20%) scale(0.4)",
-                transitionDuration: "800ms",
-                owerflow: "hidden",
-            }]} />}
-    </div>;
+        {<Tutorial css={[{
+            opacity: isTutorial ? 1 : 0,
+            position: "absolute",
+            left: isTutorial ? "50%" : "4vmin",
+            bottom: isTutorial ? "20%" : "12vmin",
+            transform: isTutorial
+                ? "translate(-50%, 20%) scale(1)"
+                : "translate(-50%,20%) scale(0.4)",
+            transitionDuration: "800ms",
+            owerflow: "hidden",
+        }]} />}
+    </div >;
 }
