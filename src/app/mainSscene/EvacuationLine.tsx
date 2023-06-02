@@ -22,13 +22,13 @@ export function EvacuationLine({
     return <group
         {...props}
     >
-        <EvacuationLineParticles
+        {p1 > 0 && <EvacuationLineParticles
             position={[
                 evacuationLinePosition(p1),
                 0,
                 dropzone.width / 2]}
             width={dropzone.width}
-        />
+        />}
         <EvacuationLineParticles
             position={[
                 evacuationLinePosition(p2),

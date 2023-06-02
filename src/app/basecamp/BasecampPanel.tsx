@@ -13,7 +13,7 @@ import { Star } from "@emotion-icons/ionicons-solid/Star";
 import { History } from "@emotion-icons/fa-solid/History";
 
 
-export function WorldSelectionPanel({
+export function BasecampPanel({
     css: cssProp,
     ...props
 }: jsx.JSX.IntrinsicElements["div"]) {

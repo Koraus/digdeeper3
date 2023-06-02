@@ -5,16 +5,18 @@ import { MainScene } from "./mainSscene/MainScene";
 import { NoToneMapping } from "three";
 import { appVersion } from "./appVersion";
 import { Gui } from "./Gui";
-import { WorldSelectionPanel } from "./basecamp/BasecampPanel";
-import { useRef, useState } from "react";
+import { BasecampPanel } from "./basecamp/BasecampPanel";
+import { useEffect, useRef, useState } from "react";
 import { useGrabFocusFromBody } from "../utils/reactish/useGrabFocusFromBody";
 import { Tent as BasecampIcon } from "@emotion-icons/fluentui-system-regular/Tent";
 import { X as CloseIcon } from "@emotion-icons/boxicons-regular/X";
 import { OverlayMap } from "./OverlayMap";
 import { MiniMap } from "./MiniMap";
-import { InformationCircle } from "@emotion-icons/ionicons-solid/InformationCircle";
-import { Tutorial } from "./Tutorial";
+import { ControlsPanel, ControlsPanelVisibility, controlsPanelVisibilityToggle, controlsPanelVisibilityToggleInverse } from "./ControlsPanel";
 import "@fontsource/noto-sans-mono";
+import { useRecoilValue } from "recoil";
+import { playerProgressionRecoil } from "./playerProgressionRecoil";
+import { startForTrek, trekRecoil } from "./trekRecoil";
 
 
 export function App() {
@@ -25,13 +27,21 @@ export function App() {
     const focusRootRef = useRef<HTMLDivElement>(null);
     useGrabFocusFromBody(focusRootRef);
 
-    const [isTutorial, setIsTutorial] = useState(false);
+    const { xp } = useRecoilValue(playerProgressionRecoil);
+    const trek = useRecoilValue(trekRecoil);
+    const hasMoved = trek !== startForTrek(trek);
+    const [controlsVisibility, setControlsVisibility] =
+        useState<ControlsPanelVisibility>(xp === 0 ? "tutorial" : "hint");
+    const isControlsOpen =
+        controlsVisibility === "open"
+        || controlsVisibility === "tutorial";
 
-    // const isFirstGame =  " condition for the first demonstration "
-    // if (isFirstGame) { setIsTutorial(true); }
-
-    const keyCodes = ["KeyW", "KeyS", "KeyD", "KeyA", "KeyZ",
-        "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"];
+    useEffect(() => {
+        if (!hasMoved) { return; }
+        if (controlsVisibility !== "tutorial") { return; }
+        setControlsVisibility(
+            controlsPanelVisibilityToggle[controlsVisibility]);
+    }, [hasMoved]);
 
     return <div
         css={{
@@ -47,11 +57,11 @@ export function App() {
             if (ev.code === "Escape") {
                 setIsBasecampShown(!isBasecampShown);
             }
-            if (ev.code === "KeyK") {
-                setIsTutorial(!isTutorial);
-            }
-            if (isTutorial && keyCodes.some((code) => ev.code === code)) {
-                setIsTutorial(false);
+            if (ev.code === "KeyH") {
+                setControlsVisibility((ev.shiftKey
+                    ? controlsPanelVisibilityToggleInverse
+                    : controlsPanelVisibilityToggle
+                )[controlsVisibility]);
             }
             if (ev.code === "KeyM") {
                 if (ev.shiftKey) {
@@ -108,28 +118,25 @@ export function App() {
                     pointerEvents: "all",
                 }} />
             </div>
-            <button //Tutorial
-                css={{
+            <ControlsPanel
+                visibility={controlsVisibility}
+                css={[{
                     position: "absolute",
-                    left: "6vmin",
-                    bottom: "14vmin",
-                    padding: "0vmin 0vmin 0.4vmin 0vmin",
-                    pointerEvents: "all",
-                }}
-                onClick={() => setIsTutorial(!isTutorial)}
-            >
-                <InformationCircle css={{
-                    width: "3vmin",
-                    marginBottom: "0.6vmin",
-                    display: "block",
-                }}
-                />
-                <span css={{
-                    textDecoration: "underline",
-                    fontSize: "1.2vmin",
-                }} >K</span>
-            </button>
-            <WorldSelectionPanel css={{
+                    bottom: "1vmin",
+                    left: isControlsOpen ? "50%" : "1vmin",
+                    transformOrigin: "0% 100%",
+                    transform: isControlsOpen
+                        ? "translate(-50%, 0) scale(1)"
+                        : "translate(0, 0) scale(0.4)",
+                    transitionDuration: "0ms",
+                    owerflow: "hidden",
+                }]}
+                onClick={(ev) => setControlsVisibility((ev.shiftKey
+                    ? controlsPanelVisibilityToggleInverse
+                    : controlsPanelVisibilityToggle
+                )[controlsVisibility])}
+            />
+            <BasecampPanel css={{
                 height: "100%",
                 inset: 0,
                 overflowX: "hidden",
@@ -138,7 +145,7 @@ export function App() {
                 pointerEvents: isBasecampShown ? "all" : "none",
                 opacity: isBasecampShown ? 1 : 0,
             }} />
-            <button // bascamp 
+            <button // toggle basecamp 
                 css={{
                     padding: "0.0vmin 0.0vmin 0.4vmin 0.0vmin",
                     pointerEvents: "all",
@@ -182,18 +189,5 @@ export function App() {
                 </span>
             </div>
         </div>
-
-        {<Tutorial css={[{
-            opacity: isTutorial ? 1 : 0,
-            position: "absolute",
-            left: isTutorial ? "50%" : "4vmin",
-            bottom: isTutorial ? "20%" : "12vmin",
-            transform: isTutorial
-                ? "translate(-50%, 20%) scale(1)"
-                : "translate(-50%,20%) scale(0.4)",
-            transitionDuration: "800ms",
-            owerflow: "hidden",
-            zIndex: isTutorial ? 1 : -1,
-        }]} />}
     </div >;
 }
