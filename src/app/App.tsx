@@ -8,8 +8,8 @@ import { Gui } from "./Gui";
 import { WorldSelectionPanel } from "./basecamp/BasecampPanel";
 import { useRef, useState } from "react";
 import { useGrabFocusFromBody } from "../utils/reactish/useGrabFocusFromBody";
-import { Menu as MenuIcon } from "@emotion-icons/boxicons-regular/Menu";
-import { X as XIcon } from "@emotion-icons/boxicons-regular/X";
+import { Tent as BasecampIcon } from "@emotion-icons/fluentui-system-regular/Tent";
+import { X as CloseIcon } from "@emotion-icons/boxicons-regular/X";
 import { OverlayMap } from "./OverlayMap";
 import { MiniMap } from "./MiniMap";
 import "@fontsource/noto-sans-mono";
@@ -127,11 +127,11 @@ export function App() {
                 onClick={() => setIsBasecampShown(!isBasecampShown)}
             >
                 {isBasecampShown
-                    ? <XIcon css={{
+                    ? <CloseIcon css={{
                         width: "3vmin",
                         marginBottom: "-0.6vmin",
                     }} />
-                    : <MenuIcon css={{
+                    : <BasecampIcon css={{
                         width: "3vmin",
                         marginBottom: "-0.6vmin",
                     }} />
