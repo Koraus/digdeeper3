@@ -9,7 +9,6 @@ import { dampVector3 } from "../../utils/dampVector3";
 import { useEffect, useMemo } from "react";
 import { StartingCamp } from "./StartingCamp";
 import { EvacuationLine } from "./EvacuationLine";
-import { FrameLimiter } from "../../utils/reactish/FrameLimiter";
 import { useThree } from "@react-three/fiber";
 import { setup as setupShaderSourceHooker } from "../../utils/glsl/hookShaderSource";
 import { RandomStarsParticles } from "./RandomStarsParticles";
@@ -22,8 +21,6 @@ export function MainScene() {
 
     const lightTarget = useMemo(() => new Object3D(), []);
     return <>
-        <FrameLimiter fps={0} />
-
         <color attach="background" args={["#2b002c"]} />
         <fog attach="fog" args={["#2b002c", 45, 51]} />
 

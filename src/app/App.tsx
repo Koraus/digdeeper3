@@ -18,6 +18,7 @@ import { useRecoilValue } from "recoil";
 import { playerProgressionRecoil } from "./playerProgressionRecoil";
 import { startForTrek, trekRecoil } from "./trekRecoil";
 import { dropShadow5 } from "../utils/dropShadow5";
+import { FrameLimiter } from "../utils/reactish/FrameLimiter";
 
 
 const eqStringify = <T,>(p: T, n: T) =>
@@ -33,6 +34,7 @@ const MainCanvas = memo(() => <Canvas
     shadows="percentage"
     frameloop="demand"
 >
+    <FrameLimiter fps={Infinity} />
     <MainScene />
 </Canvas>);
 
