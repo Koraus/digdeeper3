@@ -7,6 +7,7 @@ import { caStateCount } from "../../model/terms/World";
 import { generateRandomDropzone, generateWorld } from "../../model/generate";
 import { generateRandomSymmetricalRule } from "../../ca/generateRandomSymmetricalRule";
 import { generateRandomRule } from "../../ca/generateRandomRule";
+import { getComposition } from "../../ca/calculateComposition";
 
 const generators = {
     "symmetrical": generateRandomSymmetricalRule,
@@ -22,6 +23,9 @@ export function NewDropzones({
         useState<keyof typeof generators>("symmetrical");
 
     const setDropzone = useSetDropzone();
+
+    const [isFiltered, setIsFiltered] = useState(false);
+    const [generateCount, setGenerateCount] = useState(10);
 
     if (!dropzones) {
         setDropzones(Array.from({ length: 5 }, () => generateRandomDropzone({
@@ -46,18 +50,55 @@ export function NewDropzones({
             </select>
         </label>
         <br />
+        <label>
+            <input type="checkbox"
+                onChange={() => setIsFiltered(!isFiltered)} />
+            “filter stone &gt; 50% && energy &gt; 2%”
+        </label>
+        <br />
+        <label>
+            Generate count:
+            <select
+                disabled={!isFiltered}
+                value={generateCount}
+                onChange={e => setGenerateCount(Number(e.target.value))}
+            >
+                <option value="10">10</option>
+                <option value="100">100</option>
+                <option value="1000">1000</option>
+            </select>
+        </label>
+        <br />
         <button
             css={[{
                 margin: "0.9vmin 0",
             }]}
-            onClick={() => setDropzones(
-                Array.from(
-                    { length: 5 },
-                    () => generateRandomDropzone({
-                        world: generateWorld({
-                            ca: generators[generator](caStateCount),
-                        }),
-                    })))}> Reroll </button>
+            onClick={() => {
+                if (isFiltered) {
+                    setDropzones(Array.from(
+                        { length: generateCount },
+                        () => generateRandomDropzone({
+                            world: generateWorld({
+                                ca: generators[generator](caStateCount),
+                            }),
+                        })).filter((v) => {
+                            const composition = getComposition(v.world.ca);
+                            const energy = 0.02;
+                            const stone = 0.5;
+                            return composition[0] > stone
+                                && composition[2] > energy;
+                        }));
+                } else {
+                    setDropzones(
+                        Array.from(
+                            { length: 5 },
+                            () => generateRandomDropzone({
+                                world: generateWorld({
+                                    ca: generators[generator](caStateCount),
+                                }),
+                            })));
+                }
+            }}> Reroll </button>
         {dropzones
             && <div css={[{
                 listStyle: "none",
