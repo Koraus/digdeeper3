@@ -20,11 +20,9 @@ export function MainScene() {
     const gl = useThree(({ gl }) => gl);
     useEffect(() => setupShaderSourceHooker(gl.getContext()), [gl]);
 
-    const lowFpsMode = false;
-
     const lightTarget = useMemo(() => new Object3D(), []);
     return <>
-        <FrameLimiter fps={lowFpsMode ? 6 : Infinity} />
+        <FrameLimiter fps={0} />
 
         <color attach="background" args={["#2b002c"]} />
         <fog attach="fog" args={["#2b002c", 45, 51]} />

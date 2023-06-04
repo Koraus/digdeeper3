@@ -14,10 +14,7 @@ export const cssColorToAbgr = (() => {
 })();
 
 
-export const createImageData32 = (canvasEl: HTMLCanvasElement) => {
-    const ctx = canvasEl.getContext("2d");
-    if (!ctx) { throw new Error("no ctx"); }
-    const imageData = ctx.createImageData(canvasEl.width, canvasEl.height);
+export const createImageData32 = (imageData: ImageData) => {
     const data32 = new Uint32Array(imageData.data.buffer);
 
     const setPixelAbgr = (x: number, y: number, abgr: number) =>
@@ -26,9 +23,19 @@ export const createImageData32 = (canvasEl: HTMLCanvasElement) => {
     const setPixel = (x: number, y: number, cssColor: string) =>
         setPixelAbgr(x, y, cssColorToAbgr(cssColor));
 
-    const put = () => {
-        ctx.putImageData(imageData, 0, 0);
-    };
+    return { data32, setPixel, setPixelAbgr };
+};
 
-    return { imageData, data32, setPixel, setPixelAbgr, put };
+
+export const createFullCanvasImageData32 = (canvas: HTMLCanvasElement) => {
+    const ctx = canvas.getContext("2d");
+    if (!ctx) { throw new Error("no ctx"); }
+    const imageData = ctx.createImageData(canvas.width, canvas.height);
+    return {
+        canvas,
+        ctx,
+        imageData,
+        ...createImageData32(imageData),
+        put() { ctx.putImageData(imageData, 0, 0); },
+    };
 };

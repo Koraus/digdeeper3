@@ -54,11 +54,11 @@ export function PickablePick(color: Color, {
     const pickable = abuseBox();
     pickable.setColor(color);
 
-    let iniitialTime = Infinity;
-    abuseFrame(({ rootMatrixWorld }, { clock }) => {
-        if (iniitialTime === Infinity) { iniitialTime = clock.elapsedTime; }
+    let initialTime = Infinity;
+    abuseFrame(({ rootMatrixWorld }, { clock, invalidate }) => {
+        if (initialTime === Infinity) { initialTime = clock.elapsedTime; }
 
-        const timeSec = clock.elapsedTime - iniitialTime;
+        const timeSec = clock.elapsedTime - initialTime;
         const t1 = timeSec;
 
         pickable.setMatrix(_m4s[1].compose(
@@ -77,5 +77,7 @@ export function PickablePick(color: Color, {
                 .set(0.4, 0.4, 0.4)
                 .multiplyScalar(Math.max(0, 1 - timeSec * 2)),
         ).premultiply(rootMatrixWorld));
+
+        if (t1 <= 1) { invalidate(); }
     });
 }

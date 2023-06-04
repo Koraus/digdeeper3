@@ -142,7 +142,17 @@ export function App() {
                 top: "1vmin",
                 left: "1vmin",
             }} >
-                <MiniMap />
+                <div
+                    css={{
+                        pointerEvents: "all",
+                        cursor: "pointer",
+                    }}
+                    onClick={() => setMapShowState((mapShowState + 1) % 3)}
+                >
+                    <MiniMap css={{
+                        filter: dropShadow5("0.2em", "0.2em", "#00000080"),
+                    }} />
+                </div>
                 <Gui css={{
                     pointerEvents: "all",
                 }} />

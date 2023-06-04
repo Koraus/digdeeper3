@@ -22,7 +22,6 @@ export function Gui({
     const [, log] = rawSightAt(trek);
     const sight = sightAt(trek);
     const drop = startForTrek(trek);
-    const world = drop.zone.world;
     const { xp, level } = useRecoilValue(playerProgressionRecoil);
 
     const setDrop = useSetDrop();
@@ -38,17 +37,6 @@ export function Gui({
         }, cssProp]}
         {...props}
     >
-        {world.v}<br />
-        -- ca rule: {world.ca.rule}<br />
-        -- drain: {world.stateEnergyDrain.join(" ")}
-        &nbsp;/ gain: {world.stateEnergyGain.join(" ")}<br />
-
-        - startFillState: {drop.zone.startFillState}<br />
-        - seed: {drop.zone.seed}<br />
-        - width: {drop.zone.width}<br />
-        depthLeftBehind:{drop.depthLeftBehind} <br />
-        equipment:{JSON.stringify(drop.equipment)}<br />
-        <div>---</div>
         <div>p: {sight.playerPosition.join(",")}</div>
         <div>Energy: {sight.playerEnergy}</div>
         <div>Last move: {log}</div>

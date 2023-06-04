@@ -4,13 +4,14 @@ import { caForDropzone } from "../model/sight";
 import { useRecoilValue } from "recoil";
 import { sightAt, startForTrek, trekRecoil } from "./trekRecoil";
 import { epxandedSight } from "./mainSscene/cells/CellsView";
-import { createImageData32 } from "../utils/createImageData32";
+import { createFullCanvasImageData32 } from "../utils/createImageData32";
 import { mapEnergyColor, mapGrassColor, mapRockColor } from "./basecamp/DropzonePreview";
 import { jsx } from "@emotion/react";
 
 export function MiniMap({
+    css: cssProp,
     ...props
-}: jsx.JSX.IntrinsicElements["canvas"]) {
+}: jsx.JSX.IntrinsicElements["div"]) {
     const trek = useRecoilValue(trekRecoil);
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -28,7 +29,7 @@ export function MiniMap({
         const {
             put,
             setPixel,
-        } = createImageData32(canvasEl);
+        } = createFullCanvasImageData32(canvasEl);
 
 
         const sight = sightAt(trek);
@@ -93,12 +94,38 @@ export function MiniMap({
         put();
     }, [canvasRef.current, trek]);
 
-    return <canvas
-        ref={canvasRef}
+    const drop = startForTrek(trek);
+    const dropzone = drop.zone;
+    const world = dropzone.world;
+    const details = `${dropzone.v}`
+        + `\nca: ${world.ca.rule}`
+        + `\ndrain: ${world.stateEnergyDrain.join(" ")}`
+        + ` / gain: ${world.stateEnergyGain.join(" ")}`
+        + `\nseed: ${dropzone.seed}`
+        + `\nstartFillState: ${dropzone.startFillState}`
+        + `\nwidth: ${dropzone.width}`
+        + `\n+ depthLeftBehind: ${drop.depthLeftBehind}`
+        + `\n+ equipment: ${JSON.stringify(drop.equipment)}`;
+
+    return <div
         css={[{
-            imageRendering: "pixelated",
-            height: "100%",
-        }]}
+            display: "flex",
+            flexDirection: "row",
+        }, cssProp]}
         {...props}
-    />;
+    >
+        <canvas
+            ref={canvasRef}
+            css={[{
+                imageRendering: "pixelated",
+                height: "100%",
+            }]}
+        /><div css={{
+            fontSize: "0.8em",
+            lineHeight: "1.25em",
+            marginLeft: "0.7em",
+            marginTop: "-0.2em",
+            whiteSpace: "pre-line",
+        }}>{details}</div>
+    </div>;
 }

@@ -4,7 +4,7 @@ import { caForDropzone } from "../model/sight";
 import { useRecoilValue } from "recoil";
 import { sightAt, startForTrek, trekRecoil } from "./trekRecoil";
 import { epxandedSight } from "./mainSscene/cells/CellsView";
-import { createImageData32 } from "../utils/createImageData32";
+import { createFullCanvasImageData32 } from "../utils/createImageData32";
 import { jsx } from "@emotion/react";
 
 export function OverlayMap({
@@ -28,7 +28,7 @@ export function OverlayMap({
         const {
             put,
             setPixel,
-        } = createImageData32(canvasEl);
+        } = createFullCanvasImageData32(canvasEl);
 
 
         const sight = sightAt(trek);
