@@ -40,12 +40,10 @@ export function BasecampPanel({
             minHeight: "0",
         }}>
             <PlayerPanel css={{
-                margin: "0.5vmin",
-                width: "30vmin",
-                height: "50vmin",
+                margin: "5vmin 3vmin 2.5vmin 4.5vmin",
             }} />
             <div css={{
-                margin: "0.5vmin",
+                margin: "2.5vmin",
             }}>
                 <Tabs css={{
                     height: "100%",

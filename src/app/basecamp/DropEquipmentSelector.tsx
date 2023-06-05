@@ -3,7 +3,7 @@ import type { jsx } from "@emotion/react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import update from "immutability-helper";
 import { playerProgressionRecoil } from "../playerProgressionRecoil";
-
+import { SkillNumberPicker } from "./SkillNumberPicker";
 
 export function DropEquipmentSelector({
     css: cssProp, ...props
@@ -22,24 +22,38 @@ export function DropEquipmentSelector({
         }, cssProp]}
         {...props}
     >
-        Skills<br />
-        Skill Points: {pointsRemaining} / {totalPointsAvailable}<br />
-        - <label>
-            <span>Pick Neighborhood Index</span>&nbsp;
-            <input
-                type="number"
-                min={0}
-                max={Math.min(
-                    2,
-                    pointsRemaining + dropEquipment.pickNeighborhoodIndex,
-                )}
-                value={dropEquipment.pickNeighborhoodIndex}
-                onChange={ev => setDropEquipment(update(dropEquipment, {
-                    pickNeighborhoodIndex: {
-                        $set: Number(ev.target.value) as 0 | 1 | 2,
-                    },
-                }))}
-            ></input>
-        </label><br />
+        <h2>Level {level}</h2>
+        <h3>Skill Points spent: {pointsUsed} / {totalPointsAvailable}
+        &nbsp;({pointsRemaining} left)</h3>
+        You can reallocate points for each new game
+        <br />
+        <br />
+        <div>
+            <div css={{
+                display: "inline-block",
+                width: "25%",
+            }}>
+                <SkillNumberPicker
+                    min={0}
+                    max={Math.min(
+                        2,
+                        pointsRemaining + dropEquipment.pickNeighborhoodIndex,
+                    )}
+                    value={dropEquipment.pickNeighborhoodIndex}
+                    setValue={v => setDropEquipment(update(dropEquipment, {
+                        pickNeighborhoodIndex: {
+                            $set: v as 0 | 1 | 2,
+                        },
+                    }))}
+                    format={v => `${v}/2`}
+                />
+            </div>
+            <br />Pick Neighborhood:
+            <br />- {[
+                "Current Cell Only",
+                "Current + 4 Adjacent Cells",
+                "Current + 4 Adjacent + 4 Diagonal Cells",
+            ][dropEquipment.pickNeighborhoodIndex]}
+        </div>
     </div>;
 }

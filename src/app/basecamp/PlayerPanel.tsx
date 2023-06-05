@@ -48,12 +48,14 @@ export function PlayerPanel({
     return <div css={[{
         display: "flex",
         flexDirection: "column",
+        width: "40vmin",
     }, cssProp]} {...props}>
+        <div css={{
+            background: "#ffffff20",
+            height: "50vmin",
+        }}>
+            <Canvas><PlayerPanelScene /></Canvas>
+        </div>
         <DropEquipmentSelector />
-        <Canvas
-            css={{
-                background: "#ffffff20",
-            }}
-        ><PlayerPanelScene /></Canvas>
     </div>;
 }
