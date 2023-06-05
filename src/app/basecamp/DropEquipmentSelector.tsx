@@ -22,10 +22,12 @@ export function DropEquipmentSelector({
         }, cssProp]}
         {...props}
     >
-        <h2>Level {level}</h2>
         <h3>Skill Points spent: {pointsUsed} / {totalPointsAvailable}
         &nbsp;({pointsRemaining} left)</h3>
-        You can reallocate points for each new game
+        A skill point is givel per level up.
+        <br />
+        You can reallocate points for each new game.
+        <br />
         <br />
         <br />
         <div>

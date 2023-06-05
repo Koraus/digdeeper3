@@ -183,7 +183,7 @@ export function App() {
             <BasecampPanel css={{
                 position: "absolute",
                 inset: 0,
-                background: "rgba(0, 0, 0, 0.8)",
+                background: "rgba(0, 0, 0, 0.9)",
                 pointerEvents: isBasecampShown ? "all" : "none",
                 visibility: isBasecampShown ? "visible" : "hidden",
             }} />

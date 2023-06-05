@@ -5,6 +5,7 @@ import { Character } from "../mainSscene/Character";
 import { CameraControls } from "@react-three/drei";
 import { useLayoutEffect, useRef } from "react";
 import { Box3, PerspectiveCamera, Vector3 } from "three";
+import { LevelBadge } from "../LevelBadge";
 
 
 function PlayerPanelScene() {
@@ -56,6 +57,10 @@ export function PlayerPanel({
         }}>
             <Canvas><PlayerPanelScene /></Canvas>
         </div>
+        <LevelBadge css={{
+            marginTop: "-1.3em",
+            marginLeft: "-0.1em",
+        }} />
         <DropEquipmentSelector />
     </div>;
 }
