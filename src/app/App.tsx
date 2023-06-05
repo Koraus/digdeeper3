@@ -181,10 +181,8 @@ export function App() {
                 <ControlsPanel visibility={controlsVisibility} />
             </div>
             <BasecampPanel css={{
-                height: "100%",
-                inset: 0,
-                overflowX: "hidden",
                 position: "absolute",
+                inset: 0,
                 background: "rgba(0, 0, 0, 0.8)",
                 pointerEvents: isBasecampShown ? "all" : "none",
                 opacity: isBasecampShown ? 1 : 0,

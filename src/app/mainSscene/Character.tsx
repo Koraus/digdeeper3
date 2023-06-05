@@ -50,10 +50,10 @@ export function Character({
                     <meshBasicMaterial color="#959191" />
                 </mesh>
                 <mesh
-                    position={[-0.09, 0.6, 0.02]}
+                    position={[-0.1, 0.64, 0.04]}
                     rotation={[0.2, 0, 0.47]}
                 >
-                    <cylinderGeometry args={[0.02, 0.08, 0.5]} />
+                    <cylinderGeometry args={[0.02, 0.07, 0.5]} />
                     <meshBasicMaterial color="#959191" />
                 </mesh>
             </group>
@@ -70,10 +70,10 @@ export function Character({
                     <meshBasicMaterial color="#959191" />
                 </mesh>
                 <mesh
-                    position={[-0.09, 0.6, 0.02]}
+                    position={[-0.1, 0.64, 0.04]}
                     rotation={[0.2, 0, 0.47]}
                 >
-                    <cylinderGeometry args={[0.02, 0.08, 0.5]} />
+                    <cylinderGeometry args={[0.02, 0.07, 0.5]} />
                     <meshBasicMaterial color="#959191" />
                 </mesh>
             </group>
