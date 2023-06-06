@@ -11,7 +11,8 @@ import { Dice } from "@emotion-icons/fa-solid/Dice";
 import { Star } from "@emotion-icons/ionicons-solid/Star";
 import { History } from "@emotion-icons/fa-solid/History";
 import { PlayerPanel } from "./PlayerPanel";
-
+import { useRecoilState } from "recoil";
+import { languageRecoil } from "../languageRecoil";
 
 export function BasecampPanel({
     css: cssProp,
@@ -22,6 +23,9 @@ export function BasecampPanel({
         height: "1.2em",
         marginTop: "-0.25em",
     };
+    const [language, setLanguage] = useRecoilState(languageRecoil);
+    const ukrainian = "uk";
+    const english = "en";
 
     return <div
         css={[{
@@ -87,6 +91,16 @@ export function BasecampPanel({
                     </div>
                 </Tabs>
             </div>
+        </div>
+        <div css={{ display: "flex", margin: "0 0 2vmin 0.5vmin " }}>
+            select language:
+            <div
+                onClick={() => setLanguage({ language: english })}
+                css={{ margin: "0 2vmin 0 2vmin" }}
+            >EN</div>
+            <div
+                onClick={() => setLanguage({ language: ukrainian })}
+            >UA</div>
         </div>
     </div >;
 }
