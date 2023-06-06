@@ -19,6 +19,7 @@ import { playerProgressionRecoil } from "./playerProgressionRecoil";
 import { startForTrek, trekRecoil } from "./trekRecoil";
 import { dropShadow5 } from "../utils/dropShadow5";
 import { FrameLimiter } from "../utils/reactish/FrameLimiter";
+import { Invalidator } from "./Invalidator";
 
 
 const eqStringify = <T,>(p: T, n: T) =>
@@ -35,6 +36,7 @@ const MainCanvas = memo(() => <Canvas
     frameloop="demand"
 >
     <FrameLimiter fps={Infinity} />
+    <Invalidator />
     <MainScene />
 </Canvas>);
 
