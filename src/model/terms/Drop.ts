@@ -2,6 +2,7 @@ import { pipe } from "fp-ts/lib/function";
 import * as D from "io-ts/Decoder";
 import { version } from "../version";
 import { DropzoneDecoder } from "./Dropzone";
+import { decode, eqByKey } from "../../utils/keyifyUtils";
 
 
 export const DropDecoder = D.struct({
@@ -23,3 +24,9 @@ export const DropDecoder = D.struct({
 
 export type Drop = D.TypeOf<typeof DropDecoder>;
 export type DropEquipment = Drop["equipment"];
+
+
+export const keyProjectDrop = decode(DropDecoder);
+export const keyifyDrop =
+    (x: Drop) => JSON.stringify(keyProjectDrop(x));
+export const eqDrop = eqByKey(keyifyDrop);

@@ -1,6 +1,6 @@
 import type { jsx } from "@emotion/react";
 import { FavoriteDropzones } from "./FavoriteDropzones";
-import { HistoricalWorlds } from "./HistoricalWorlds";
+import { HistoricalDrops } from "./HistoricalDrops";
 import { NewDropzones } from "./NewDropzones";
 import { CurrentDropInfo } from "./CurrentDropInfo";
 import { DevChoiceWorlds } from "./DevChoiceWorlds";
@@ -81,7 +81,7 @@ export function BasecampPanel({
                                 <FavoriteDropzones css={{ height: "100%" }} />
                             </TabPanel>
                             <TabPanel>
-                                <HistoricalWorlds css={{ height: "100%" }} />
+                                <HistoricalDrops css={{ height: "100%" }} />
                             </TabPanel>
                         </div>
                     </div>

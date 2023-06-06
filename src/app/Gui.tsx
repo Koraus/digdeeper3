@@ -10,11 +10,11 @@ import { caStateCount } from "../model/terms/World";
 import { generateWorld } from "../model/generate";
 import { generateRandomSymmetricalRule } from "../ca/generateRandomSymmetricalRule";
 import { version } from "../model/version";
-import { playerProgressionRecoil } from "./playerProgressionRecoil";
 import { dropShadow5 } from "../utils/dropShadow5";
 import { evacuationLineProgress } from "../model/evacuation";
 import { LightningChargeFill } from "@emotion-icons/bootstrap/LightningChargeFill";
 import { LevelBadge } from "./LevelBadge";
+import { dropEquipmentRecoil } from "./basecamp/dropEquipmentRecoil";
 
 export function Gui({
     css: cssProp,
@@ -39,6 +39,8 @@ export function Gui({
     const theEvacuationLineProgress = evacuationLineProgress(pos[1]) % 1;
     const theEvacuationLineProgress1 =
         evacuationLineProgress(sight.maxDepth) % 1;
+
+    const equipment = useRecoilValue(dropEquipmentRecoil);
 
     const setDrop = useSetDrop();
 
@@ -149,9 +151,7 @@ export function Gui({
                         world: drop.zone.world,
                     }),
                     depthLeftBehind: 10,
-                    equipment: {
-                        pickNeighborhoodIndex: 0,
-                    },
+                    equipment,
                 })}
             >
                 <PinDrop
@@ -175,9 +175,7 @@ export function Gui({
                         }),
                     }),
                     depthLeftBehind: 10,
-                    equipment: {
-                        pickNeighborhoodIndex: 0,
-                    },
+                    equipment,
                 })}
             >
                 <World

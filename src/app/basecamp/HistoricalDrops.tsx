@@ -1,16 +1,15 @@
 import type { jsx } from "@emotion/react";
 import { useRecoilValue } from "recoil";
 import { DropzonePreview } from "./DropzonePreview";
-import { historicalWorldsRecoil } from "./historicalWorldsRecoil";
+import { historicalDropsRecoil } from "./historicalDropsRecoil";
 import { useSetDrop } from "./useSetDrop";
-import { version } from "../../model/version";
 import { Sparkles } from "@emotion-icons/ionicons-solid/Sparkles";
 
 
-export function HistoricalWorlds({
+export function HistoricalDrops({
     ...props
 }: jsx.JSX.IntrinsicElements["div"]) {
-    const historicalWorlds = useRecoilValue(historicalWorldsRecoil);
+    const historicalWorlds = useRecoilValue(historicalDropsRecoil);
     const setDrop = useSetDrop();
 
     return <div {...props}>
@@ -25,7 +24,7 @@ export function HistoricalWorlds({
         }]}>
             {historicalWorlds
                 .slice(0, 10)
-                .map((p, i) => <div
+                .map((drop, i) => <div
                     key={i}
                     css={[{
                         position: "relative",
@@ -34,7 +33,7 @@ export function HistoricalWorlds({
                         css={[{
                             margin: "0.1vmin",
                         }]}
-                        dropzone={p} />
+                        dropzone={drop.zone} />
                     <button
                         css={[{
                             position: "absolute",
@@ -42,14 +41,7 @@ export function HistoricalWorlds({
                             left: "50%",
                             transform: "translateX(-50%)",
                         }]}
-                        onClick={() => setDrop({
-                            v: version,
-                            zone: p,
-                            depthLeftBehind: 10,
-                            equipment: {
-                                pickNeighborhoodIndex: 0,
-                            },
-                        })}
+                        onClick={() => setDrop(drop)}
                     > Play!</button>
                 </div>)}
         </div>

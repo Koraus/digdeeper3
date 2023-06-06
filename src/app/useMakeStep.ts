@@ -5,6 +5,7 @@ import { submitTrek } from "./submitTrek";
 import { isEvacuationLineCrossed } from "../model/evacuation";
 import { trekRecoil, rawSightAt, sightAt } from "./trekRecoil";
 import { useRegisterXp } from "./playerProgressionRecoil";
+import { saveTrek } from "../copilot/saver";
 
 
 export function useMakeStep() {
@@ -22,6 +23,7 @@ export function useMakeStep() {
 
         if (isEvacuationLineCrossed(sight.maxDepth, nextSight.maxDepth)) {
             submitTrek(packTrekChain(nextTrek)); //no await
+            saveTrek(packTrekChain(trek)); // copilot
             addXp(1);
         }
         setTrek(nextTrek);

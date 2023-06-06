@@ -1,21 +1,18 @@
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { trekRecoil } from "../trekRecoil";
-import { historicalWorldsRecoil } from "./historicalWorldsRecoil";
-import { saveTrek } from "../../copilot/saver";
-import { Drop } from "../../model/terms/Drop";
-import { eqDropzone } from "../../model/terms/Dropzone";
-import { packTrekChain } from "../packTrekChain";
+import { historicalDropsRecoil } from "./historicalDropsRecoil";
+import { Drop, eqDrop } from "../../model/terms/Drop";
+
 
 export function useSetDrop() {
-    const [trek, setTrek] = useRecoilState(trekRecoil);
-    const [historicalWorlds, setHistoricalWorlds] =
-        useRecoilState(historicalWorldsRecoil);
+    const setTrek = useSetRecoilState(trekRecoil);
+    const [historicalDrops, setHistoricalDrops] =
+        useRecoilState(historicalDropsRecoil);
     return (drop: Drop) => {
-        saveTrek(packTrekChain(trek));
-        setHistoricalWorlds([
-            drop.zone,
-            ...historicalWorlds
-                .filter(p => !eqDropzone(p, drop.zone)),
+        setHistoricalDrops([
+            drop,
+            ...historicalDrops
+                .filter(p => !eqDrop(p, drop)),
         ]);
         setTrek(drop);
     };
