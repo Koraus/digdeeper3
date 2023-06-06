@@ -3,6 +3,5 @@
 /dist-packs/
 /dist/
 /dist*/
-
-# JetBrains Rider
 .idea
+.DS_Store
