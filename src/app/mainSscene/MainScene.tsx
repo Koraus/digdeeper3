@@ -29,14 +29,6 @@ export function MainScene() {
 
         <ambientLight intensity={0.5} />
 
-
-        <GizmoHelper
-            alignment="bottom-right"
-            margin={[80, 110]}
-        >
-            <GizmoViewport />
-        </GizmoHelper>
-
         <PerspectiveCamera
             makeDefault
             fov={40}

@@ -5,6 +5,8 @@ import { MainScene } from "./mainSscene/MainScene";
 import { NoToneMapping } from "three";
 import { appVersion } from "./appVersion";
 import { Gui as _Gui } from "./Gui";
+import { NewGameButtonsPanel as _NewGameButtonsPanel } from "./NewGameButtonsPanel";
+import { EnergyPanel as _EnergyPanel } from "./EnergyPanel";
 import { BasecampPanel as _BasecampPanel } from "./basecamp/BasecampPanel";
 import { memo, useEffect, useRef, useState } from "react";
 import { useGrabFocusFromBody } from "../utils/reactish/useGrabFocusFromBody";
@@ -59,6 +61,14 @@ const Gui = memo(
 const ControlsPanel = memo(
     (props: Parameters<typeof _ContraolsPanel>[0]) =>
         <_ContraolsPanel {...props} />,
+    eqStringify);
+const NewGameButtonsPanel = memo(
+    (props: Parameters<typeof _NewGameButtonsPanel>[0]) =>
+        <_NewGameButtonsPanel {...props} />,
+    eqStringify);
+const EnergyPanel = memo(
+    (props: Parameters<typeof _EnergyPanel>[0]) =>
+        <_EnergyPanel {...props} />,
     eqStringify);
 
 
@@ -167,11 +177,10 @@ export function App() {
                     cursor: "pointer",
                     position: "absolute",
                     bottom: "1vmin",
-                    left: isControlsOpen ? "50%" : "1vmin",
-                    transformOrigin: "0% 100%",
-                    transform: isControlsOpen
-                        ? "translate(-50%, 0) scale(1)"
-                        : "translate(0, 0) scale(0.4)",
+                    left: "50%",
+                    transformOrigin: "50% 100%",
+                    translate: "-50%",
+                    scale: isControlsOpen ? "1" : "0.4",
                     transitionDuration: "0ms",
                     owerflow: "hidden",
                 }}
@@ -182,6 +191,13 @@ export function App() {
             >
                 <ControlsPanel visibility={controlsVisibility} />
             </div>
+            <NewGameButtonsPanel css={{
+                filter: dropShadow5("0.2em", "0.1em", "rgb(0 0 0 / 0.8)"),
+                pointerEvents: "all",
+                position: "absolute",
+                right: "6vmin",
+                top: "1vmin",
+            }} />
             <BasecampPanel css={{
                 position: "absolute",
                 inset: 0,
@@ -191,6 +207,7 @@ export function App() {
             }} />
             <button // toggle basecamp 
                 css={{
+                    filter: dropShadow5("0.2em", "0.1em", "rgb(0 0 0 / 0.8)"),
                     padding: "0.0vmin 0.0vmin 0.4vmin 0.0vmin",
                     pointerEvents: "all",
                     position: "absolute",
@@ -215,6 +232,12 @@ export function App() {
                     fontSize: "1.2vmin",
                 }} >Esc</span>
             </button>
+            <EnergyPanel css={{
+                position: "absolute",
+                left: "1vmin",
+                bottom: "1vmin",
+                filter: dropShadow5("0.2em", "0.1em", "rgb(0 0 0 / 0.8)"),
+            }} />
             <div css={{ // appVersion panel
                 position: "absolute",
                 right: "1vmin",
