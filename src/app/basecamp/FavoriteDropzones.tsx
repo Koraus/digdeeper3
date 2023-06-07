@@ -5,7 +5,7 @@ import { DropzonePreview } from "./DropzonePreview";
 import { useSetDrop } from "./useSetDrop";
 import { version } from "../../model/version";
 import { Sparkles } from "@emotion-icons/ionicons-solid/Sparkles";
-
+import { Hiking } from "@emotion-icons/fa-solid/Hiking";
 
 
 export function FavoriteDropzones({
@@ -46,7 +46,8 @@ export function FavoriteDropzones({
                         left: "50%",
                         transform: "translateX(-50%)",
                     }]}
-                > Play!</button>
+                >  <Hiking css={{ height: "1em", marginTop: "-0.2em" }} />
+                    &nbsp;Go!</button>
             </div>)}
         </div>
     </div >;

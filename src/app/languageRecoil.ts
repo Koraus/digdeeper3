@@ -11,9 +11,29 @@ import { localStorageAtomEffect } from "../utils/reactish/localStorageAtomEffect
 // };
 
 export const translation = {
+    "change language:": {
+        "en": "change language",
+        "uk": "змінити мову",
+    },
+    "Generator:": {
+        "en": "Generator:",
+        "uk": "Генератор:",
+    },
+    "filter rock in": {
+        "en": "filter rock in:",
+        "uk": "відфільтрувати скелів в:",
+    },
+    "and energy in": {
+        "en": "and energy in",
+        "uk": "і енергію в:",
+    },
+    "Count:": {
+        "en": "Count",
+        "uk": "Кількість",
+    },
     "Generate": {
         "en": "Generate",
-        "ua": "Згенерувати",
+        "uk": "Згенерувати",
     },
     "WASD / Arrows to move": {
         "en": "WASD / Arrows to move",
@@ -21,19 +41,19 @@ export const translation = {
     },
     "Esc": {
         "en": "Esc",
-        "ua": "Вихід",
+        "uk": "Вихід",
     },
     "Restart": {
         "en": "Restart",
-        "ua": "Перезапуск",
+        "uk": "Перезапуск",
     },
     "New Dropzone": {
         "en": "New Dropzone",
-        "ua": "Нове Місце Висадки",
+        "uk": "Нове Місце Висадки",
     },
     "New World": {
         "en": "New World",
-        "ua": "Новий Світ",
+        "uk": "Новий Світ",
     },
     "Dev Choice Worlds": {
         "en": "Dev Choice Worlds",
@@ -50,6 +70,38 @@ export const translation = {
     "Drop History": {
         "en": "Drop History",
         "uk": "Історія зіграних світів",
+    },
+    "A skill point is given per level up.": {
+        "en": "A skill point is given per level up.",
+        "uk": "Очко навику надається при піднятті рівня",
+    },
+    "You can reallocate points for each new game.": {
+        "eu": "You can reallocate points for each new game.",
+        "uk": "Ви можете перерозподіляти очки для кожної нової гри.",
+    },
+    "Skill Points spent:": {
+        "eu": "Skill Points spent:",
+        "uk": "Витрачені бали навичок:",
+    },
+    "left": {
+        "eu": "left",
+        "uk": "залишилося",
+    },
+    "Pick Neighborhood:": {
+        "eu": "Pick Neighborhood:",
+        "uk": "Підбирати сусудні",
+    },
+    "Current Cell Only": {
+        "eu": "Current Cell Only",
+        "uk": "Лише поточна комірка",
+    },
+    "Current + 4 Adjacent Cells": {
+        "eu": "Current + 4 Adjacent Cells",
+        "uk": "Поточна + 4 прилеглі комірки",
+    },
+    "Current + 4 Adjacent + 4 Diagonal Cells": {
+        "eu": "Current + 4 Adjacent + 4 Diagonal Cells",
+        "uk": "Поточний + 4 суміжні + 4 діагональні клітинки",
     },
 
 } as Record<string, Record<string, string>>;

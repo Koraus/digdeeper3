@@ -4,6 +4,7 @@ import { DropzonePreview } from "./DropzonePreview";
 import { historicalDropsRecoil } from "./historicalDropsRecoil";
 import { useSetDrop } from "./useSetDrop";
 import { Sparkles } from "@emotion-icons/ionicons-solid/Sparkles";
+import { Hiking } from "@emotion-icons/fa-solid/Hiking";
 
 
 export function HistoricalDrops({
@@ -42,7 +43,8 @@ export function HistoricalDrops({
                             transform: "translateX(-50%)",
                         }]}
                         onClick={() => setDrop(drop)}
-                    > Play!</button>
+                    >  <Hiking css={{ height: "1em", marginTop: "-0.2em" }} />
+                        &nbsp;Go!</button>
                 </div>)}
         </div>
     </div>;

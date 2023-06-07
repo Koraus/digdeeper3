@@ -8,6 +8,8 @@ import { generateRandomDropzone, generateWorld } from "../../model/generate";
 import { generateRandomSymmetricalRule } from "../../ca/generateRandomSymmetricalRule";
 import { generateRandomRule } from "../../ca/generateRandomRule";
 import { getComposition } from "../../ca/calculateComposition";
+import { useTranslate } from "../languageRecoil";
+import { Hiking } from "@emotion-icons/fa-solid/Hiking";
 
 const generators = {
     "symmetrical": generateRandomSymmetricalRule,
@@ -27,6 +29,8 @@ export function NewDropzones({
 
     const [isCompositionFiltered, setIsCompositionFiltered] = useState(false);
     const [generateCount, setGenerateCount] = useState(30);
+
+    const translate = useTranslate();
 
     if (dropzones.length === 0) {
         setDropzones(
@@ -66,7 +70,7 @@ export function NewDropzones({
     >
         <div>
             <label>
-                Generator: <select
+                {translate("Generator:")} <select
                     value={generator}
                     onChange={e =>
                         setGenerator(e.target.value as keyof typeof generators)}
@@ -77,7 +81,7 @@ export function NewDropzones({
                     >{key}</option>)}
                 </select>
             </label> =&gt; <label>
-                Count:
+                {translate("Count:")} &nbsp;
                 <select
                     value={generateCount}
                     onChange={e => setGenerateCount(Number(e.target.value))}
@@ -105,8 +109,8 @@ export function NewDropzones({
                 <input type="checkbox"
                     onChange={() =>
                         setIsCompositionFiltered(!isCompositionFiltered)} />
-                filter rock in {JSON.stringify(rockRange)}
-                &nbsp;and energy in {JSON.stringify(energyRange)}
+                {translate("filter rock in")} {JSON.stringify(rockRange)}
+                &nbsp;{translate("and energy in")} {JSON.stringify(energyRange)}
             </label>
         </div>
         <div css={[{
@@ -131,7 +135,8 @@ export function NewDropzones({
                         transform: "translateX(-50%)",
                     }]}
                     onClick={() => setDropzone(dropzone)}
-                > Play!</button>
+                >  <Hiking css={{ height: "1em", marginTop: "-0.2em" }} />
+                    &nbsp;Go!</button>
             </div>)}
         </div>
     </div>;

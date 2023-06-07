@@ -105,7 +105,7 @@ export function BasecampPanel({
             right: "8vmin",
             top: "3vmin",
         }}>
-            select language:
+            change language:
             <div
                 onClick={() => setLanguage(english)}
                 css={{

@@ -4,6 +4,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import update from "immutability-helper";
 import { playerProgressionRecoil } from "../playerProgressionRecoil";
 import { SkillNumberPicker } from "./SkillNumberPicker";
+import { useTranslate } from "../languageRecoil";
 
 export function DropEquipmentSelector({
     css: cssProp, ...props
@@ -15,6 +16,7 @@ export function DropEquipmentSelector({
     const totalPointsAvailable = level;
     const pointsUsed = dropEquipment.pickNeighborhoodIndex;
     const pointsRemaining = totalPointsAvailable - pointsUsed;
+    const translate = useTranslate();
 
     return <div
         css={[{
@@ -22,11 +24,12 @@ export function DropEquipmentSelector({
         }, cssProp]}
         {...props}
     >
-        <h3>Skill Points spent: {pointsUsed} / {totalPointsAvailable}
-        &nbsp;({pointsRemaining} left)</h3>
-        A skill point is givel per level up.
+        <h3>{translate("Skill Points spent:")}
+            {pointsUsed} / {totalPointsAvailable}
+            &nbsp;({pointsRemaining} {translate("left")} )</h3>
+        {translate("A skill point is given per level up.")}
         <br />
-        You can reallocate points for each new game.
+        {translate("You can reallocate points for each new game.")}
         <br />
         <br />
         <br />
@@ -50,11 +53,11 @@ export function DropEquipmentSelector({
                     format={v => `${v}/2`}
                 />
             </div>
-            <br />Pick Neighborhood:
+            <br />{translate("Pick Neighborhood:")}
             <br />- {[
-                "Current Cell Only",
-                "Current + 4 Adjacent Cells",
-                "Current + 4 Adjacent + 4 Diagonal Cells",
+                translate("Current Cell Only"),
+                translate("Current + 4 Adjacent Cells"),
+                translate("Current + 4 Adjacent + 4 Diagonal Cells"),
             ][dropEquipment.pickNeighborhoodIndex]}
         </div>
     </div>;
