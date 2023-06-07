@@ -12,7 +12,7 @@ import { Star } from "@emotion-icons/ionicons-solid/Star";
 import { History } from "@emotion-icons/fa-solid/History";
 import { PlayerPanel } from "./PlayerPanel";
 import { useRecoilState } from "recoil";
-import { languageRecoil } from "../languageRecoil";
+import { languageRecoil, useTranslate } from "../languageRecoil";
 
 export function BasecampPanel({
     css: cssProp,
@@ -23,9 +23,11 @@ export function BasecampPanel({
         height: "1.2em",
         marginTop: "-0.25em",
     };
+
     const [language, setLanguage] = useRecoilState(languageRecoil);
     const ukrainian = "uk";
     const english = "en";
+    const translate = useTranslate();
 
     return <div
         css={[{
@@ -59,16 +61,20 @@ export function BasecampPanel({
                     }}>
                         <TabList>
                             <Tab>
-                                <Ribbon css={iconStyle} /> Dev Choice Worlds
+                                <Ribbon css={iconStyle} />&nbsp;
+                                {translate("Dev Choice Worlds")}
                             </Tab>
                             <Tab>
-                                <Dice css={iconStyle} /> Generate Worlds
+                                <Dice css={iconStyle} />&nbsp;
+                                {translate("Generate Worlds")}
                             </Tab>
                             <Tab>
-                                <Star css={iconStyle} /> Bookmarked Drops
+                                <Star css={iconStyle} />&nbsp;
+                                {translate("Bookmarked Drops")}
                             </Tab>
                             <Tab>
-                                <History css={iconStyle} /> Drop History
+                                <History css={iconStyle} />&nbsp;
+                                {translate("Drop History")}
                             </Tab>
                         </TabList>
                         <div css={[{
@@ -92,14 +98,28 @@ export function BasecampPanel({
                 </Tabs>
             </div>
         </div>
-        <div css={{ display: "flex", margin: "0 0 2vmin 0.5vmin " }}>
+        <div css={{
+            display: "flex",
+            margin: "0 0 2vmin 0.5vmin ",
+            position: "absolute",
+            right: "8vmin",
+            top: "3vmin",
+        }}>
             select language:
             <div
-                onClick={() => setLanguage({ language: english })}
-                css={{ margin: "0 2vmin 0 2vmin" }}
+                onClick={() => setLanguage(english)}
+                css={{
+                    margin: "0 2vmin 0 2vmin",
+                    textDecoration: language === "en" ? "underline" : "none",
+                    cursor: "pointer",
+                }}
             >EN</div>
             <div
-                onClick={() => setLanguage({ language: ukrainian })}
+                onClick={() => setLanguage(ukrainian)}
+                css={{
+                    textDecoration: language === "uk" ? "underline" : "none",
+                    cursor: "pointer",
+                }}
             >UA</div>
         </div>
     </div >;
