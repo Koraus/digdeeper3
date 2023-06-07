@@ -2,6 +2,8 @@ import { atom, useRecoilState } from "recoil";
 import { localStorageAtomEffect } from "../utils/reactish/localStorageAtomEffect";
 import update from "immutability-helper";
 import { _never } from "../utils/_never";
+import { Identify, identify, track } from "@amplitude/analytics-browser";
+import { onChangeAtomEffect } from "../utils/reactish/onChangeAtomEffect";
 
 const firstLevelAt = 2;
 
@@ -25,8 +27,32 @@ export const playerProgressionRecoil = atom({
         localStorageAtomEffect({
             key: key => `${key}@1`,
         }),
+        ({ onSet, getInfo_UNSTABLE, node }) => {
+            const value = getInfo_UNSTABLE(node).loadable?.getValue();
+            if (value) { setPlayerUserProps(value); }
+            onSet(setPlayerUserProps);
+        },
+        onChangeAtomEffect({
+            select: x => JSON.stringify(x),
+            onChange: (_, __, x, ___, ____, { node: { key } }) =>
+                track(key, x),
+        }),
+        onChangeAtomEffect({
+            select: ({ level }) => level,
+            onChange: (level) => track("level up", { level }),
+        }),
     ],
 });
+
+const setPlayerUserProps = ({
+    level, xp,
+}: typeof playerProgressionRecoil.__tag[0]) => {
+    const props = new Identify();
+    props.set("level", level);
+    props.set("xp", xp);
+    identify(props);
+};
+
 
 export const useRegisterXp = () => {
     const [playerProgression, setPlayerProgression] =

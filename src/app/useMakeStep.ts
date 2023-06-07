@@ -2,10 +2,11 @@ import { useRecoilState } from "recoil";
 import { instructionIndices } from "../model/terms/PackedTrek";
 import { packTrekChain } from "./packTrekChain";
 import { submitTrek } from "./submitTrek";
-import { isEvacuationLineCrossed } from "../model/evacuation";
-import { trekRecoil, rawSightAt, sightAt } from "./trekRecoil";
+import { evacuationLineProgress, isEvacuationLineCrossed } from "../model/evacuation";
+import { trekRecoil, rawSightAt, sightAt, startForTrek } from "./trekRecoil";
 import { useRegisterXp } from "./playerProgressionRecoil";
 import { saveTrek } from "../copilot/saver";
+import { track } from "@amplitude/analytics-browser";
 
 
 export function useMakeStep() {
@@ -24,6 +25,10 @@ export function useMakeStep() {
         if (isEvacuationLineCrossed(sight.maxDepth, nextSight.maxDepth)) {
             submitTrek(packTrekChain(nextTrek)); //no await
             saveTrek(packTrekChain(trek)); // copilot
+            track("evacuation", {
+                drop: startForTrek(trek),
+                line: Math.floor(evacuationLineProgress(nextSight.maxDepth)),
+            });
             addXp(1);
         }
         setTrek(nextTrek);

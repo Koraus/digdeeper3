@@ -9,8 +9,7 @@ import { jsx } from "@emotion/react";
 import { caStateCount } from "../model/terms/World";
 import { generateWorld } from "../model/generate";
 import { generateRandomSymmetricalRule } from "../ca/generateRandomSymmetricalRule";
-import { version } from "../model/version";
-import { dropEquipmentRecoil } from "./basecamp/dropEquipmentRecoil";
+import { useSetDropzone } from "./basecamp/useSetDropzone";
 
 
 
@@ -19,8 +18,8 @@ export function NewGameButtonsPanel({
 }: jsx.JSX.IntrinsicElements["div"]) {
     const trek = useRecoilValue(trekRecoil);
     const drop = startForTrek(trek);
-    const equipment = useRecoilValue(dropEquipmentRecoil);
     const setDrop = useSetDrop();
+    const setDropzone = useSetDropzone();
 
     return <div css={[{
         display: "flex",
@@ -44,14 +43,9 @@ export function NewGameButtonsPanel({
                 display: "flex",
                 alignItems: "center",
             }]}
-            onClick={() => setDrop({
-                v: version,
-                zone: generateRandomDropzone({
-                    world: drop.zone.world,
-                }),
-                depthLeftBehind: 10,
-                equipment,
-            })}
+            onClick={() => setDropzone(generateRandomDropzone({
+                world: drop.zone.world,
+            }))}
         >
             <PinDrop
                 css={[{
@@ -64,17 +58,12 @@ export function NewGameButtonsPanel({
                 display: "flex",
                 alignItems: "center",
             }]}
-            onClick={() => setDrop({
-                v: version,
-                zone: generateRandomDropzone({
-                    world: generateWorld({
-                        // todo use gen rules from "NewDropzones" here
-                        ca: generateRandomSymmetricalRule(caStateCount),
-                    }),
+            onClick={() => setDropzone(generateRandomDropzone({
+                world: generateWorld({
+                    // todo use gen rules from "NewDropzones" here
+                    ca: generateRandomSymmetricalRule(caStateCount),
                 }),
-                depthLeftBehind: 10,
-                equipment,
-            })}
+            }))}
         >
             <World
                 css={[{
