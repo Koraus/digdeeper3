@@ -16,22 +16,13 @@ export function EvacuationLine({
     const pos = sight.playerPosition;
 
     const p = evacuationLineProgress(pos[1]);
-    const p1 = Math.floor(p);
-    const p2 = Math.ceil(p) === p1 ? p1 + 1 : Math.ceil(p);
 
     return <group
         {...props}
     >
-        {p1 > 0 && <EvacuationLineParticles
-            position={[
-                evacuationLinePosition(p1),
-                0,
-                dropzone.width / 2]}
-            width={dropzone.width}
-        />}
         <EvacuationLineParticles
             position={[
-                evacuationLinePosition(p2),
+                evacuationLinePosition(Math.floor(p) + 1),
                 0,
                 dropzone.width / 2]}
             width={dropzone.width}
