@@ -17,13 +17,13 @@ import { MiniMap as _MiniMap } from "./MiniMap";
 import { ControlsHelpPanel as _ContraolsPanel, ControlsPanelVisibility, controlsPanelVisibilityToggle, controlsPanelVisibilityToggleInverse } from "./ControlsHelpPanel";
 import "@fontsource/noto-sans-mono";
 import { useRecoilValue } from "recoil";
-import { playerProgressionRecoil } from "./playerProgressionRecoil";
 import { startForTrek, trekRecoil } from "./trekRecoil";
 import { dropShadow5 } from "../utils/dropShadow5";
 import { FrameLimiter } from "../utils/reactish/FrameLimiter";
 import { Invalidator } from "./Invalidator";
 import { DisclaimerPanel as _DisclaimerPanel } from "./DisclaimerPanel";
 import { CheckboxWarning as DisclaimerIcon } from "@emotion-icons/fluentui-system-regular/CheckboxWarning";
+import { levelProgressRecoil } from "./levelProgressRecoil";
 
 
 const eqStringify = <T,>(p: T, n: T) =>
@@ -86,11 +86,15 @@ export function App() {
     const focusRootRef = useRef<HTMLDivElement>(null);
     useGrabFocusFromBody(focusRootRef);
 
-    const { xp } = useRecoilValue(playerProgressionRecoil);
+    const levelProgress = useRecoilValue(levelProgressRecoil);
+
     const trek = useRecoilValue(trekRecoil);
     const hasMoved = trek !== startForTrek(trek);
     const [controlsVisibility, setControlsVisibility] =
-        useState<ControlsPanelVisibility>(xp === 0 ? "tutorial" : "hint");
+        useState<ControlsPanelVisibility>(
+            levelProgress === 0
+                ? "tutorial"
+                : "hint");
     const isControlsOpen =
         controlsVisibility === "open"
         || controlsVisibility === "tutorial";

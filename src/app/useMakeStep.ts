@@ -4,10 +4,11 @@ import { packTrekChain } from "./packTrekChain";
 import { submitTrek } from "./submitTrek";
 import { evacuationLineProgress, isEvacuationLineCrossed } from "../model/evacuation";
 import { trekRecoil, rawSightAt, sightAt, startForTrek } from "./trekRecoil";
-import { useRegisterXp } from "./playerProgressionRecoil";
+import { useRegisterXp } from "./levelProgressRecoil";
 import { saveTrek } from "../copilot/saver";
 import { track } from "@amplitude/analytics-browser";
 import { optOutSubmissionRecoil } from "./optOutSubmissionRecoil";
+import { keyProjectDrop } from "../model/terms/Drop";
 
 
 export function useMakeStep() {
@@ -33,7 +34,10 @@ export function useMakeStep() {
                 drop: startForTrek(trek),
                 line: Math.floor(evacuationLineProgress(nextSight.maxDepth)),
             });
-            addXp(1);
+            addXp(1, JSON.stringify({
+                drop: keyProjectDrop(startForTrek(trek)),
+                line: Math.floor(evacuationLineProgress(nextSight.maxDepth)),
+            }));
         }
         setTrek(nextTrek);
     };

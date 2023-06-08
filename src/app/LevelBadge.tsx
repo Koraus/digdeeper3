@@ -1,18 +1,17 @@
 import { useRecoilValue } from "recoil";
 import { jsx } from "@emotion/react";
-import { levelCap, levelProgress, playerProgressionRecoil } from "./playerProgressionRecoil";
-
 
 export function LevelBadge({
     css: cssProp, ...props
 }: jsx.JSX.IntrinsicElements["div"]) {
-    const { xp, level } = useRecoilValue(playerProgressionRecoil);
-    const isMaxLevel = level >= levelCap;
-    const theLevelProgress = levelProgress(xp) % 1;
+    const levelProgress = useRecoilValue(levelProgressRecoil);
+    const isMaxLevel = levelProgress >= levelCap;
+    const level = Math.floor(levelProgress);
+    const progress = levelProgress % 1;
     const levelProgressText =
         isMaxLevel
             ? "MAX"
-            : `${Math.floor(theLevelProgress * 100)}%`;
+            : `${Math.floor(progress * 100)}%`;
 
     return <div
         css={[{
@@ -44,9 +43,12 @@ export function LevelBadge({
             }} />
             <div css={{
                 position: "absolute",
-                inset: `0 ${100 * (1 - theLevelProgress)}% 0 0`,
+                inset: `0 ${100 * (1 - progress)}% 0 0`,
                 background: "#f98602",
             }} />
         </div>}
     </div>;
 }
+
+
+import { levelCap, levelProgressRecoil } from "./levelProgressRecoil";
