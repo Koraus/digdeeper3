@@ -22,6 +22,8 @@ import { startForTrek, trekRecoil } from "./trekRecoil";
 import { dropShadow5 } from "../utils/dropShadow5";
 import { FrameLimiter } from "../utils/reactish/FrameLimiter";
 import { Invalidator } from "./Invalidator";
+import { DisclaimerPanel as _DisclaimerPanel } from "./DisclaimerPanel";
+import { CheckboxWarning as DisclaimerIcon } from "@emotion-icons/fluentui-system-regular/CheckboxWarning";
 
 
 const eqStringify = <T,>(p: T, n: T) =>
@@ -70,6 +72,10 @@ const EnergyPanel = memo(
     (props: Parameters<typeof _EnergyPanel>[0]) =>
         <_EnergyPanel {...props} />,
     eqStringify);
+const DisclaimerPanel = memo(
+    (props: Parameters<typeof _DisclaimerPanel>[0]) =>
+        <_DisclaimerPanel {...props} />,
+    eqStringify);
 
 
 export function App() {
@@ -95,6 +101,8 @@ export function App() {
         setControlsVisibility(
             controlsPanelVisibilityToggle[controlsVisibility]);
     }, [hasMoved]);
+
+    const [isDisclaimerShown, setIsDisclaimerShown] = useState(false);
 
     return <div
         css={{
@@ -198,6 +206,12 @@ export function App() {
                 right: "6vmin",
                 top: "1vmin",
             }} />
+            <EnergyPanel css={{
+                position: "absolute",
+                left: "1vmin",
+                bottom: "1vmin",
+                filter: dropShadow5("0.2em", "0.1em", "rgb(0 0 0 / 0.8)"),
+            }} />
             <BasecampPanel css={{
                 position: "absolute",
                 inset: 0,
@@ -232,15 +246,34 @@ export function App() {
                     fontSize: "1.2vmin",
                 }} >Esc</span>
             </button>
-            <EnergyPanel css={{
-                position: "absolute",
-                left: "1vmin",
-                bottom: "1vmin",
-                filter: dropShadow5("0.2em", "0.1em", "rgb(0 0 0 / 0.8)"),
-            }} />
+            <button // toggle basecamp 
+                css={{
+                    filter: dropShadow5(
+                        "0.2vmin", "0.2vmin", "rgb(0 0 0 / 0.5)"),
+                    padding: "0",
+                    pointerEvents: "all",
+                    position: "absolute",
+                    right: "1vmin",
+                    bottom: "1vmin",
+                    fontSize: "2.5em",
+                    display: "flex",
+                }}
+                onClick={() => setIsDisclaimerShown(!isDisclaimerShown)}
+            >
+                {isDisclaimerShown
+                    ? <CloseIcon css={{
+                        width: "1em",
+                        margin: "0.015em 0 -0.03em 0",
+                    }} />
+                    : <DisclaimerIcon css={{
+                        width: "1em",
+                        margin: "0.05em -0.05em -0.05em 0.05em",
+                    }} />
+                }
+            </button>
             <div css={{ // appVersion panel
                 position: "absolute",
-                right: "1vmin",
+                right: "5.4vmin",
                 bottom: "1vmin",
                 textAlign: "right",
                 fontSize: "1.4vmin",
@@ -252,6 +285,21 @@ export function App() {
                     {appVersion.split("+")[1]}
                 </span>
             </div>
+            <DisclaimerPanel
+                css={{
+                    position: "absolute",
+                    left: "50vw",
+                    top: "50vh",
+                    width: "60vmin",
+                    maxHeight: "60vmin",
+                    translate: "-50% -50%",
+                    background: "rgba(0, 0, 0, 0.9)",
+                    pointerEvents: isDisclaimerShown ? "all" : "none",
+                    visibility: isDisclaimerShown ? "visible" : "hidden",
+                    filter: dropShadow5("0.2em", "0.2em", "rgb(0 0 0 / 0.3)"),
+                }}
+                onClose={() => setIsDisclaimerShown(false)}
+            />
         </div>
     </div >;
 }

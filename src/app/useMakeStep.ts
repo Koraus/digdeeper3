@@ -1,4 +1,4 @@
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { instructionIndices } from "../model/terms/PackedTrek";
 import { packTrekChain } from "./packTrekChain";
 import { submitTrek } from "./submitTrek";
@@ -7,10 +7,12 @@ import { trekRecoil, rawSightAt, sightAt, startForTrek } from "./trekRecoil";
 import { useRegisterXp } from "./playerProgressionRecoil";
 import { saveTrek } from "../copilot/saver";
 import { track } from "@amplitude/analytics-browser";
+import { optOutSubmissionRecoil } from "./optOutSubmissionRecoil";
 
 
 export function useMakeStep() {
     const [trek, setTrek] = useRecoilState(trekRecoil);
+    const optOutSubmission = useRecoilValue(optOutSubmissionRecoil);
     const addXp = useRegisterXp();
     return (instruction: keyof typeof instructionIndices) => {
         const _sight = rawSightAt(trek);
@@ -23,7 +25,9 @@ export function useMakeStep() {
         const nextSight = sightAt(nextTrek);
 
         if (isEvacuationLineCrossed(sight.maxDepth, nextSight.maxDepth)) {
-            submitTrek(packTrekChain(nextTrek)); //no await
+            if (!optOutSubmission) {
+                submitTrek(packTrekChain(nextTrek)); //no await
+            }
             saveTrek(packTrekChain(trek)); // copilot
             track("evacuation", {
                 drop: startForTrek(trek),

@@ -17,6 +17,8 @@ export function PlayerView({
     const pos = sight.playerPosition;
     const makeStep = useMakeStep();
 
+    // todo detect rotation from trek
+    // todo and move controls into a separate component
     const [rotation, setRotation] = useState(0);
 
     useWindowEvent("keydown", ev => {

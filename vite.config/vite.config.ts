@@ -7,6 +7,7 @@ import { createHtmlPlugin } from 'vite-plugin-html';
 const importMap = {
     "three": `https://unpkg.com/three@${packageLockJson.packages["node_modules/three"].version}/build/three.module.js`,
     "@fontsource/noto-sans-mono": "_noop",
+    "@fontsource/noto-serif": "_noop",
 };
 
 export default defineConfig(async ({
@@ -85,6 +86,14 @@ export default defineConfig(async ({
                                     rel: "stylesheet",
                                     crossorigin: "",
                                     href: "https://fonts.googleapis.com/css2?family=Noto+Sans+Mono&display=swap",
+                                },
+                            }, {
+                                injectTo: "head",
+                                tag: "link",
+                                attrs: {
+                                    rel: "stylesheet",
+                                    crossorigin: "",
+                                    href: "https://fonts.googleapis.com/css2?family=Noto+Serif&display=swap",
                                 },
                             }],
 
