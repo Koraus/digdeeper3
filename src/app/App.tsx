@@ -24,6 +24,7 @@ import { Invalidator } from "./Invalidator";
 import { DisclaimerPanel as _DisclaimerPanel } from "./DisclaimerPanel";
 import { CheckboxWarning as DisclaimerIcon } from "@emotion-icons/fluentui-system-regular/CheckboxWarning";
 import { levelProgressRecoil } from "./levelProgressRecoil";
+import { usePlayerControls } from "./usePlayerControls";
 
 
 const eqStringify = <T,>(p: T, n: T) =>
@@ -107,6 +108,8 @@ export function App() {
     }, [hasMoved]);
 
     const [isDisclaimerShown, setIsDisclaimerShown] = useState(false);
+
+    usePlayerControls();
 
     return <div
         css={{

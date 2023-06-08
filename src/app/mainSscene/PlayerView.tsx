@@ -1,70 +1,31 @@
 import { ThreeElements } from "@react-three/fiber";
-import { useWindowEvent } from "../../utils/reactish/useWindowEvent";
-import { useRecoilState } from "recoil";
-import { sightAt, trekRecoil } from "../trekRecoil";
-import { useMakeStep } from "../useMakeStep";
-import { offer } from "../../copilot";
-import { instructions } from "../../model/terms/PackedTrek";
-import { useState } from "react";
+import { useRecoilValue } from "recoil";
+import { TrekChain, sightAt, trekRecoil } from "../trekRecoil";
 import { Character } from "./Character";
 
+
+const rotationForTrek = (trek: TrekChain) => {
+    if (!("prev" in trek)) { return 0; }
+
+    const curCop = sightAt(trek).playerPosition;
+    const prevCop = sightAt(trek.prev).playerPosition;
+
+    const [dx, dt] = [curCop[0] - prevCop[0], curCop[1] - prevCop[1]];
+
+    if (dx === 0 && dt === 0) { return 0; }
+    if (dx === 0) { return dt > 0 ? 1 : 3; }
+    if (dt === 0) { return dx > 0 ? 0 : 2; }
+    return 0;
+};
 
 export function PlayerView({
     children, ...props
 }: ThreeElements["group"]) {
-    const [trek, setTrek] = useRecoilState(trekRecoil);
+    const trek = useRecoilValue(trekRecoil);
     const sight = sightAt(trek);
     const pos = sight.playerPosition;
-    const makeStep = useMakeStep();
 
-    // todo detect rotation from trek
-    // todo and move controls into a separate component
-    const [rotation, setRotation] = useState(0);
-
-    useWindowEvent("keydown", ev => {
-        switch (ev.code) {
-            case "ArrowLeft":
-            case "KeyA": {
-                makeStep("backward");
-                setRotation(3);
-                break;
-            }
-            case "ArrowRight":
-            case "KeyD": {
-                makeStep("forward");
-                setRotation(1);
-                break;
-            }
-            case "ArrowUp":
-            case "KeyW": {
-                makeStep("left");
-                setRotation(2);
-                break;
-            }
-            case "ArrowDown":
-            case "KeyS": {
-                makeStep("right");
-                setRotation(0);
-                break;
-            }
-            case "KeyC": {
-                const theOffer = offer(trek);
-                if (!theOffer) { break; }
-                const actionIndex = theOffer
-                    .map((v, i) => [i, v])
-                    .sort((a, b) => (b[1] ?? 0) - (a[1] ?? 0))[0]?.[0];
-                const action = instructions[actionIndex];
-                makeStep(action);
-                break;
-            }
-            case "KeyZ": {
-                if ("prev" in trek) {
-                    setTrek(trek.prev);
-                }
-                break;
-            }
-        }
-    });
+    const rotation = rotationForTrek(trek);
 
     return <group
         {...props}
