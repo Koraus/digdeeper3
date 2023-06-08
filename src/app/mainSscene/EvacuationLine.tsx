@@ -12,10 +12,8 @@ export function EvacuationLine({
 }) {
     const trek = useRecoilValue(trekRecoil);
     const dropzone = startForTrek(trek).zone;
-    const sight = sightAt(trek);
-    const pos = sight.playerPosition;
 
-    const p = evacuationLineProgress(pos[1]);
+    const p = evacuationLineProgress(sightAt(trek).maxDepth);
 
     return <group
         {...props}
