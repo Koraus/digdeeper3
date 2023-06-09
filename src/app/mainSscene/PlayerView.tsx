@@ -7,8 +7,8 @@ import { MathUtils } from "three";
 import { easeSinInOut } from "d3-ease";
 import { useEffect, useMemo } from "react";
 import { Howl, HowlOptions } from "howler";
-import sound1Url from "../sounds/244980__ani_music__wing-flap-flag-flapping-7a.wav";
-import sound2Url from "../sounds/389634__stubb__wing-flap-1.wav";
+import sound1Url from "../sounds/244980__ani_music__wing-flap-flag-flapping-7a.mp3";
+import sound2Url from "../sounds/389634__stubb__wing-flap-1.mp3";
 
 
 const sounds: HowlOptions[] = [
