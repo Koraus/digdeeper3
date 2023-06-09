@@ -46,7 +46,7 @@ export function PlayerView({
     useEffect(() => {
         const howl = new Howl(randomEl(sounds));
         howl.play();
-        return () => { howl.stop(); };
+        // return () => { howl.stop(); };
     }, [trek]);
 
     return <group
