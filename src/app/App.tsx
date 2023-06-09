@@ -40,43 +40,19 @@ const MainCanvas = memo(() => <Canvas
     shadows="percentage"
     frameloop="demand"
 >
-    <FrameLimiter fps={Infinity} />
+    <FrameLimiter fps={0} />
     <Invalidator />
     <MainScene />
 </Canvas>);
 
-const OverlayMap = memo(
-    (props: Parameters<typeof _OverlayMap>[0]) =>
-        <_OverlayMap {...props} />,
-    eqStringify);
-const BasecampPanel = memo(
-    (props: Parameters<typeof _BasecampPanel>[0]) =>
-        <_BasecampPanel {...props} />,
-    eqStringify);
-const MiniMap = memo(
-    (props: Parameters<typeof _MiniMap>[0]) =>
-        <_MiniMap {...props} />,
-    eqStringify);
-const Gui = memo(
-    (props: Parameters<typeof _Gui>[0]) =>
-        <_Gui {...props} />,
-    eqStringify);
-const ControlsPanel = memo(
-    (props: Parameters<typeof _ContraolsPanel>[0]) =>
-        <_ContraolsPanel {...props} />,
-    eqStringify);
-const NewGameButtonsPanel = memo(
-    (props: Parameters<typeof _NewGameButtonsPanel>[0]) =>
-        <_NewGameButtonsPanel {...props} />,
-    eqStringify);
-const EnergyPanel = memo(
-    (props: Parameters<typeof _EnergyPanel>[0]) =>
-        <_EnergyPanel {...props} />,
-    eqStringify);
-const DisclaimerPanel = memo(
-    (props: Parameters<typeof _DisclaimerPanel>[0]) =>
-        <_DisclaimerPanel {...props} />,
-    eqStringify);
+const OverlayMap = memo(_OverlayMap, eqStringify);
+const BasecampPanel = memo(_BasecampPanel, eqStringify);
+const MiniMap = memo(_MiniMap, eqStringify);
+const Gui = memo(_Gui, eqStringify);
+const ControlsPanel = memo(_ContraolsPanel, eqStringify);
+const NewGameButtonsPanel = memo(_NewGameButtonsPanel, eqStringify);
+const EnergyPanel = memo(_EnergyPanel, eqStringify);
+const DisclaimerPanel = memo(_DisclaimerPanel, eqStringify);
 
 
 export function App() {

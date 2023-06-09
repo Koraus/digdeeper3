@@ -16,6 +16,7 @@ export function PlayerView({
     const prevPos = "prev" in trek ? sightAt(trek.prev).playerPosition : pos;
     const [dx, dt] = [pos[0] - prevPos[0], pos[1] - prevPos[1]];
 
+    const invalidate = useThree(({ invalidate }) => invalidate);
 
     const rotation = (() => {
         if (dx === 0 && dt === 0) { return 0; }
@@ -35,6 +36,7 @@ export function PlayerView({
             onFrame={(g, frame) => {
                 const dTimeSec = frame.clock.getElapsedTime() - tStart;
                 const t = MathUtils.clamp(dTimeSec * 8, 0, 1);
+                if (t < 1) { invalidate(); }
                 const t1 = easeSinInOut(t);
                 const t2 = t1 - 1;
                 g.position.z = dx * t2;
