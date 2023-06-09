@@ -62,7 +62,11 @@ export default defineConfig(async ({
         },
 
         esbuild: {
-            banner: '/*! licenses: ./LICENSE.txt, ./vendor.LICENSES.txt */',
+            banner: "/*! licenses:"
+                + " ./LICENSE.txt,"
+                + " ./LICENSES.txt"
+                + " ./LICENSES2.txt"
+                + " */",
             legalComments: 'none',
         },
 
@@ -136,6 +140,10 @@ export default defineConfig(async ({
                     src: "LICENSE",
                     dest: "assets",
                     rename: "LICENSE.txt",
+                }, {
+                    src: "src/app/sounds/LICENSE",
+                    dest: "assets",
+                    rename: "LICENSES2.txt",
                 }],
             }),
         ],

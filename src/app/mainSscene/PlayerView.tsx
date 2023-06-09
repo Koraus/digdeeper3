@@ -5,7 +5,19 @@ import { Character } from "./Character";
 import { GroupSync } from "../../utils/GroupSync";
 import { MathUtils } from "three";
 import { easeSinInOut } from "d3-ease";
+import { useEffect, useMemo } from "react";
+import { Howl, HowlOptions } from "howler";
+import sound1Url from "../sounds/244980__ani_music__wing-flap-flag-flapping-7a.wav";
+import sound2Url from "../sounds/389634__stubb__wing-flap-1.wav";
 
+
+const sounds: HowlOptions[] = [
+    { src: [sound1Url] },
+    { src: [sound2Url], volume: 0.5 },
+];
+
+const randomEl = <T,>(arr: T[]) =>
+    arr[Math.floor(Math.random() * arr.length)];
 
 export function PlayerView({
     children, ...props
@@ -27,6 +39,15 @@ export function PlayerView({
 
     const clock = useThree(({ clock }) => clock);
     const tStart = clock.getElapsedTime();
+
+    // preload sounds
+    useMemo(() => sounds.map(x => new Howl(x)), []);
+
+    useEffect(() => {
+        const howl = new Howl(randomEl(sounds));
+        howl.play();
+        return () => { howl.stop(); };
+    }, [trek]);
 
     return <group
         {...props}
