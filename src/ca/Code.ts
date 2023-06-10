@@ -31,8 +31,8 @@ export const CodeDecoder = pipe(
             D.string,
             D.refine(
                 (s): s is string =>
-                    /^[0-9]+$/.test(s),
-                "BigInt base 10 string"),
+                    /^(0|[1-9][0-9]*)$/.test(s),
+                "BigInt base 10 string without leading zeros"),
         ),
     }),
     D.refine(
