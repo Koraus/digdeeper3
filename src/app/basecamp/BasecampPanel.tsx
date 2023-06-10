@@ -13,6 +13,7 @@ import { History } from "@emotion-icons/fa-solid/History";
 import { PlayerPanel } from "./PlayerPanel";
 import { useRecoilState } from "recoil";
 import { languageRecoil, useTranslate } from "../languageRecoil";
+import { TopWorlds } from "./TopWorlds";
 
 export function BasecampPanel({
     css: cssProp,
@@ -76,6 +77,10 @@ export function BasecampPanel({
                                 <History css={iconStyle} />&nbsp;
                                 {translate("Drop History")}
                             </Tab>
+                            <Tab>
+                                <History css={iconStyle} />&nbsp;
+                                TOP10
+                            </Tab>
                         </TabList>
                         <div css={[{
                             flexShrink: 1,
@@ -92,6 +97,9 @@ export function BasecampPanel({
                             </TabPanel>
                             <TabPanel>
                                 <HistoricalDrops css={{ height: "100%" }} />
+                            </TabPanel>
+                            <TabPanel>
+                                <TopWorlds css={{ height: "100%" }} />
                             </TabPanel>
                         </div>
                     </div>
