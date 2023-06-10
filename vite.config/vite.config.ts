@@ -1,8 +1,11 @@
 import { PluginOption, defineConfig } from "vite";
-import BuildInfo from 'vite-plugin-info';
-import react from '@vitejs/plugin-react';
+import BuildInfo from "vite-plugin-info";
+import react from "@vitejs/plugin-react";
 import packageLockJson from "../package-lock.json";
-import { createHtmlPlugin } from 'vite-plugin-html';
+import { createHtmlPlugin } from "vite-plugin-html";
+import license from "rollup-plugin-license";
+import path from "path";
+import { viteStaticCopy } from "vite-plugin-static-copy";
 
 const importMap = {
     "three": `https://unpkg.com/three@${packageLockJson.packages["node_modules/three"].version}/build/three.module.js`,
@@ -34,6 +37,19 @@ export default defineConfig(async ({
         build: {
             // minify: false,
             rollupOptions: {
+                plugins: [
+                    license({
+                        thirdParty: {
+                            output: path.join(
+                                "dist", "assets", "LICENSES.txt"),
+                            allow: {
+                                test: "MIT OR Apache-2.0 OR BSD-3-Clause OR 0BSD OR ISC",
+                                failOnViolation: true,
+                                failOnUnlicensed: true,
+                            }
+                        },
+                    })
+                ],
                 output: {
                     // manualChunks(id) {
                     //     const match = id.match(/node_modules\/(.*?)\//);
@@ -43,6 +59,15 @@ export default defineConfig(async ({
                     // }
                 }
             }
+        },
+
+        esbuild: {
+            banner: "/*! licenses:"
+                + " ./LICENSE.txt,"
+                + " ./LICENSES.txt"
+                + " ./LICENSES2.txt"
+                + " */",
+            legalComments: 'none',
         },
 
         plugins: [
@@ -110,6 +135,17 @@ export default defineConfig(async ({
                 }
             }),
             BuildInfo(),
+            viteStaticCopy({
+                targets: [{
+                    src: "LICENSE",
+                    dest: "assets",
+                    rename: "LICENSE.txt",
+                }, {
+                    src: "src/app/sounds/LICENSE",
+                    dest: "assets",
+                    rename: "LICENSES2.txt",
+                }],
+            }),
         ],
 
         server: {

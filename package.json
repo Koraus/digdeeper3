@@ -20,6 +20,7 @@
     "@types/color": "^3.0.3",
     "@types/crypto-js": "^4.1.1",
     "@types/d3-ease": "^3.0.0",
+    "@types/howler": "^2.2.7",
     "@types/lodash": "^4.14.192",
     "@types/memoizee": "^0.4.8",
     "@types/three": "^0.152.0",
@@ -33,6 +34,7 @@
     "eslint": "^8.38.0",
     "eslint-plugin-react": "^7.32.2",
     "glsl-easings": "^1.0.0",
+    "howler": "^2.2.3",
     "immutability-helper": "^3.1.1",
     "io-ts": "^2.2.20",
     "lodash": "^4.17.21",
@@ -43,6 +45,7 @@
     "react-tabs": "^6.0.1",
     "react-use-promise": "^0.5.0",
     "recoil": "^0.7.7",
+    "rollup-plugin-license": "^3.0.1",
     "rxjs": "^7.8.0",
     "three": "^0.152.2",
     "ts-is-present": "^1.2.2",
@@ -51,6 +54,7 @@
     "vite": "^4.3.9",
     "vite-plugin-glsl": "^1.1.2",
     "vite-plugin-html": "^3.2.0",
-    "vite-plugin-info": "^0.4.0"
+    "vite-plugin-info": "^0.4.0",
+    "vite-plugin-static-copy": "^0.16.0"
   }
 }

@@ -1,5 +1,5 @@
 {
-  "name": "gamma-quantum-backend",
+  "name": "digdeeper3-backend",
   "scripts": {
     "build": "rollup -c"
   },

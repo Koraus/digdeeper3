@@ -29,9 +29,12 @@ router
             return error(404, `Value for \`${hid}\` not found`);
         }
         return new Response(value, {
-            ...(ctype === "json" ? {
-                headers: { "Content-Type": "application/json" },
-            } : {}),
+            headers: {
+                ...(ctype === "json" ? {
+                    "Content-Type": "application/json",
+                } : {}),
+                "Cache-Control": "public, max-age=31536000, immutable",
+            },
         });
     })
     .post("/trek/", async (req, env: Env) => {
