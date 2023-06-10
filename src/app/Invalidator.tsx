@@ -1,11 +1,11 @@
 import { useThree } from "@react-three/fiber";
 import { useLayoutEffect } from "react";
 import { useRecoilValue } from "recoil";
-import { trekRecoil } from "./trekRecoil";
+import { playerActionRecoil } from "./playerActionRecoil";
 
 export function Invalidator() {
-    const trek = useRecoilValue(trekRecoil);
+    const playerAction = useRecoilValue(playerActionRecoil);
     const invalidate = useThree(({ invalidate }) => invalidate);
-    useLayoutEffect(() => { invalidate(); }, [trek, invalidate]);
+    useLayoutEffect(() => { invalidate(); }, [playerAction, invalidate]);
     return null;
 }

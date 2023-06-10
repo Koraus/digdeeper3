@@ -2,13 +2,13 @@ import { Box } from "@react-three/drei";
 import { GroupSync } from "../../utils/GroupSync";
 import { jsx } from "@emotion/react";
 import { useRecoilValue } from "recoil";
-import { startForTrek, trekRecoil } from "../trekRecoil";
+import { playerActionRecoil, startForTrek } from "../playerActionRecoil";
 
 
 export function StartingCamp({
     ...props
 }: jsx.JSX.IntrinsicElements["group"]) {
-    const trek = useRecoilValue(trekRecoil);
+    const trek = useRecoilValue(playerActionRecoil).trek;
     const drop = startForTrek(trek);
 
     return <group

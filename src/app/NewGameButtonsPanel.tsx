@@ -1,5 +1,5 @@
 import { useRecoilValue } from "recoil";
-import { startForTrek, trekRecoil } from "./trekRecoil";
+import { playerActionRecoil, startForTrek } from "./playerActionRecoil";
 import { RestartAlt } from "@emotion-icons/material/RestartAlt";
 import { PinDrop } from "@emotion-icons/material-outlined/PinDrop";
 import { World } from "@emotion-icons/boxicons-regular/World";
@@ -16,7 +16,7 @@ import { useSetDropzone } from "./basecamp/useSetDropzone";
 export function NewGameButtonsPanel({
     css: cssProp, ...props
 }: jsx.JSX.IntrinsicElements["div"]) {
-    const trek = useRecoilValue(trekRecoil);
+    const trek = useRecoilValue(playerActionRecoil).trek;
     const drop = startForTrek(trek);
     const setDrop = useSetDrop();
     const setDropzone = useSetDropzone();

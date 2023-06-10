@@ -1,7 +1,7 @@
 import { encode } from "../utils/base64Array";
 import { InstructionIndex, PackedTrek, instructionBitSize, instructionIndices } from "../model/terms/PackedTrek";
 import { version } from "../model/version";
-import { TrekChain } from "./trekRecoil";
+import { TrekChain } from "./playerActionRecoil";
 
 
 export const packTrekChain = (trek: TrekChain): PackedTrek => {

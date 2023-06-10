@@ -1,7 +1,7 @@
 import { jsx } from "@emotion/react";
 import { EvacuationLineParticles } from "./EvacuationLineParticles";
 import { useRecoilValue } from "recoil";
-import { sightAt, startForTrek, trekRecoil } from "../trekRecoil";
+import { playerActionRecoil, sightAt, startForTrek } from "../playerActionRecoil";
 import { evacuationLinePosition, evacuationLineProgress } from "../../model/evacuation";
 import { Howl, HowlOptions } from "howler";
 import sound1Url from "../sounds/619837__eponn__soft-short-app-melody.mp3";
@@ -15,7 +15,8 @@ export function EvacuationLine({
 }: jsx.JSX.IntrinsicElements["group"] & {
     isPrev?: boolean;
 }) {
-    const trek = useRecoilValue(trekRecoil);
+    const playerAction = useRecoilValue(playerActionRecoil);
+    const trek = playerAction.trek;
     const dropzone = startForTrek(trek).zone;
 
     const p = evacuationLineProgress(sightAt(trek).maxDepth);
@@ -25,6 +26,10 @@ export function EvacuationLine({
     useMemo(() => new Howl(sound), []);
 
     useEffect(() => {
+        // note: no playerAction in deps, 
+        // as the sound should play only when the line has changed
+        if (playerAction.action?.action !== "step") { return; }
+
         if (line === 1) { return; }
         const howl = new Howl(sound);
         howl.play();

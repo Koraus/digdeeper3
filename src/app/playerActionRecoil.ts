@@ -15,17 +15,28 @@ export type TrekChain =
         prev: TrekChain,
     };
 
-export const trekRecoil = atom<TrekChain>({
-    key: "trek",
+export const playerActionRecoil = atom({
+    key: "playerAction",
     default: {
-        v: sightVersion,
-        zone: generateRandomDropzone({
-            world: devChoiceWorlds[0],
-        }),
-        equipment: {
-            pickNeighborhoodIndex: 0,
+        action: undefined as undefined | {
+            action: "step",
+            copiloted: boolean,
+            instruction: keyof typeof instructionIndices,
+        } | {
+            action: "undo",
         },
-        depthLeftBehind: 10,
+        ok: true,
+        log: undefined as undefined | string,
+        trek: {
+            v: sightVersion,
+            zone: generateRandomDropzone({
+                world: devChoiceWorlds[0],
+            }),
+            equipment: {
+                pickNeighborhoodIndex: 0,
+            },
+            depthLeftBehind: 10,
+        } as TrekChain,
     },
 });
 
@@ -45,8 +56,4 @@ export const rawSightAt = memoize(
 
 export const sightAt = (trek: TrekChain): SightBody =>
     rawSightAt(trek)[0]
-    ?? (("prev" in trek)
-        ? sightAt(trek.prev)
-        : _never(
-            "prev should always exist"
-            + " when sightAt(trek)[0] happenes to be undefined"));
+    ?? _never("In TrekChain, sight is guaranteed to exist");

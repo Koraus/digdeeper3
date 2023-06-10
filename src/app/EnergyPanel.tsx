@@ -1,5 +1,5 @@
 import { useRecoilValue } from "recoil";
-import { sightAt, rawSightAt, trekRecoil } from "./trekRecoil";
+import { sightAt, rawSightAt, playerActionRecoil } from "./playerActionRecoil";
 import { jsx } from "@emotion/react";
 import { LightningChargeFill } from "@emotion-icons/bootstrap/LightningChargeFill";
 
@@ -7,8 +7,9 @@ import { LightningChargeFill } from "@emotion-icons/bootstrap/LightningChargeFil
 export function EnergyPanel({
     css: cssProp, ...props
 }: jsx.JSX.IntrinsicElements["div"]) {
-    const trek = useRecoilValue(trekRecoil);
-    const [, log] = rawSightAt(trek);
+    const playerAction = useRecoilValue(playerActionRecoil);
+    const trek = playerAction.trek;
+    const log = playerAction.log ?? rawSightAt(trek)[1];
     const sight = sightAt(trek);
 
     const log1 = ("prev" in trek)
@@ -46,7 +47,12 @@ export function EnergyPanel({
             }}>
                 <div css={{ opacity: 0.4, fontSize: "0.9em" }}>{log2}</div>
                 <div css={{ opacity: 0.7, fontSize: "0.95em" }}>{log1}</div>
-                <div>&gt; {log}</div>
+                <div>
+                    {(playerAction.action?.action === "undo"
+                        ? "⤣"
+                        : playerAction.ok ? ">" : "⚠")}
+                    &nbsp;
+                    {log}</div>
             </div>
         </div>
     </div>;

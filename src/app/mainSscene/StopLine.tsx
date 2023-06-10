@@ -1,8 +1,8 @@
 import { useRecoilValue } from "recoil";
-import { sightAt, trekRecoil } from "../trekRecoil";
+import { playerActionRecoil, sightAt } from "../playerActionRecoil";
 
 export function StopLine() {
-    const trek = useRecoilValue(trekRecoil);
+    const trek = useRecoilValue(playerActionRecoil).trek;
     const sight = sightAt(trek);
     return <group position={[sight.depth - 0.5, 1, sight.playerPosition[0]]}>
         <mesh position={[0.1, -0.8, 0]}>
