@@ -1,13 +1,20 @@
-# <img src="./favicon.svg" alt="favicon" width="16" /> digdeeper3 (play [dev](https://ndry.github.io/digdeeper3/))
+# <img src="./favicon.svg" alt="favicon" width="16" /> Through Cells / digdeeper3 ([play dev build](https://ndry.github.io/digdeeper3/))
 
 Play [development build](https://ndry.github.io/digdeeper3/) on GitHub Pages
 
 ![Game screenhot](./cover.png "Cover")
 
+The game is an indie-research project, 
+attempting to explore cellular automata worlds in a citizen science manner.
+            
+For this purpose,
+the game submits successful game solutions to a server.
+The solutions are then instantly publicly available and analyzable.
 
-# The setting and the terms
 
-There is a math universe to explore and map, and the player is a cartographer.
+# The lore and the glossary
+
+There is a universe to explore and map, and the player is a cartographer.
 
 The universe consists of `Worlds` defined mainly by `Cellular Automata`.
 Not all `Worlds` are fun to explore, 
@@ -19,16 +26,15 @@ The `Dropzone` defines a point in the `World` - the parameters to generate
 the specific instance of the `Cellular Automaton` (mainly, the seed).
 
 The `Trek` is a player-made path through the `World`.
-A single step of the `Trek` may be refferred as a `TrekStep`.
 
-The `Drop` or the `TrekStart` describes the player and the `Dropzone`.
+The `Drop` describes the player and the `Dropzone`.
 The `Drop` is a single play attempt.
 
 The `Sight` is a computed state, 
 all the data available to the player at a given step of the `Trek`.
 Generally, the way `Sight` is computed defines how the player plays.
 
-The `Copilot` (?) is a non-player companion,
+The `Copilot` is a non-player companion,
 kind of AI to automate the mundane routes
 and help the player to explore the `World`.
 
