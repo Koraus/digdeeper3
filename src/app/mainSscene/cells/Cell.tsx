@@ -126,9 +126,10 @@ export function Cell(ctx: LayoutContext) {
         abuseBox,
     } = ctx;
 
-    // const colors = colorThemes[Math.floor(t / 15) % colorThemes.length];
-    const colors = colorThemes[
-        Number(dropzone.world.ca.rule[1]) % colorThemes.length];
+    const cIndex =
+        Number(dropzone.world.ca.rule[1]);
+        // Math.floor(t / 12) + 10;
+    const colors = colorThemes[cIndex % colorThemes.length];
 
     const expSight = epxandedSight(trek);
     const caState = caForDropzone(dropzone)._at(t, x);
