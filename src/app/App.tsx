@@ -17,7 +17,7 @@ import { MiniMap as _MiniMap } from "./MiniMap";
 import { ControlsHelpPanel as _ContraolsPanel, ControlsPanelVisibility, controlsPanelVisibilityToggle, controlsPanelVisibilityToggleInverse } from "./ControlsHelpPanel";
 import "@fontsource/noto-sans-mono";
 import { useRecoilValue } from "recoil";
-import { startForTrek, trekRecoil } from "./trekRecoil";
+import { playerActionRecoil, startForTrek } from "./playerActionRecoil";
 import { dropShadow5 } from "../utils/dropShadow5";
 import { FrameLimiter } from "../utils/reactish/FrameLimiter";
 import { Invalidator } from "./Invalidator";
@@ -65,7 +65,7 @@ export function App() {
 
     const levelProgress = useRecoilValue(levelProgressRecoil);
 
-    const trek = useRecoilValue(trekRecoil);
+    const trek = useRecoilValue(playerActionRecoil).trek;
     const hasMoved = trek !== startForTrek(trek);
     const [controlsVisibility, setControlsVisibility] =
         useState<ControlsPanelVisibility>(

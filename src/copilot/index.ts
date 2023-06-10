@@ -6,7 +6,7 @@ import memoize from "memoizee";
 import { loadPackedTreks } from "./saver";
 import { PackedTrek, getInstructionAt, instructionIndices, instructions } from "../model/terms/PackedTrek";
 import { _never } from "../utils/_never";
-import { TrekChain, sightAt, startForTrek } from "../app/trekRecoil";
+import { TrekChain, sightAt, startForTrek } from "../app/playerActionRecoil";
 
 
 const offerVersion = "digdeeper3/copilot/offer@14";

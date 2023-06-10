@@ -1,6 +1,6 @@
 import { RenderCallback, ThreeElements, useFrame } from "@react-three/fiber";
 import { useRecoilValue } from "recoil";
-import { TrekChain, sightAt, startForTrek, trekRecoil } from "../../trekRecoil";
+import { TrekChain, playerActionRecoil, sightAt, startForTrek } from "../../playerActionRecoil";
 import { caForDropzone } from "../../../model/sight";
 import { useMemo } from "react";
 import { BoxGeometry, Euler, Group, Matrix4, MeshPhongMaterial, Quaternion, Vector3 } from "three";
@@ -203,7 +203,7 @@ export function CellsView({
     tCellsPerScreen: number;
     xCellsPerScreen: number;
 } & ThreeElements["group"]) {
-    const trek = useRecoilValue(trekRecoil);
+    const trek = useRecoilValue(playerActionRecoil).trek;
 
     const { parent, frameSignal, trekSignal } = useMemo(() => {
         const parent = new Group();

@@ -1,5 +1,5 @@
 import { useRecoilValue } from "recoil";
-import { sightAt, trekRecoil } from "./trekRecoil";
+import { playerActionRecoil, sightAt } from "./playerActionRecoil";
 import { jsx } from "@emotion/react";
 import { dropShadow5 } from "../utils/dropShadow5";
 import { evacuationLineProgress } from "../model/evacuation";
@@ -10,8 +10,7 @@ export function Gui({
     css: cssProp,
     ...props
 }: jsx.JSX.IntrinsicElements["div"]) {
-    const trek = useRecoilValue(trekRecoil);
-    const sight = sightAt(trek);
+    const sight = sightAt(useRecoilValue(playerActionRecoil).trek);
     const pos = sight.playerPosition;
 
     const theEvacuationLineProgress = evacuationLineProgress(pos[1]) % 1;

@@ -3,7 +3,7 @@ import { instructionIndices } from "../model/terms/PackedTrek";
 import { packTrekChain } from "./packTrekChain";
 import { submitTrek } from "./submitTrek";
 import { evacuationLineProgress, isEvacuationLineCrossed } from "../model/evacuation";
-import { trekRecoil, rawSightAt, sightAt, startForTrek } from "./trekRecoil";
+import { playerActionRecoil, rawSightAt, sightAt, startForTrek } from "./playerActionRecoil";
 import { useRegisterXp } from "./levelProgressRecoil";
 import { saveTrek } from "../copilot/saver";
 import { track } from "@amplitude/analytics-browser";
@@ -12,18 +12,32 @@ import { keyProjectDrop } from "../model/terms/Drop";
 
 
 export function useMakeStep() {
-    const [trek, setTrek] = useRecoilState(trekRecoil);
+    const [playerAction, setPlayerAction] = useRecoilState(playerActionRecoil);
     const optOutSubmission = useRecoilValue(optOutSubmissionRecoil);
     const addXp = useRegisterXp();
-    return (instruction: keyof typeof instructionIndices) => {
-        const _sight = rawSightAt(trek);
-
-        const nextTrek = !("prev" in trek) || _sight[0]
-            ? { prev: trek, instruction }
-            : { ...trek, instruction };
-
+    return (
+        instruction: keyof typeof instructionIndices,
+        copiloted = false,
+    ) => {
+        const { trek } = playerAction;
         const sight = sightAt(trek);
-        const nextSight = sightAt(nextTrek);
+
+        const nextTrek = { prev: trek, instruction };
+        const [nextSight, log] = rawSightAt(nextTrek);
+
+        if (!nextSight) {
+            setPlayerAction({
+                action: {
+                    action: "step",
+                    copiloted,
+                    instruction,
+                },
+                ok: false,
+                log,
+                trek,
+            });
+            return;
+        }
 
         if (isEvacuationLineCrossed(sight.maxDepth, nextSight.maxDepth)) {
             if (!optOutSubmission) {
@@ -39,6 +53,16 @@ export function useMakeStep() {
                 line: Math.floor(evacuationLineProgress(nextSight.maxDepth)),
             }));
         }
-        setTrek(nextTrek);
+
+        setPlayerAction({
+            action: {
+                action: "step",
+                copiloted,
+                instruction,
+            },
+            ok: true,
+            log: undefined,
+            trek: nextTrek,
+        });
     };
 }

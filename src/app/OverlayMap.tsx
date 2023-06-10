@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { useEffect } from "react";
 import { caForDropzone } from "../model/sight";
 import { useRecoilValue } from "recoil";
-import { sightAt, startForTrek, trekRecoil } from "./trekRecoil";
+import { playerActionRecoil, sightAt, startForTrek } from "./playerActionRecoil";
 import { epxandedSight } from "./mainSscene/cells/CellsView";
 import { createFullCanvasImageData32 } from "../utils/createImageData32";
 import { jsx } from "@emotion/react";
@@ -11,7 +11,7 @@ export function OverlayMap({
     css: cssProp,
     ...props
 }: jsx.JSX.IntrinsicElements["canvas"]) {
-    const trek = useRecoilValue(trekRecoil);
+    const trek = useRecoilValue(playerActionRecoil).trek;
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
 

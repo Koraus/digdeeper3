@@ -1,5 +1,5 @@
-import { useRecoilState } from "recoil";
-import { sightAt, trekRecoil } from "../trekRecoil";
+import { useRecoilValue } from "recoil";
+import { playerActionRecoil, rawSightAt, sightAt } from "../playerActionRecoil";
 import { offer } from "../../copilot";
 import { ThreeElements } from "@react-three/fiber";
 import { instructions } from "../../model/terms/PackedTrek";
@@ -8,7 +8,7 @@ import { instructions } from "../../model/terms/PackedTrek";
 export function CopilotView({
     ...props
 }: ThreeElements["group"]) {
-    const [trek] = useRecoilState(trekRecoil);
+    const trek = useRecoilValue(playerActionRecoil).trek;
     const sight = sightAt(trek);
     const pos = sight.playerPosition;
 
@@ -29,7 +29,8 @@ export function CopilotView({
                     prev: pr,
                     instruction: action,
                 };
-                const w = sightAt(pr);
+                const [w] = rawSightAt(pr);
+                if (!w) { break; }
                 yield w.playerPosition;
             }
         })()].map((p, i, arr) => {
