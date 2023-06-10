@@ -50,11 +50,11 @@ export function CopilotView({
                     position={[0, 0.5, 0]}
                 >
                     <cylinderGeometry args={[
-                        0.02 * (arr.length - i),
-                        0.02 * (arr.length - i - 1),
+                        0.01 * (arr.length - i),
+                        0.01 * (arr.length - i - 1),
                         1,
                     ]} />
-                    <meshBasicMaterial color={"grey"} />
+                    <meshBasicMaterial color={"#919191"} />
                 </mesh>
             </group>;
         })}
