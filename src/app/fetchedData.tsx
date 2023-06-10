@@ -1,5 +1,5 @@
+import _ from "lodash";
 import { World } from "../model/terms/World";
-
 
 async function fetchTrekOpenBlock() {
     const url = "https://dd3.x-pl.art/trek/openBlock";
@@ -14,10 +14,10 @@ async function fetchTrekOpenBlock() {
 async function fetchByHid<T>(hid: string) {
     const response = await fetch(`https://dd3.x-pl.art/hid_kv/${hid}/json`);
     const result = await response.json();
-    return result as T;
+    return result.drop.zone.world as T;
 }
 
-export async function testFetch() {
+export async function topTenWorlds() {
     const openBlock = await fetchTrekOpenBlock();
 
     const worlds =
@@ -25,6 +25,18 @@ export async function testFetch() {
             async (w) => { return await fetchByHid<World>(w); },
         ));
 
-    console.log("worlds", worlds);
+    if (worlds) {
+        const worldRules: string[] = worlds.map((w) => w.ca.rule);
+        const worldsCount = _.countBy(worldRules, _.identity);
+        const sortedValues = [];
+
+        for (const [rule, count] of Object.entries(worldsCount)) {
+            sortedValues.push({ rule, count });
+        }
+        // last 10
+        console.log(
+            sortedValues.sort((a, b) => a.count - b.count).slice(-10));
+    }
+
 }
 
