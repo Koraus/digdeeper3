@@ -40,7 +40,7 @@ const MainCanvas = memo(() => <Canvas
     shadows="percentage"
     frameloop="demand"
 >
-    <FrameLimiter fps={0} />
+    <FrameLimiter fps={Infinity} />
     <Invalidator />
     <MainScene />
 </Canvas>);
