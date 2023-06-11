@@ -9,7 +9,7 @@ init(amplitudeApiKey ?? "stub", undefined, {
     appVersion: appVersion,
     optOut:
         JSON.parse(localStorage.getItem(optOutAnalyticsRecoil.key) ?? "false")
-        && !analyticsEnabled,
+        || !analyticsEnabled,
     attribution: {
         trackPageViews: true,
     },
@@ -20,4 +20,4 @@ init(amplitudeApiKey ?? "stub", undefined, {
 });
 
 export const setOptOut = (optOut: boolean) =>
-    _setOptOut(optOut && !analyticsEnabled);
+    _setOptOut(optOut || !analyticsEnabled);
