@@ -11,6 +11,34 @@ For this purpose,
 the game submits successful game solutions to a server.
 The solutions are then instantly publicly available and analyzable.
 
+# The research
+
+> The goal of the research is to find elementary cellular automata
+> with emergent behavior.
+
+Elementary emergent system is a system with very few rules 
+but still an ability to exhibit complex behavior. 
+Like in 
+[Wolfram's class 4 behavior of simple computational models](
+        https://www.wolframscience.com/nks/p235--four-classes-of-behavior/), 
+defined as "...neither completely stable nor completely chaotic. 
+Localized structures appear and interact in complex ways."
+
+Elementery cellular automata are a good example of elementary systems.
+Obviously, not all elementary systems are emergent -- very few are.
+
+The hypothesis is that the emergent systems are fun to explore, 
+and vice versa -- the fun systems are emergent.
+
+So, let a system manifest an explorable world.
+If someone among all possible worlds finds a fun world,
+and the game broadcasts it to others,
+and endorses others to compete in exploring it,
+then the most interesting worlds will bubble up --
+and those would be derived from the emergent systems.
+
+The game is an attempt to do just that.
+
 
 # The lore and the glossary
 
