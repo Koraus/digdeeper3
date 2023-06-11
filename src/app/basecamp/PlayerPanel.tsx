@@ -49,7 +49,6 @@ export function PlayerPanel({
     return <div css={[{
         display: "flex",
         flexDirection: "column",
-        width: "40vmin",
     }, cssProp]} {...props}>
         <div css={{
             background: "#ffffff20",

@@ -24,9 +24,14 @@ export function DropEquipmentSelector({
         }, cssProp]}
         {...props}
     >
-        <h3>{translate("Skill Points spent:")}
-            {pointsUsed} / {totalPointsAvailable}
-            &nbsp;({pointsRemaining} {translate("left")} )</h3>
+        <h3>
+            # {translate("Skill Points")}: {pointsRemaining}
+            <br />
+            <span css={{ fontSize: "0.85em" }}>(
+                {pointsUsed} {translate("spent")}
+                &nbsp;/ {totalPointsAvailable} {translate("total")}
+            )</span>
+        </h3>
         {translate("A skill point is given per level up.")}
         <br />
         {translate("You can reallocate points for each new game.")}
@@ -53,7 +58,7 @@ export function DropEquipmentSelector({
                     format={v => `${v}/2`}
                 />
             </div>
-            <br />{translate("Pick Neighborhood:")}
+            <br />{translate("Pick Neighborhood")}:
             <br />- {[
                 translate("Current Cell Only"),
                 translate("Current + 4 Adjacent Cells"),

@@ -10,6 +10,7 @@ import { caStateCount } from "../model/terms/World";
 import { generateWorld } from "../model/generate";
 import { generateRandomSymmetricalRule } from "../ca/generateRandomSymmetricalRule";
 import { useSetDropzone } from "./basecamp/useSetDropzone";
+import { useTranslate } from "./languageRecoil";
 
 
 
@@ -20,6 +21,7 @@ export function NewGameButtonsPanel({
     const drop = startForTrek(trek);
     const setDrop = useSetDrop();
     const setDropzone = useSetDropzone();
+    const translate = useTranslate();
 
     return <div css={[{
         display: "flex",
@@ -37,7 +39,8 @@ export function NewGameButtonsPanel({
                     width: "2vmin",
                     marginRight: "0.4vmin",
                 }]} />
-            Restart</button>
+            {translate("Restart")}
+        </button>
         <button
             css={[{
                 display: "flex",
@@ -52,7 +55,8 @@ export function NewGameButtonsPanel({
                     width: "2vmin",
                     marginRight: "0.4vmin",
                 }]} />
-            New Dropzone</button>
+            {translate("New Dropzone")}
+        </button>
         <button
             css={[{
                 display: "flex",
@@ -70,6 +74,7 @@ export function NewGameButtonsPanel({
                     width: "2vmin",
                     marginRight: "0.4vmin",
                 }]} />
-            New World</button>
+            {translate("New World")}
+        </button>
     </div>;
 }

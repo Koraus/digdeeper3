@@ -11,6 +11,7 @@ import { generateRandomDropzone } from "../../model/generate";
 import { generateWorld } from "../../model/generate";
 import { version as caVersion } from "../../ca";
 import { caStateCount } from "../../model/terms/World";
+import { LoaderCircle } from "@emotion-icons/boxicons-regular/LoaderCircle";
 
 
 export function TopWorlds({
@@ -44,7 +45,9 @@ export function TopWorlds({
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
             `} 2s linear infinite`,
-        }}>Loading...</div>}
+        }}>
+            <LoaderCircle css={{ height: "8em", margin: "2em" }} />
+        </div>}
         {dropzones && dropzones.length === 0 && <>
             <Sparkles css={{ height: "8em", margin: "2em" }} />
         </>}

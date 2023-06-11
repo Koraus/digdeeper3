@@ -3,10 +3,6 @@ import { localStorageAtomEffect } from "../utils/reactish/localStorageAtomEffect
 
 
 export const translation = {
-    "change language:": {
-        "en": "change language",
-        "uk": "змінити мову",
-    },
     "Generator:": {
         "en": "Generator:",
         "uk": "Генератор:",
@@ -27,57 +23,61 @@ export const translation = {
         "en": "Generate",
         "uk": "Згенерувати",
     },
-    "Esc": {
-        "en": "Esc",
-        "uk": "Вихід",
-    },
     "Restart": {
         "en": "Restart",
-        "uk": "Перезапуск",
+        "uk": "Переграти",
     },
     "New Dropzone": {
         "en": "New Dropzone",
-        "uk": "Нове Місце Висадки",
+        "uk": "Інше місце",
     },
     "New World": {
         "en": "New World",
-        "uk": "Новий Світ",
+        "uk": "Інший світ",
     },
-    "Dev Choice Worlds": {
-        "en": "Dev Choice Worlds",
+    "Dev Choice": {
+        "en": "Dev Choice",
         "uk": "Вибір Розробників",
     },
-    "Generate Worlds": {
-        "en": "Generate Worlds",
-        "uk": "Створити світи",
+    "Generate-header": {
+        "en": "Generate",
+        "uk": "Створити",
     },
-    "Bookmarked Drops": {
-        "en": "Bookmarked Drops",
-        "uk": "Додано в закладки",
+    "Bookmarked": {
+        "en": "Bookmarked",
+        "uk": "Закладки",
     },
-    "Drop History": {
-        "en": "Drop History",
-        "uk": "Історія зіграних світів",
+    "History": {
+        "en": "History",
+        "uk": "Історія",
+    },
+    "Trending": {
+        "en": "Trending",
+        "uk": "Популярні",
+    },
+    "Skill Points": {
+        "en": "Skill Points",
+        "uk": "Очки Навиків",
+    },
+    "spent": {
+        "en": "spent",
+        "uk": "витрачено",
+    },
+    "total": {
+        "en": "total",
+        "uk": "всього",
     },
     "A skill point is given per level up.": {
         "en": "A skill point is given per level up.",
-        "uk": "Очко навику надається при піднятті рівня",
+        "uk": "Очко навику отримується при піднятті рівня.",
     },
     "You can reallocate points for each new game.": {
         "en": "You can reallocate points for each new game.",
-        "uk": "Ви можете перерозподіляти очки для кожної нової гри.",
+        "uk": "Очки можна перерозподілити для кожної нової гри.",
     },
-    "Skill Points spent:": {
-        "en": "Skill Points spent:",
-        "uk": "Витрачені бали навичок:",
-    },
-    "left": {
-        "en": "left",
-        "uk": "залишилося",
-    },
-    "Pick Neighborhood:": {
-        "en": "Pick Neighborhood:",
-        "uk": "Підбирати сусудні",
+    "Pick Neighborhood": {
+        "en": "Pick Neighborhood",
+        "uk": "Радіус збору",
     },
     "Current Cell Only": {
         "en": "Current Cell Only",
@@ -89,9 +89,37 @@ export const translation = {
     },
     "Current + 4 Adjacent + 4 Diagonal Cells": {
         "en": "Current + 4 Adjacent + 4 Diagonal Cells",
-        "uk": "Поточний + 4 суміжні + 4 діагональні клітинки",
+        "uk": "Поточна + 4 прилеглі + 4 діагональні комірки",
     },
-} as Record<string, Record<string, string>>;
+    "Reroll": {
+        "en": "Reroll",
+        "uk": "Перегенерувати",
+    },
+    "accept copilot hint": {
+        "en": "accept copilot hint",
+        "uk": "прийняти підказку копілота",
+    },
+    "undo": {
+        "en": "undo",
+        "uk": "скасувати хід",
+    },
+    "map": {
+        "en": "map",
+        "uk": "карта",
+    },
+    "visit basecamp": {
+        "en": "visit basecamp",
+        "uk": "базовий табір",
+    },
+    "help": {
+        "en": "help",
+        "uk": "управління",
+    },
+    "controls help": {
+        "en": "controls help",
+        "uk": "управління",
+    },
+};
 
 const resolveByLanguage = <T>(
     languages: readonly string[],
@@ -130,7 +158,7 @@ export const useResolveByLanguage = () => {
 
 export const useTranslate = () => {
     const resolveByLanguage = useResolveByLanguage();
-    return (term: string) =>
+    return (term: keyof typeof translation) =>
         (term in translation)
             ? resolveByLanguage(translation[term]) ?? term
             : term;

@@ -7,6 +7,7 @@ import { caStateCount } from "../../model/terms/World";
 import { generateRandomDropzone, generateWorld } from "../../model/generate";
 import { version as caVersion } from "../../ca";
 import { Hiking } from "@emotion-icons/fa-solid/Hiking";
+import { useTranslate } from "../languageRecoil";
 
 export const devChoiceWorlds = [
     "418459516935405908508209846366493604693",
@@ -33,6 +34,7 @@ export function DevChoiceWorlds({
     const [dropzones, setDropzones] = useState<Dropzone[]>();
 
     const setDropzone = useSetDropzone();
+    const translate = useTranslate();
 
     if (!dropzones) {
         setDropzones(
@@ -47,7 +49,7 @@ export function DevChoiceWorlds({
                 setDropzones(
                     devChoiceWorlds.map((world) =>
                         generateRandomDropzone({ world })))
-            }> Reroll </button>
+            }> {translate("Reroll")} </button>
         {dropzones
             && <div css={[{
                 listStyle: "none",

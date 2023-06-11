@@ -18,6 +18,7 @@ import { Twemoji } from "react-emoji-render";
 import { VolumeMute } from "@emotion-icons/fa-solid/VolumeMute";
 import { VolumeUp } from "@emotion-icons/fa-solid/VolumeUp";
 import { muteSoundsRecoil } from "../muteSoundsRecoil";
+import { TrendingUp } from "@emotion-icons/boxicons-regular/TrendingUp";
 
 
 export function BasecampPanel({
@@ -33,7 +34,7 @@ export function BasecampPanel({
     const resolveByLanguage = useResolveByLanguage();
     const languageToDisplayAsSelected = resolveByLanguage({
         "en": "en",
-        "uk": "ua",
+        "uk": "uk",
     }) ?? "en";
     const setLanguage = useSetRecoilState(languageRecoil);
     const translate = useTranslate();
@@ -57,7 +58,8 @@ export function BasecampPanel({
             minHeight: "0",
         }}>
             <PlayerPanel css={{
-                margin: "5vmin 3vmin 2.5vmin 4.5vmin",
+                margin: "4.5vmin 3vmin 2.5vmin 4.5vmin",
+                flex: "0 0 33vmin",
             }} />
             <div css={{
                 margin: "2.5vmin",
@@ -71,26 +73,28 @@ export function BasecampPanel({
                         flexDirection: "column",
                     }}>
                         <TabList>
-                            <Tab>
-                                <Ribbon css={iconStyle} />&nbsp;
-                                {translate("Dev Choice Worlds")}
-                            </Tab>
-                            <Tab>
-                                <Dice css={iconStyle} />&nbsp;
-                                {translate("Generate Worlds")}
-                            </Tab>
-                            <Tab>
-                                <Star css={iconStyle} />&nbsp;
-                                {translate("Bookmarked Drops")}
-                            </Tab>
-                            <Tab>
-                                <History css={iconStyle} />&nbsp;
-                                {translate("Drop History")}
-                            </Tab>
-                            <Tab>
-                                <History css={iconStyle} />&nbsp;
-                                TOP10
-                            </Tab>
+                            <div css={{ fontSize: "1.2em" }}>
+                                <Tab>
+                                    <Ribbon css={iconStyle} />&nbsp;
+                                    {translate("Dev Choice")}
+                                </Tab>
+                                <Tab>
+                                    <TrendingUp css={iconStyle} />&nbsp;
+                                    {translate("Trending")}
+                                </Tab>
+                                <Tab>
+                                    <Dice css={iconStyle} />&nbsp;
+                                    {translate("Generate-header")}
+                                </Tab>
+                                <Tab>
+                                    <Star css={iconStyle} />&nbsp;
+                                    {translate("Bookmarked")}
+                                </Tab>
+                                <Tab>
+                                    <History css={iconStyle} />&nbsp;
+                                    {translate("History")}
+                                </Tab>
+                            </div>
                         </TabList>
                         <div css={[{
                             flexShrink: 1,
@@ -100,6 +104,9 @@ export function BasecampPanel({
                                 <DevChoiceWorlds css={{ height: "100%" }} />
                             </TabPanel>
                             <TabPanel>
+                                <TopWorlds css={{ height: "100%" }} />
+                            </TabPanel>
+                            <TabPanel>
                                 <NewDropzones css={{ height: "100%" }} />
                             </TabPanel>
                             <TabPanel>
@@ -107,9 +114,6 @@ export function BasecampPanel({
                             </TabPanel>
                             <TabPanel>
                                 <HistoricalDrops css={{ height: "100%" }} />
-                            </TabPanel>
-                            <TabPanel>
-                                <TopWorlds css={{ height: "100%" }} />
                             </TabPanel>
                         </div>
                     </div>

@@ -5,6 +5,7 @@ import { Undo } from "@emotion-icons/evaicons-solid/Undo";
 import { Robot } from "@emotion-icons/fa-solid/Robot";
 import { JoystickButton } from "@emotion-icons/boxicons-regular/JoystickButton";
 import { dropShadow5 } from "../utils/dropShadow5";
+import { useTranslate } from "./languageRecoil";
 
 
 const keyStyle = {
@@ -42,6 +43,7 @@ export function ControlsHelpPanel({
 }: jsx.JSX.IntrinsicElements["div"] & {
     visibility: ControlsPanelVisibility,
 }) {
+    const translate = useTranslate();
 
     const wasd = <div css={{
         fontSize: "3em",
@@ -71,13 +73,13 @@ export function ControlsHelpPanel({
             <span css={keyStyle}>C</span> - <Robot css={{
                 height: "1.5em",
                 margin: "-0.4em -0.1em 0em -0.1em",
-            }} /> accept copilot hint
+            }} /> {translate("accept copilot hint")}
         </div>
         <div>
             <span css={keyStyle}>Z</span> - <Undo css={{
                 height: "1.5em",
                 margin: "-0.4em -0.1em 0em -0.1em",
-            }} /> undo
+            }} /> {translate("undo")}
         </div>
         <div>
             <span css={keyStyle}>
@@ -85,7 +87,7 @@ export function ControlsHelpPanel({
             </span> - <MapMarkedAlt css={{
                 height: "1.5em",
                 margin: "-0.4em -0.0em 0em -0.0em",
-            }} /> map
+            }} /> {translate("map")}
         </div>
         <div>
             <span css={keyStyle}>
@@ -93,7 +95,7 @@ export function ControlsHelpPanel({
             </span> - <Tent css={{
                 height: "1.5em",
                 margin: "-0.4em -0.3em 0em -0.3em",
-            }} /> visit basecamp
+            }} /> {translate("visit basecamp")}
         </div>
     </div>;
 
@@ -108,8 +110,8 @@ export function ControlsHelpPanel({
                 margin: "-0.4em -0.1em -0.1em -0.1em",
             }} />{
                 (visibility === "hint")
-                    ? " help"
-                    : " controls help"
+                    ? " " + translate("help")
+                    : " " + translate("controls help")
             }</div>
     </div>;
 
