@@ -126,7 +126,7 @@ export function App() {
             flex: "row",
             overflow: "hidden",
         }}>
-            <div css={{
+            {isMapShown && <div css={{
                 position: "absolute",
                 top: "50vh",
                 left: "35vw",
@@ -140,7 +140,7 @@ export function App() {
                     : "transparent",
             }} >
                 <OverlayMap css={{ display: "block" }} />
-            </div>
+            </div>}
 
             <div css={{
                 position: "absolute",
@@ -229,7 +229,7 @@ export function App() {
                     fontSize: "1.2vmin",
                 }} >Esc</span>
             </button>
-            <button // toggle basecamp 
+            <button // toggle disclaimer 
                 css={{
                     filter: dropShadow5(
                         "0.2vmin", "0.2vmin", "rgb(0 0 0 / 0.5)"),
