@@ -17,6 +17,8 @@ export type TrekChain =
 
 export const playerActionRecoil = atom({
     key: "playerAction",
+
+    // this would be reset immediately
     default: {
         action: undefined as undefined | {
             action: "step",
