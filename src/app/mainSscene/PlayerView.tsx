@@ -7,13 +7,17 @@ import { MathUtils } from "three";
 import { easeSinInOut } from "d3-ease";
 import { useEffect, useMemo } from "react";
 import { Howl, HowlOptions } from "howler";
-import sound1Url from "../sounds/244980__ani_music__wing-flap-flag-flapping-7a.mp3";
-import sound2Url from "../sounds/389634__stubb__wing-flap-1.mp3";
+import stepSound1Url from "../sounds/244980__ani_music__wing-flap-flag-flapping-7a.mp3";
+import stepSound2Url from "../sounds/389634__stubb__wing-flap-1.mp3";
+import impactSound1Url from "../sounds/607667__jayroo9__pots_and_cans_33.mp3";
 
 
-const sounds: HowlOptions[] = [
-    { src: [sound1Url] },
-    { src: [sound2Url], volume: 0.5 },
+const stepSounds: HowlOptions[] = [
+    { src: [stepSound1Url] },
+    { src: [stepSound2Url], volume: 0.5 },
+];
+const impactSounds: HowlOptions[] = [
+    { src: [impactSound1Url] },
 ];
 
 const randomEl = <T,>(arr: T[]) =>
@@ -24,6 +28,12 @@ const rotationMap = {
     "left": 2,
     "backward": 3,
     "right": 0,
+};
+const directionMap = {
+    "forward": [0, 1],
+    "left": [-1, 0],
+    "backward": [0, -1],
+    "right": [1, 0],
 };
 
 export function PlayerView({
@@ -52,13 +62,15 @@ export function PlayerView({
     const tStart = clock.getElapsedTime();
 
     // preload sounds
-    useMemo(() => sounds.map(x => new Howl(x)), []);
+    useMemo(() => stepSounds.map(x => new Howl(x)), []);
 
     useEffect(() => {
-        const howl = new Howl(randomEl(sounds));
+        if (playerAction.action?.action !== "step") { return; }
+        const howl = new Howl(randomEl(
+            playerAction.ok ? stepSounds : impactSounds));
         howl.play();
         // return () => { howl.stop(); };
-    }, [trek]);
+    }, [playerAction]);
 
     return <group
         {...props}
@@ -67,15 +79,26 @@ export function PlayerView({
         <GroupSync
             onFrame={(g, frame) => {
                 if (playerAction.action?.action === "step") {
+                    const dTimeSec = frame.clock.getElapsedTime() - tStart;
+                    const t = MathUtils.clamp(dTimeSec * 8, 0, 1);
+                    if (t < 1) { invalidate(); }
+
+                    const [dx, dt] =
+                        directionMap[playerAction.action.instruction];
+
                     if (playerAction.ok) {
-                        const dTimeSec = frame.clock.getElapsedTime() - tStart;
-                        const t = MathUtils.clamp(dTimeSec * 8, 0, 1);
-                        if (t < 1) { invalidate(); }
                         const t1 = easeSinInOut(t);
                         const t2 = t1 - 1;
                         g.position.z = dx * t2;
                         g.position.x = dt * t2;
+                    } else {
+                        const t1 = t * (1 - t) * (1 - t) * 2;
+                        g.position.z = dx * t1;
+                        g.position.x = dt * t1;
                     }
+                } else {
+                    g.position.z = 0;
+                    g.position.x = 0;
                 }
             }}
         >
