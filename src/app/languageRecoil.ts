@@ -2,14 +2,6 @@ import { atom, useRecoilValue } from "recoil";
 import { localStorageAtomEffect } from "../utils/reactish/localStorageAtomEffect";
 
 
-// const detectBrowserLanguage = () => {
-//     let language = navigator.language;
-//     if (language.includes("-")) {
-//         language = language.split("-")[0];
-//     }
-//     return language;
-// };
-
 export const translation = {
     "change language:": {
         "en": "change language",
@@ -34,10 +26,6 @@ export const translation = {
     "Generate": {
         "en": "Generate",
         "uk": "Згенерувати",
-    },
-    "WASD / Arrows to move": {
-        "en": "WASD / Arrows to move",
-        "ua": "WASD / Стрілки для руху",
     },
     "Esc": {
         "en": "Esc",
@@ -76,46 +64,74 @@ export const translation = {
         "uk": "Очко навику надається при піднятті рівня",
     },
     "You can reallocate points for each new game.": {
-        "eu": "You can reallocate points for each new game.",
+        "en": "You can reallocate points for each new game.",
         "uk": "Ви можете перерозподіляти очки для кожної нової гри.",
     },
     "Skill Points spent:": {
-        "eu": "Skill Points spent:",
+        "en": "Skill Points spent:",
         "uk": "Витрачені бали навичок:",
     },
     "left": {
-        "eu": "left",
+        "en": "left",
         "uk": "залишилося",
     },
     "Pick Neighborhood:": {
-        "eu": "Pick Neighborhood:",
+        "en": "Pick Neighborhood:",
         "uk": "Підбирати сусудні",
     },
     "Current Cell Only": {
-        "eu": "Current Cell Only",
+        "en": "Current Cell Only",
         "uk": "Лише поточна комірка",
     },
     "Current + 4 Adjacent Cells": {
-        "eu": "Current + 4 Adjacent Cells",
+        "en": "Current + 4 Adjacent Cells",
         "uk": "Поточна + 4 прилеглі комірки",
     },
     "Current + 4 Adjacent + 4 Diagonal Cells": {
-        "eu": "Current + 4 Adjacent + 4 Diagonal Cells",
+        "en": "Current + 4 Adjacent + 4 Diagonal Cells",
         "uk": "Поточний + 4 суміжні + 4 діагональні клітинки",
     },
-
 } as Record<string, Record<string, string>>;
+
+const resolveByLanguage = <T>(
+    languages: readonly string[],
+    translations: Readonly<Record<string, T>>,
+) => {
+    for (const language of languages) {
+        if (language in translations) {
+            return translations[language];
+        }
+    }
+    for (const language of languages) {
+        const languageShort = language.split("-")[0];
+        if (languageShort in translations) {
+            return translations[languageShort];
+        }
+    }
+};
 
 export const languageRecoil = atom({
     key: "language",
-    default: navigator.language,
+    default: undefined as string | undefined,
     effects: [
         localStorageAtomEffect(),
     ],
 });
 
-export const useTranslate = () => {
+export const useResolveByLanguage = () => {
+    const selectedLanguage = useRecoilValue(languageRecoil);
+    const languages =
+        selectedLanguage
+            ? [selectedLanguage, ...navigator.languages]
+            : navigator.languages;
+    return <T>(translations: Readonly<Record<string, T>>) =>
+        resolveByLanguage(languages, translations);
+};
 
-    const lang = useRecoilValue(languageRecoil);
-    return (term: string) => translation[term]?.[lang] ?? term;
+export const useTranslate = () => {
+    const resolveByLanguage = useResolveByLanguage();
+    return (term: string) =>
+        (term in translation)
+            ? resolveByLanguage(translation[term]) ?? term
+            : term;
 };

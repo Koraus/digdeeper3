@@ -11,9 +11,14 @@ import { Dice } from "@emotion-icons/fa-solid/Dice";
 import { Star } from "@emotion-icons/ionicons-solid/Star";
 import { History } from "@emotion-icons/fa-solid/History";
 import { PlayerPanel } from "./PlayerPanel";
-import { useRecoilState } from "recoil";
-import { languageRecoil, useTranslate } from "../languageRecoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { languageRecoil, useResolveByLanguage, useTranslate } from "../languageRecoil";
 import { TopWorlds } from "./TopWorlds";
+import { Twemoji } from "react-emoji-render";
+import { VolumeMute } from "@emotion-icons/fa-solid/VolumeMute";
+import { VolumeUp } from "@emotion-icons/fa-solid/VolumeUp";
+import { muteSoundsRecoil } from "../muteSoundsRecoil";
+
 
 export function BasecampPanel({
     css: cssProp,
@@ -25,10 +30,15 @@ export function BasecampPanel({
         marginTop: "-0.25em",
     };
 
-    const [language, setLanguage] = useRecoilState(languageRecoil);
-    const ukrainian = "uk";
-    const english = "en";
+    const resolveByLanguage = useResolveByLanguage();
+    const languageToDisplayAsSelected = resolveByLanguage({
+        "en": "en",
+        "uk": "ua",
+    }) ?? "en";
+    const setLanguage = useSetRecoilState(languageRecoil);
     const translate = useTranslate();
+
+    const [muteSounds, setMuteSounds] = useRecoilState(muteSoundsRecoil);
 
     return <div
         css={[{
@@ -107,29 +117,50 @@ export function BasecampPanel({
             </div>
         </div>
         <div css={{
-            display: "flex",
-            margin: "0 0 2vmin 0.5vmin ",
             position: "absolute",
-            right: "8vmin",
-            top: "3vmin",
+            right: "13vmin",
+            top: "1vmin",
+            textAlign: "right",
+            fontSize: "1.3em",
         }}>
-            change language:
-            <div
-                onClick={() => setLanguage(english)}
+            {[
+                ["en", "en:us:"],
+                ["uk", "uk:ua:"],
+            ].map(([lang, name]) => <span
+                key={lang}
+                onClick={() => setLanguage(lang)}
                 css={{
-                    margin: "0 2vmin 0 2vmin",
-                    textDecoration: language === "en" ? "underline" : "none",
+                    margin: "0 0.2em",
                     cursor: "pointer",
+                    ...(languageToDisplayAsSelected === lang && {
+                        borderBottom: "1px solid",
+                    }),
                 }}
-            >EN</div>
-            <div
-                onClick={() => setLanguage(ukrainian)}
-                css={{
-                    textDecoration: language === "uk" ? "underline" : "none",
-                    cursor: "pointer",
-                }}
-            >UA</div>
+            >
+                <Twemoji>{name}</Twemoji>
+            </span>)}
         </div>
+        <button
+            css={{
+                position: "absolute",
+                right: "7vmin",
+                top: "1vmin",
+                fontSize: "1.5em",
+            }}
+            onClick={() => setMuteSounds(!muteSounds)}
+        >
+            {
+                muteSounds
+                    ? <VolumeMute css={{
+                        height: "1em",
+                        margin: "0.15em 0.12em 0.18em 0em",
+                    }} />
+                    : <VolumeUp css={{
+                        height: "1em",
+                        margin: "0.15em 0em 0.18em 0em",
+                    }} />
+            }
+        </button>
     </div >;
 }
 

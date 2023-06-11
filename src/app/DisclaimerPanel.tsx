@@ -1,11 +1,11 @@
 import { jsx } from "@emotion/react";
 import { Check } from "@emotion-icons/fa-solid/Check";
 import "@fontsource/noto-serif";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { optOutAnalyticsRecoil } from "./optOutAnalyticsRecoil";
 import { optOutSubmissionRecoil } from "./optOutSubmissionRecoil";
 import { DisclaimerText } from "./DisclaimerText";
-import { languageRecoil } from "./languageRecoil";
+import { useResolveByLanguage } from "./languageRecoil";
 import { DisclaimerTextUk } from "./DisclaimerTextUk";
 
 
@@ -19,11 +19,11 @@ export function DisclaimerPanel({
     const optOutSubmissionState = useRecoilState(optOutSubmissionRecoil);
     const optOutAnalyticsState = useRecoilState(optOutAnalyticsRecoil);
 
-    const lang = useRecoilValue(languageRecoil);
-    const Text = {
+    const resolveByLanguage = useResolveByLanguage();
+    const Text = resolveByLanguage({
         "en": DisclaimerText,
         "uk": DisclaimerTextUk,
-    }[lang] ?? DisclaimerText;
+    }) ?? DisclaimerText;
 
     return <div css={[{
         padding: "0 2vmin 1.5vmin 2vmin",
