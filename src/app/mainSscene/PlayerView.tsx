@@ -62,7 +62,10 @@ export function PlayerView({
     const tStart = clock.getElapsedTime();
 
     // preload sounds
-    useMemo(() => stepSounds.map(x => new Howl(x)), []);
+    useMemo(() => {
+        stepSounds.map(x => new Howl(x));
+        impactSounds.map(x => new Howl(x));
+    }, []);
 
     useEffect(() => {
         if (playerAction.action?.action !== "step") { return; }
