@@ -51,33 +51,39 @@ export function DevChoiceWorlds({
                         generateRandomDropzone({ world })))
             }> {translate("Reroll")} </button>
         {dropzones
-            && <div css={[{
-                listStyle: "none",
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-            }]}>
-                {dropzones.map((dropzone, i) => <div key={i} css={[{
-                    position: "relative",
+            && <div css={{ display: "flex", height: "100%" }}>
+                <div css={[{
+                    display: "flex",
+                    flexDirection: "row",
+                    flexWrap: "wrap",
+                    overflow: "auto",
                 }]}>
-                    <DropzonePreview
-                        css={[{
-                            margin: "0.1vmin",
-                        }]}
-                        dropzone={dropzone} />
-                    <button
-                        css={[{
-                            position: "absolute",
-                            bottom: "1vmin",
-                            left: "50%",
-                            transform: "translateX(-50%)",
-                        }]}
-                        onClick={() => setDropzone(dropzone)}
-                    >
-                        <Hiking css={{ height: "1em", marginTop: "-0.2em" }} />
-                        &nbsp;Go!
-                    </button>
-                </div>)}
-            </div>}
-    </div>;
+                    {dropzones.map((dropzone, i) => <div key={i} css={[{
+                        position: "relative",
+                    }]}>
+                        <DropzonePreview
+                            css={[{
+                                margin: "0.1vmin",
+                            }]}
+                            dropzone={dropzone} />
+                        <button
+                            css={[{
+                                position: "absolute",
+                                bottom: "1vmin",
+                                left: "50%",
+                                transform: "translateX(-50%)",
+                            }]}
+                            onClick={() => setDropzone(dropzone)}
+                        >
+                            <Hiking css={{
+                                height: "1em",
+                                marginTop: "-0.2em",
+                            }} />
+                            &nbsp;Go!
+                        </button>
+                    </div>)}
+                </div>
+            </div>
+        }
+    </div >;
 }

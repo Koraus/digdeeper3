@@ -14,7 +14,7 @@ import { caStateCount } from "../../model/terms/World";
 import { LoaderCircle } from "@emotion-icons/boxicons-regular/LoaderCircle";
 
 
-export function TopWorlds({
+export function Trending({
     ...props
 }: jsx.JSX.IntrinsicElements["div"]) {
     const setDrop = useSetDrop();
@@ -34,7 +34,9 @@ export function TopWorlds({
                 }),
             }));
     }, []);
-
+    // trending назва 
+    // скрол
+    //
     // todo reroll button
     // todo reload button
     // todo display popularity (treks count)
@@ -51,37 +53,44 @@ export function TopWorlds({
         {dropzones && dropzones.length === 0 && <>
             <Sparkles css={{ height: "8em", margin: "2em" }} />
         </>}
-        <div css={[{
-            display: "flex",
-            flexDirection: "row",
-            flexWrap: "wrap",
-        }]}>
-            {dropzones && dropzones.map((dropzone, i) => <div key={i} css={[{
-                position: "relative",
+        <div css={{ display: "flex", height: "100%" }}>
+            <div css={[{
+                display: "flex",
+                flexDirection: "row",
+                flexWrap: "wrap",
+                overflow: "auto",
             }]}>
-                <DropzonePreview
-                    css={[{
-                        margin: "0.1vmin",
-                    }]}
-                    dropzone={dropzone} />
-                <button
-                    onClick={() => setDrop({
-                        v: version,
-                        zone: dropzone,
-                        depthLeftBehind: 10,
-                        equipment: {
-                            pickNeighborhoodIndex: 0,
-                        },
-                    })}
-                    css={[{
-                        position: "absolute",
-                        bottom: "1vmin",
-                        left: "50%",
-                        transform: "translateX(-50%)",
-                    }]}
-                >  <Hiking css={{ height: "1em", marginTop: "-0.2em" }} />
-                    &nbsp;Go!</button>
-            </div>)}
+                {dropzones && dropzones.map((dropzone, i) =>
+                    <div key={i} css={[{
+                        position: "relative",
+                    }]}>
+                        <DropzonePreview
+                            css={[{
+                                margin: "0.1vmin",
+                            }]}
+                            dropzone={dropzone} />
+                        <button
+                            onClick={() => setDrop({
+                                v: version,
+                                zone: dropzone,
+                                depthLeftBehind: 10,
+                                equipment: {
+                                    pickNeighborhoodIndex: 0,
+                                },
+                            })}
+                            css={[{
+                                position: "absolute",
+                                bottom: "1vmin",
+                                left: "50%",
+                                transform: "translateX(-50%)",
+                            }]}
+                        >  <Hiking css={{
+                            height: "1em",
+                            marginTop: "-0.2em",
+                        }} />
+                            &nbsp;Go!</button>
+                    </div>)}
+            </div>
         </div>
     </div >;
 }
