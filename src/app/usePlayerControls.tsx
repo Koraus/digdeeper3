@@ -2,7 +2,7 @@ import { useWindowEvent } from "../utils/reactish/useWindowEvent";
 import { useRecoilState } from "recoil";
 import { useMakeStep } from "./useMakeStep";
 import { offer } from "../copilot";
-import { instructions } from "../model/terms/PackedTrek";
+import { Instruction, namedInstructions } from "../model/terms/PackedTrek";
 import { playerActionRecoil } from "./playerActionRecoil";
 
 
@@ -14,33 +14,32 @@ export function usePlayerControls() {
         switch (ev.code) {
             case "ArrowLeft":
             case "KeyA": {
-                makeStep("backward");
+                makeStep(namedInstructions.backward);
                 break;
             }
             case "ArrowRight":
             case "KeyD": {
-                makeStep("forward");
+                makeStep(namedInstructions.forward);
                 break;
             }
             case "ArrowUp":
             case "KeyW": {
-                makeStep("left");
+                makeStep(namedInstructions.left);
                 break;
             }
             case "ArrowDown":
             case "KeyS": {
-                makeStep("right");
+                makeStep(namedInstructions.right);
                 break;
             }
             case "KeyC": {
                 const trek = playerAction.trek;
                 const theOffer = offer(trek);
                 if (!theOffer) { break; }
-                const actionIndex = theOffer
-                    .map((v, i) => [i, v])
-                    .sort((a, b) => (b[1] ?? 0) - (a[1] ?? 0))[0]?.[0];
-                const action = instructions[actionIndex];
-                makeStep(action, true);
+                const instruction = theOffer
+                    .map((v, i) => [i as Instruction, v] as const)
+                    .sort((a, b) => b[1] - a[1])[0][0];
+                makeStep(instruction, true);
                 break;
             }
             case "KeyZ": {

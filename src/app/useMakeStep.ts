@@ -1,5 +1,5 @@
 import { useRecoilState, useRecoilValue } from "recoil";
-import { instructionIndices } from "../model/terms/PackedTrek";
+import { Instruction } from "../model/terms/PackedTrek";
 import { packTrekChain } from "./packTrekChain";
 import { submitTrek } from "./submitTrek";
 import { evacuationLineProgress, isEvacuationLineCrossed } from "../model/evacuation";
@@ -16,7 +16,7 @@ export function useMakeStep() {
     const optOutSubmission = useRecoilValue(optOutSubmissionRecoil);
     const addXp = useRegisterXp();
     return (
-        instruction: keyof typeof instructionIndices,
+        instruction: Instruction,
         copiloted = false,
     ) => {
         const { trek } = playerAction;

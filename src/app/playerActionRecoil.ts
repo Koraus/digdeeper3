@@ -2,7 +2,7 @@ import { atom } from "recoil";
 import { version as sightVersion } from "../model/version";
 import { generateRandomDropzone } from "../model/generate";
 import { devChoiceWorlds } from "./basecamp/DevChoiceWorlds";
-import { instructionIndices } from "../model/terms/PackedTrek";
+import { Instruction } from "../model/terms/PackedTrek";
 import { Drop } from "../model/terms/Drop";
 import { SightBody, applyStep, initSight } from "../model/sight";
 import memoize from "memoizee";
@@ -11,7 +11,7 @@ import { _never } from "../utils/_never";
 export type TrekChain =
     Drop
     | {
-        instruction: keyof typeof instructionIndices,
+        instruction: Instruction,
         prev: TrekChain,
     };
 
@@ -23,7 +23,7 @@ export const playerActionRecoil = atom({
         action: undefined as undefined | {
             action: "step",
             copiloted: boolean,
-            instruction: keyof typeof instructionIndices,
+            instruction: Instruction,
         } | {
             action: "undo",
         },
@@ -53,7 +53,7 @@ export const rawSightAt = memoize(
             : applyStep(
                 startForTrek(trek),
                 sightAt(trek.prev),
-                instructionIndices[trek.instruction],
+                trek.instruction,
                 true));
 
 export const sightAt = (trek: TrekChain): SightBody =>

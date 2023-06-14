@@ -2,7 +2,7 @@ import { useRecoilValue } from "recoil";
 import { playerActionRecoil, rawSightAt, sightAt } from "../playerActionRecoil";
 import { offer } from "../../copilot";
 import { ThreeElements } from "@react-three/fiber";
-import { instructions } from "../../model/terms/PackedTrek";
+import { Instruction } from "../../model/terms/PackedTrek";
 
 
 export function CopilotView({
@@ -21,13 +21,12 @@ export function CopilotView({
                 if (!theOffer) { break; }
 
                 // if (i === 0) { console.log("offer", theOffer); }
-                const actionIndex = theOffer
-                    .map((v, i) => [i, v])
-                    .sort((a, b) => (b[1] ?? 0) - (a[1] ?? 0))[0]?.[0];
-                const action = instructions[actionIndex];
+                const instruction = theOffer
+                    .map((v, i) => [i as Instruction, v] as const)
+                    .sort((a, b) => b[1] - a[1])[0][0];
                 pr = {
                     prev: pr,
-                    instruction: action,
+                    instruction,
                 };
                 const [w] = rawSightAt(pr);
                 if (!w) { break; }

@@ -3,7 +3,7 @@ import memoize from "memoizee";
 import { ca } from "./ca";
 import { Dropzone } from "./terms/Dropzone";
 import { Drop } from "./terms/Drop";
-import { InstructionIndex, instructionIndices } from "./terms/PackedTrek";
+import { Instruction, namedInstructions } from "./terms/PackedTrek";
 
 export const caForDropzone = memoize((dropzone: Dropzone) => ca({
     ca: dropzone.world.ca,
@@ -13,16 +13,32 @@ export const caForDropzone = memoize((dropzone: Dropzone) => ca({
 }));
 
 export const directionEnergyDrain = {
-    [instructionIndices.left]: 1,
-    [instructionIndices.right]: 1,
-    [instructionIndices.backward]: 9,
-    [instructionIndices.forward]: 0,
+    [namedInstructions.left]: 1,
+    [namedInstructions.right]: 1,
+    [namedInstructions.backward]: 9,
+    [namedInstructions.forward]: 0,
+    [namedInstructions.knightForwardLeft]: 27,
+    [namedInstructions.knightForwardRight]: 27,
+    [namedInstructions.knightBackwardLeft]: 27,
+    [namedInstructions.knightBackwardRight]: 27,
+    [namedInstructions.knightLeftForward]: 27,
+    [namedInstructions.knightLeftBackward]: 27,
+    [namedInstructions.knightRightForward]: 27,
+    [namedInstructions.knightRightBackward]: 27,
 } as const;
 export const directionVec = {
-    [instructionIndices.left]: [-1, 0],
-    [instructionIndices.right]: [1, 0],
-    [instructionIndices.backward]: [0, -1],
-    [instructionIndices.forward]: [0, 1],
+    [namedInstructions.left]: [-1, 0],
+    [namedInstructions.right]: [1, 0],
+    [namedInstructions.backward]: [0, -1],
+    [namedInstructions.forward]: [0, 1],
+    [namedInstructions.knightForwardLeft]: [-1, 2],
+    [namedInstructions.knightForwardRight]: [1, 2],
+    [namedInstructions.knightBackwardLeft]: [-1, -2],
+    [namedInstructions.knightBackwardRight]: [1, -2],
+    [namedInstructions.knightLeftForward]: [-2, 1],
+    [namedInstructions.knightLeftBackward]: [-2, -1],
+    [namedInstructions.knightRightForward]: [2, 1],
+    [namedInstructions.knightRightBackward]: [2, -1],
 } as const;
 
 export type SightBody = {
@@ -63,19 +79,19 @@ export const initSight = ({
 export function applyStep(
     start: Drop,
     prevSight: SightBody,
-    instruction: InstructionIndex,
+    instruction: Instruction,
     verbose?: false,
 ): [SightBody, undefined] | [undefined, string];
 export function applyStep(
     start: Drop,
     prevSight: SightBody,
-    instruction: InstructionIndex,
+    instruction: Instruction,
     verbose: true,
 ): [SightBody, string] | [undefined, string];
 export function applyStep(
     start: Drop,
     prevSight: SightBody,
-    instruction: InstructionIndex,
+    instruction: Instruction,
     verbose = false,
 ): [SightBody, string | undefined] | [undefined, string] {
     const {

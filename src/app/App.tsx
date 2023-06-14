@@ -28,6 +28,7 @@ import { usePlayerControls } from "./usePlayerControls";
 import { useSetDropzone } from "./basecamp/useSetDropzone";
 import { generateRandomDropzone } from "../model/generate";
 import { devChoiceWorlds } from "./basecamp/DevChoiceWorlds";
+import { KnightMovesButtonsPanel } from "./KnightMovesButtonsPanel";
 
 
 const eqStringify = <T,>(p: T, n: T) =>
@@ -299,6 +300,12 @@ export function App() {
                 }}
                 onClose={() => setIsDisclaimerShown(false)}
             />
+            <KnightMovesButtonsPanel css={{
+                position: "absolute",
+                left: "1vmin",
+                bottom: "8vmin",
+                pointerEvents: "all",
+            }} />
         </div>
     </div >;
 }

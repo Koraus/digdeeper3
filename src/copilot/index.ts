@@ -4,12 +4,24 @@ import { applyStep, caForDropzone, initSight, SightBody } from "../model/sight";
 import { v2 } from "../utils/v";
 import memoize from "memoizee";
 import { loadPackedTreks } from "./saver";
-import { PackedTrek, getInstructionAt, instructionIndices, instructions } from "../model/terms/PackedTrek";
+import { Instruction, PackedTrek, enumerateBytecode, namedInstructions } from "../model/terms/PackedTrek";
 import { _never } from "../utils/_never";
 import { TrekChain, sightAt, startForTrek } from "../app/playerActionRecoil";
 
 
-const offerVersion = "digdeeper3/copilot/offer@14";
+const offerVersion = "digdeeper3/copilot/offer@15";
+
+if (namedInstructions.forward !== 0) { _never(); }
+if (namedInstructions.backward !== 1) { _never(); }
+if (namedInstructions.left !== 2) { _never(); }
+if (namedInstructions.right !== 3) { _never(); }
+const noop = 4 as const; // for init and non-copiloted instructions
+const instructionCount = 5; // 4 directions + 1 noop
+const mapInstruction = (instruction: Instruction) =>
+    (instruction >= 0 && instruction < 4)
+        ? instruction as 0 | 1 | 2 | 3
+        : noop;
+
 
 const windowLengths = [6, 5, 4, 3];
 const neighborhoods = [[
@@ -129,8 +141,7 @@ const getReducedState = (
             const sight = sightAt(trek);
             const rns = getReducedNeighborhoodState(
                 dropzone, sight, neighborhood);
-            return rns * (instructions.length + 1)
-                + instructionIndices[trek.instruction];
+            return rns * instructionCount + mapInstruction(trek.instruction);
         }),
 );
 
@@ -144,18 +155,17 @@ export const processTrek = (
 
     const rns = getReducedNeighborhoodState(
         packedTrek.drop.zone, sight, neighborhood);
-    const states = [rns * (instructions.length + 1) + instructions.length];
-    for (let i = 0; i < packedTrek.bytecodeLength; i++) {
-        const instruction = getInstructionAt(packedTrek, i);
+    const states = [rns * instructionCount + noop];
+    for (const instruction of enumerateBytecode(packedTrek)) {
+        const i = mapInstruction(instruction);
         if (states.length >= windowLength) {
             const key = JSON.stringify(states);
             const mapActions = map[key] ?? (map[key] = [0, 0, 0, 0]);
-            for (let ai = 0; ai < instructions.length; ai++) {
-                mapActions[ai] *= 0.95;
-                if (ai === instruction) {
-                    mapActions[ai] += 1;
-                }
-            }
+            mapActions[0] *= 0.95;
+            mapActions[1] *= 0.95;
+            mapActions[2] *= 0.95;
+            mapActions[3] *= 0.95;
+            if (i !== noop) { mapActions[i] += 1; }
         }
 
         const _sight = applyStep(packedTrek.drop, sight, instruction)[0];
@@ -164,7 +174,7 @@ export const processTrek = (
 
         const rns = getReducedNeighborhoodState(
             packedTrek.drop.zone, sight, neighborhood);
-        states.push(rns * (instructions.length + 1) + instruction);
+        states.push(rns * instructionCount + i);
         states.splice(0, states.length - windowLength);
     }
 

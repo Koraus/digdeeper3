@@ -10,6 +10,8 @@ import { Howl, HowlOptions } from "howler";
 import stepSound1Url from "../sounds/244980__ani_music__wing-flap-flag-flapping-7a.mp3";
 import stepSound2Url from "../sounds/389634__stubb__wing-flap-1.mp3";
 import impactSound1Url from "../sounds/607667__jayroo9__pots_and_cans_33.mp3";
+import { namedInstructions } from "../../model/terms/PackedTrek";
+import { directionVec } from "../../model/sight";
 
 
 const stepSounds: HowlOptions[] = [
@@ -24,16 +26,18 @@ const randomEl = <T,>(arr: T[]) =>
     arr[Math.floor(Math.random() * arr.length)];
 
 const rotationMap = {
-    "forward": 1,
-    "left": 2,
-    "backward": 3,
-    "right": 0,
-};
-const directionMap = {
-    "forward": [0, 1],
-    "left": [-1, 0],
-    "backward": [0, -1],
-    "right": [1, 0],
+    [namedInstructions.forward]: 1,
+    [namedInstructions.left]: 2,
+    [namedInstructions.backward]: 3,
+    [namedInstructions.right]: 0,
+    [namedInstructions.knightForwardLeft]: 2,
+    [namedInstructions.knightForwardRight]: 0,
+    [namedInstructions.knightBackwardLeft]: 2,
+    [namedInstructions.knightBackwardRight]: 0,
+    [namedInstructions.knightLeftForward]: 1,
+    [namedInstructions.knightLeftBackward]: 3,
+    [namedInstructions.knightRightForward]: 1,
+    [namedInstructions.knightRightBackward]: 3,
 };
 
 export function PlayerView({
@@ -87,7 +91,7 @@ export function PlayerView({
                     if (t < 1) { invalidate(); }
 
                     const [dx, dt] =
-                        directionMap[playerAction.action.instruction];
+                        directionVec[playerAction.action.instruction];
 
                     if (playerAction.ok) {
                         const t1 = easeSinInOut(t);
