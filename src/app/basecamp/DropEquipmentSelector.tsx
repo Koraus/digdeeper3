@@ -14,7 +14,9 @@ export function DropEquipmentSelector({
     const levelProgress = useRecoilValue(levelProgressRecoil);
 
     const totalPointsAvailable = Math.floor(levelProgress);
-    const pointsUsed = dropEquipment.pickNeighborhoodIndex;
+    const pointsUsed = 
+        dropEquipment.pickNeighborhoodLevel
+        + dropEquipment.knightMoveLevel;
     const pointsRemaining = totalPointsAvailable - pointsUsed;
     const translate = useTranslate();
 
@@ -47,11 +49,11 @@ export function DropEquipmentSelector({
                     min={0}
                     max={Math.min(
                         2,
-                        pointsRemaining + dropEquipment.pickNeighborhoodIndex,
+                        pointsRemaining + dropEquipment.pickNeighborhoodLevel,
                     )}
-                    value={dropEquipment.pickNeighborhoodIndex}
+                    value={dropEquipment.pickNeighborhoodLevel}
                     setValue={v => setDropEquipment(update(dropEquipment, {
-                        pickNeighborhoodIndex: {
+                        pickNeighborhoodLevel: {
                             $set: v as 0 | 1 | 2,
                         },
                     }))}
@@ -63,7 +65,35 @@ export function DropEquipmentSelector({
                 translate("Current Cell Only"),
                 translate("Current + 4 Adjacent Cells"),
                 translate("Current + 4 Adjacent + 4 Diagonal Cells"),
-            ][dropEquipment.pickNeighborhoodIndex]}
+            ][dropEquipment.pickNeighborhoodLevel]}
+        </div>
+        <br />
+        <div>
+            <div css={{
+                display: "inline-block",
+                width: "25%",
+            }}>
+                <SkillNumberPicker
+                    min={0}
+                    max={Math.min(
+                        2,
+                        pointsRemaining + dropEquipment.knightMoveLevel,
+                    )}
+                    value={dropEquipment.knightMoveLevel}
+                    setValue={v => setDropEquipment(update(dropEquipment, {
+                        knightMoveLevel: {
+                            $set: v as 0 | 1 | 2,
+                        },
+                    }))}
+                    format={v => `${v}/2`}
+                />
+            </div>
+            <br />{translate("Blink: Move like a Chess Knight")}:
+            <br />- {[
+                translate("No blink"),
+                translate("Blink forward-left or forward-right"),
+                translate("Blick in any direction"),
+            ][dropEquipment.knightMoveLevel]}
         </div>
     </div>;
 }

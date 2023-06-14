@@ -3,6 +3,7 @@ import { localStorageAtomEffect } from "../utils/reactish/localStorageAtomEffect
 import { _never } from "../utils/_never";
 import { Identify, identify, track } from "@amplitude/analytics-browser";
 import { onChangeAtomEffect } from "../utils/reactish/onChangeAtomEffect";
+import { knightMovesPerLevel, neighborhoods } from "../model/sight";
 
 
 const PHI = 1.618033988749895;
@@ -28,7 +29,9 @@ const addXp = (levelProgress: number, xp: number) => {
 };
 
 
-export const levelCap = 2;
+export const levelCap =
+    neighborhoods.length
+    + knightMovesPerLevel.length;
 
 // Level is stored as state agnostically as possible
 // so that the level achieved persists

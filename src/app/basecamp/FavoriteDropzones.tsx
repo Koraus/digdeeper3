@@ -6,6 +6,7 @@ import { useSetDrop } from "./useSetDrop";
 import { version } from "../../model/version";
 import { Sparkles } from "@emotion-icons/ionicons-solid/Sparkles";
 import { Hiking } from "@emotion-icons/fa-solid/Hiking";
+import { dropEquipmentRecoil } from "./dropEquipmentRecoil";
 
 
 export function FavoriteDropzones({
@@ -13,6 +14,7 @@ export function FavoriteDropzones({
 }: jsx.JSX.IntrinsicElements["div"]) {
     const favoriteDropzones = useRecoilValue(favoriteDropzonesRecoil);
     const setDrop = useSetDrop();
+    const equipment = useRecoilValue(dropEquipmentRecoil);
 
     return <div  {...props}>
         {favoriteDropzones.length === 0 && <>
@@ -36,9 +38,7 @@ export function FavoriteDropzones({
                         v: version,
                         zone: dropzone,
                         depthLeftBehind: 10,
-                        equipment: {
-                            pickNeighborhoodIndex: 0,
-                        },
+                        equipment,
                     })}
                     css={[{
                         position: "absolute",

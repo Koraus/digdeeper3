@@ -15,30 +15,36 @@ export type TrekChain =
         prev: TrekChain,
     };
 
-export const playerActionRecoil = atom({
+export const playerActionRecoil = atom<{
+    action: undefined | {
+        action: "step",
+        copiloted: boolean,
+        instruction: Instruction,
+    } | {
+        action: "undo",
+    },
+    ok: boolean,
+    log: undefined | string,
+    trek: TrekChain,
+}>({
     key: "playerAction",
 
     // this would be reset immediately
     default: {
-        action: undefined as undefined | {
-            action: "step",
-            copiloted: boolean,
-            instruction: Instruction,
-        } | {
-            action: "undo",
-        },
+        action: undefined,
         ok: true,
-        log: undefined as undefined | string,
+        log: undefined,
         trek: {
             v: sightVersion,
             zone: generateRandomDropzone({
                 world: devChoiceWorlds[0],
             }),
             equipment: {
-                pickNeighborhoodIndex: 0,
+                pickNeighborhoodLevel: 0,
+                knightMoveLevel: 0,
             },
             depthLeftBehind: 10,
-        } as TrekChain,
+        },
     },
 });
 

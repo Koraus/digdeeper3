@@ -12,11 +12,14 @@ import { generateWorld } from "../../model/generate";
 import { version as caVersion } from "../../ca";
 import { caStateCount } from "../../model/terms/World";
 import { LoaderCircle } from "@emotion-icons/boxicons-regular/LoaderCircle";
+import { dropEquipmentRecoil } from "./dropEquipmentRecoil";
+import { useRecoilValue } from "recoil";
 
 
 export function TopWorlds({
     ...props
 }: jsx.JSX.IntrinsicElements["div"]) {
+    const equipment = useRecoilValue(dropEquipmentRecoil);
     const setDrop = useSetDrop();
     const [dropzones] = usePromise(async () => {
         const treks = await fetchLastTreks(1000);
@@ -69,9 +72,7 @@ export function TopWorlds({
                         v: version,
                         zone: dropzone,
                         depthLeftBehind: 10,
-                        equipment: {
-                            pickNeighborhoodIndex: 0,
-                        },
+                        equipment,
                     })}
                     css={[{
                         position: "absolute",

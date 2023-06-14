@@ -9,11 +9,8 @@ export const DropDecoder = D.struct({
     v: D.literal(version),
     zone: DropzoneDecoder,
     equipment: D.struct({
-        pickNeighborhoodIndex: D.union(
-            D.literal(0),
-            D.literal(1),
-            D.literal(2),
-        ),
+        pickNeighborhoodLevel: D.literal(0, 1, 2),
+        knightMoveLevel: D.literal(0, 1, 2),
     }),
     depthLeftBehind: pipe(
         D.number,

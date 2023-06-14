@@ -6,7 +6,8 @@ import { atom } from "recoil";
 export const dropEquipmentRecoil = atom<DropEquipment>({
     key: "dropEquipment",
     default: {
-        pickNeighborhoodIndex: 0,
+        pickNeighborhoodLevel: 0,
+        knightMoveLevel: 0,
     },
     effects: [
         localStorageAtomEffect({

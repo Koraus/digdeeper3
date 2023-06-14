@@ -4,6 +4,7 @@ import { ca } from "./ca";
 import { Dropzone } from "./terms/Dropzone";
 import { Drop } from "./terms/Drop";
 import { Instruction, namedInstructions } from "./terms/PackedTrek";
+import { evacuationLineProgress, isEvacuationLineCrossed } from "./evacuation";
 
 export const caForDropzone = memoize((dropzone: Dropzone) => ca({
     ca: dropzone.world.ca,
@@ -48,6 +49,7 @@ export type SightBody = {
     collectedCells: v2[],
     depth: number,
     maxDepth: number,
+    knightMovesUsed: number,
 };
 
 export const neighborhoods = [[
@@ -62,6 +64,29 @@ export const neighborhoods = [[
     [1, -1], [1, 0], [1, 1],
 ]] as v2[][];
 
+export const knightMovesPerLevel = [
+    [],
+    [
+        namedInstructions.knightForwardLeft,
+        namedInstructions.knightForwardRight,
+    ],
+    [
+        namedInstructions.knightForwardLeft,
+        namedInstructions.knightForwardRight,
+        namedInstructions.knightBackwardLeft,
+        namedInstructions.knightBackwardRight,
+        namedInstructions.knightLeftForward,
+        namedInstructions.knightLeftBackward,
+        namedInstructions.knightRightForward,
+        namedInstructions.knightRightBackward,
+    ],
+];
+export const allKnightMoves =
+    knightMovesPerLevel[knightMovesPerLevel.length - 1];
+export const knightMovesCap = ({ maxDepth }: SightBody) =>
+    Math.floor(evacuationLineProgress(maxDepth)) + 1;
+
+
 export const initSight = ({
     zone,
     equipment,
@@ -69,11 +94,12 @@ export const initSight = ({
     playerPosition: [Math.floor(zone.width / 2), 0],
     playerEnergy: 81 * 3,
     visitedCells: [[Math.floor(zone.width / 2), 0]],
-    collectedCells: neighborhoods[equipment.pickNeighborhoodIndex]
+    collectedCells: neighborhoods[equipment.pickNeighborhoodLevel]
         .map(x => v2.add(x, [Math.floor(zone.width / 2), 0]))
         .filter((x) => x[1] >= 0),
     maxDepth: 0,
     depth: 0,
+    knightMovesUsed: 0,
 });
 
 export function applyStep(
@@ -95,14 +121,28 @@ export function applyStep(
     verbose = false,
 ): [SightBody, string | undefined] | [undefined, string] {
     const {
-        zone: dropzone, depthLeftBehind, equipment,
+        zone: dropzone,
+        depthLeftBehind,
+        equipment: { knightMoveLevel, pickNeighborhoodLevel },
     } = start;
-    const {
-        world, width,
-    } = dropzone;
-    const {
-        stateEnergyDrain, stateEnergyGain,
-    } = world;
+
+    let newKnightMovesUsed = prevSight.knightMovesUsed;
+
+
+    if ((allKnightMoves as Instruction[]).includes(instruction)) {
+        const levelKnightMoves =
+            knightMovesPerLevel[knightMoveLevel];
+        if (!(levelKnightMoves as Instruction[]).includes(instruction)) {
+            return [undefined, "knight move not allowed"];
+        }
+        if (newKnightMovesUsed < knightMovesCap(prevSight)) {
+            newKnightMovesUsed++;
+        } else {
+            return [undefined, "knight moves limit reached"];
+        }
+    }
+
+    const { world, width } = dropzone;
 
     const p1 = v2.add(
         prevSight.playerPosition,
@@ -120,6 +160,7 @@ export function applyStep(
     const ca = caForDropzone(dropzone);
     const caState = caForDropzone(dropzone)._at(p1[1], p1[0]);
 
+    const { stateEnergyDrain, stateEnergyGain } = world;
     const theStateEnergyDrain = directionEnergyDrain[instruction];
     const theDirectionEnergyDrain = isP1Visited ? 0 : stateEnergyDrain[caState];
     const moveCost = theStateEnergyDrain + theDirectionEnergyDrain;
@@ -131,7 +172,7 @@ export function applyStep(
         ];
     }
 
-    const stepCollectedCells = neighborhoods[equipment.pickNeighborhoodIndex]
+    const stepCollectedCells = neighborhoods[pickNeighborhoodLevel]
         .map(x => v2.add(x, p1))
         .filter((x) => x[0] >= 0
             && x[0] < width
@@ -176,6 +217,12 @@ export function applyStep(
             : "")
         : undefined;
 
+    const newMaxDepth = Math.max(prevSight.maxDepth, p1[1]);
+
+    if (isEvacuationLineCrossed(prevSight.maxDepth, newMaxDepth)) {
+        newKnightMovesUsed = 0;
+    }
+
     return [
         {
             playerPosition: p1,
@@ -183,7 +230,8 @@ export function applyStep(
             visitedCells: newVisitedCells,
             collectedCells: newcCollectedCells,
             depth: newDepth,
-            maxDepth: Math.max(prevSight.maxDepth, p1[1]),
+            maxDepth: newMaxDepth,
+            knightMovesUsed: newKnightMovesUsed,
         },
         log,
     ];

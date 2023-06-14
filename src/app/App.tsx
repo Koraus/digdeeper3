@@ -212,6 +212,13 @@ export function App() {
                 bottom: "1vmin",
                 filter: dropShadow5("0.2em", "0.1em", "rgb(0 0 0 / 0.8)"),
             }} />
+            <KnightMovesButtonsPanel css={{
+                filter: dropShadow5("0.2em", "0.1em", "rgb(0 0 0 / 0.8)"),
+                position: "absolute",
+                left: "1vmin",
+                bottom: "8vmin",
+                pointerEvents: "all",
+            }} />
             <BasecampPanel css={{
                 position: "absolute",
                 inset: 0,
@@ -300,12 +307,6 @@ export function App() {
                 }}
                 onClose={() => setIsDisclaimerShown(false)}
             />
-            <KnightMovesButtonsPanel css={{
-                position: "absolute",
-                left: "1vmin",
-                bottom: "8vmin",
-                pointerEvents: "all",
-            }} />
         </div>
     </div >;
 }
