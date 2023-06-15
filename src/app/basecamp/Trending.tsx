@@ -30,11 +30,10 @@ export function Trending({
     const [dropzones, setDropzones] = useState<Dropzone[] | undefined>();
     const [fetchedData] = usePromise(async () => {
         const treks = await fetchLastTreks(1000);
-        const rules = Object.entries(
+        const groupedSortedRules = Object.entries(
             _.groupBy(treks, trek => trek.drop.zone.world.ca.rule))
             .sort((a, b) => b[1].length - a[1].length);
-        const rullesFrequency = rules.map((r) => [r[0], r[1].length]);
-        const dropzones = rules
+        const dropzones = groupedSortedRules
             .slice(0, 10)
             .map(([rule]) => generateRandomDropzone({
                 world: generateWorld({
@@ -46,12 +45,12 @@ export function Trending({
                 }),
             }));
 
-        return { dropzones, rullesFrequency };
+        return { dropzones, groupedSortedRules };
     }, [fetchCoutnt]);
 
     useEffect(() => setDropzones(fetchedData?.dropzones), [fetchedData]);
 
-    const rullesFrequency = fetchedData?.rullesFrequency;
+    const groupedSortedRules = fetchedData?.groupedSortedRules;
 
     const translate = useTranslate();
 
@@ -71,11 +70,11 @@ export function Trending({
             {dropzones && <>
                 <button css={[{ margin: "0.9vmin 0" }]}
                     onClick={() => {
-                        rullesFrequency &&
-                            setDropzones(rullesFrequency.map(
-                                (i) => {
-                                    const rule = i[0].toString();
-                                    return generateRandomDropzone({
+                        groupedSortedRules &&
+                            setDropzones(groupedSortedRules
+                                .slice(0, 10)
+                                .map(
+                                    ([rule]) => generateRandomDropzone({
                                         world: generateWorld({
                                             ca: {
                                                 v: caVersion,
@@ -83,8 +82,8 @@ export function Trending({
                                                 stateCount: caStateCount,
                                             },
                                         }),
-                                    });
-                                }));
+                                    }),
+                                ));
                     }}>
                     <Dice css={{
                         height: "1em",
@@ -110,9 +109,13 @@ export function Trending({
                         position: "relative",
                         height: "fit-content",
                     }]}>
-                        {rullesFrequency &&
-                            `rule: ${rullesFrequency[i][0]} 
-                        count :  ${rullesFrequency[i][1]}`}
+                        {groupedSortedRules && <>
+                            <Hiking css={{
+                                height: "1em",
+                                marginTop: "-0.2em",
+                            }} />&nbsp;-&nbsp;
+                            {groupedSortedRules[i][1].length}
+                        </>}
                         <DropzonePreview
                             css={[{
                                 margin: "0.1vmin",
