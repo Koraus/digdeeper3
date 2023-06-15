@@ -128,8 +128,8 @@ export const translation = {
         "en": "Blink forward-left or forward-right",
         "uk": "Блінк вперед-ліворуч або вперед-праворуч",
     },
-    "Blick in any direction": {
-        "en": "Blick in any direction",
+    "Blink in any direction": {
+        "en": "Blink in any direction",
         "uk": "Блінк в будь-якому напрямку",
     },
     "Reload": {
