@@ -10,8 +10,8 @@ import { Howl, HowlOptions } from "howler";
 import stepSound1Url from "../sounds/244980__ani_music__wing-flap-flag-flapping-7a.mp3";
 import stepSound2Url from "../sounds/389634__stubb__wing-flap-1.mp3";
 import impactSound1Url from "../sounds/607667__jayroo9__pots_and_cans_33.mp3";
-import { namedInstructions } from "../../model/terms/PackedTrek";
-import { directionVec } from "../../model/sight";
+import { Instruction, namedInstructions } from "../../model/terms/PackedTrek";
+import { allKnightMoves, directionVec } from "../../model/sight";
 
 
 const stepSounds: HowlOptions[] = [
@@ -30,14 +30,14 @@ const rotationMap = {
     [namedInstructions.left]: 2,
     [namedInstructions.backward]: 3,
     [namedInstructions.right]: 0,
-    [namedInstructions.knightForwardLeft]: 2,
-    [namedInstructions.knightForwardRight]: 0,
-    [namedInstructions.knightBackwardLeft]: 2,
-    [namedInstructions.knightBackwardRight]: 0,
-    [namedInstructions.knightLeftForward]: 1,
-    [namedInstructions.knightLeftBackward]: 3,
-    [namedInstructions.knightRightForward]: 1,
-    [namedInstructions.knightRightBackward]: 3,
+    [namedInstructions.knightForwardLeft]: 1,
+    [namedInstructions.knightForwardRight]: 1,
+    [namedInstructions.knightBackwardLeft]: 3,
+    [namedInstructions.knightBackwardRight]: 3,
+    [namedInstructions.knightLeftForward]: 2,
+    [namedInstructions.knightLeftBackward]: 2,
+    [namedInstructions.knightRightForward]: 0,
+    [namedInstructions.knightRightBackward]: 0,
 };
 
 export function PlayerView({
@@ -86,31 +86,56 @@ export function PlayerView({
         <GroupSync
             onFrame={(g, frame) => {
                 if (playerAction.action?.action === "step") {
+                    const isKnightMove =
+                        (allKnightMoves as Instruction[])
+                            .includes(playerAction.action.instruction);
+                    const animationDurationSec = isKnightMove ? 0.25 : 0.125;
+
                     const dTimeSec = frame.clock.getElapsedTime() - tStart;
-                    const t = MathUtils.clamp(dTimeSec * 8, 0, 1);
+                    const t = MathUtils.clamp(
+                        dTimeSec / animationDurationSec, 0, 1);
                     if (t < 1) { invalidate(); }
 
                     const [dx, dt] =
                         directionVec[playerAction.action.instruction];
 
                     if (playerAction.ok) {
-                        const t1 = easeSinInOut(t);
-                        const t2 = t1 - 1;
-                        g.position.z = dx * t2;
-                        g.position.x = dt * t2;
+                        if (isKnightMove) {
+                            g.scale.setScalar(
+                                Math.abs(easeSinInOut(t) * 2 - 1));
+
+                            const t2 = Math.round(t) - 1;
+                            g.position.z = dx * t2;
+                            g.position.x = dt * t2;
+                        } else {
+                            const t1 = easeSinInOut(t);
+                            const t2 = t1 - 1;
+                            g.position.z = dx * t2;
+                            g.position.x = dt * t2;
+                            g.scale.setScalar(1);
+                        }
                     } else {
-                        const t1 = t * (1 - t) * (1 - t) * 2;
-                        g.position.z = dx * t1;
-                        g.position.x = dt * t1;
+                        if (isKnightMove) {
+                            g.scale.setScalar(
+                                0.3 + 0.7 * Math.abs(easeSinInOut(t) * 2 - 1));
+                            g.position.z = 0;
+                            g.position.x = 0;
+                        } else {
+                            const t1 = t * (1 - t) * (1 - t) * 2;
+                            g.position.z = dx * t1;
+                            g.position.x = dt * t1;
+                            g.scale.setScalar(1);
+                        }
                     }
                 } else {
                     g.position.z = 0;
                     g.position.x = 0;
+                    g.scale.setScalar(1);
                 }
             }}
         >
             <Character rotation={[0, rotation * Math.PI / 2, 0]} />
-            {children}
         </GroupSync>
+        {children}
     </group >;
 }
