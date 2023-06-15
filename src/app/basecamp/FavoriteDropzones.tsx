@@ -16,17 +16,19 @@ export function FavoriteDropzones({
     const setDrop = useSetDrop();
     const equipment = useRecoilValue(dropEquipmentRecoil);
 
-    return <div  {...props}>
+    return <div  {...props} css={{ display: "flex" }}>
         {favoriteDropzones.length === 0 && <>
             <Sparkles css={{ height: "8em", margin: "2em" }} />
         </>}
         <div css={[{
             display: "flex",
-            flexDirection: "row",
-            flexWrap: "wrap",
+            flexFlow: "row wrap",
+            height: "100%",
+            overflow: "auto",
         }]}>
             {favoriteDropzones.map((dropzone, i) => <div key={i} css={[{
                 position: "relative",
+                height: "fit-content",
             }]}>
                 <DropzonePreview
                     css={[{
@@ -42,7 +44,7 @@ export function FavoriteDropzones({
                     })}
                     css={[{
                         position: "absolute",
-                        bottom: "1vmin",
+                        bottom: "10%",
                         left: "50%",
                         transform: "translateX(-50%)",
                     }]}

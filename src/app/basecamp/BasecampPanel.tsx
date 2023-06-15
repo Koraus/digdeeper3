@@ -13,7 +13,7 @@ import { History } from "@emotion-icons/fa-solid/History";
 import { PlayerPanel } from "./PlayerPanel";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { languageRecoil, useResolveByLanguage, useTranslate } from "../languageRecoil";
-import { TopWorlds } from "./TopWorlds";
+import { Trending } from "./Trending";
 import { Twemoji } from "react-emoji-render";
 import { VolumeMute } from "@emotion-icons/fa-solid/VolumeMute";
 import { VolumeUp } from "@emotion-icons/fa-solid/VolumeUp";
@@ -104,7 +104,7 @@ export function BasecampPanel({
                                 <DevChoiceWorlds css={{ height: "100%" }} />
                             </TabPanel>
                             <TabPanel>
-                                <TopWorlds css={{ height: "100%" }} />
+                                <Trending css={{ height: "100%" }} />
                             </TabPanel>
                             <TabPanel>
                                 <NewDropzones css={{ height: "100%" }} />

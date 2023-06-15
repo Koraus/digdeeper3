@@ -132,4 +132,8 @@ export const translation = {
         "en": "Blick in any direction",
         "uk": "Блінк в будь-якому напрямку",
     },
+    "Reload": {
+        "en": "Reload",
+        "uk": "Перезавантажити",
+    },
 };

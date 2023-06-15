@@ -67,77 +67,80 @@ export function NewDropzones({
             flexDirection: "column",
         }, cssProp]}
         {...props}
-    >
-        <div>
-            <label>
-                {translate("Generator:")} <select
-                    value={generator}
-                    onChange={e =>
-                        setGenerator(e.target.value as keyof typeof generators)}
-                >
-                    {Object.keys(generators).map((key) => <option
-                        key={key}
-                        value={key}
-                    >{key}</option>)}
-                </select>
-            </label> =&gt; <label>
-                {translate("Count:")} &nbsp;
-                <select
-                    value={generateCount}
-                    onChange={e => setGenerateCount(Number(e.target.value))}
-                >
-                    <option value="10">10</option>
-                    <option value="30">30</option>
-                    <option value="100">100</option>
-                </select>
-            </label> =&gt; <button
-                css={[{
-                    margin: "0.9vmin 0",
-                }]}
-                onClick={() => {
-                    setDropzones(
-                        Array.from(
-                            { length: generateCount },
-                            () => generateRandomDropzone({
-                                world: generateWorld({
-                                    ca: generators[generator](caStateCount),
-                                }),
-                            })));
-                }}> (Re-)generate </button>
-            <br />
-            <label>
-                <input type="checkbox"
-                    onChange={() =>
-                        setIsCompositionFiltered(!isCompositionFiltered)} />
-                {translate("filter rock in")} {JSON.stringify(rockRange)}
-                &nbsp;{translate("and energy in")} {JSON.stringify(energyRange)}
-            </label>
-        </div>
-        <div css={[{
-            flexShrink: 1,
-            display: "flex",
-            flexFlow: "row wrap",
-            overflow: "auto",
-        }]}>
-            {filteredDropzones.map((dropzone, i) => <div key={i} css={[{
-                position: "relative",
+    > <div css={{ height: "100%", overflow: "auto" }}>
+            <div>
+                <label>
+                    {translate("Generator:")} <select
+                        value={generator}
+                        onChange={e =>
+                            setGenerator(e.target.value as
+                                keyof typeof generators)}
+                    >
+                        {Object.keys(generators).map((key) => <option
+                            key={key}
+                            value={key}
+                        >{key}</option>)}
+                    </select>
+                </label> =&gt; <label>
+                    {translate("Count:")} &nbsp;
+                    <select
+                        value={generateCount}
+                        onChange={e => setGenerateCount(Number(e.target.value))}
+                    >
+                        <option value="10">10</option>
+                        <option value="30">30</option>
+                        <option value="100">100</option>
+                    </select>
+                </label> =&gt; <button
+                    css={[{
+                        margin: "0.9vmin 0",
+                    }]}
+                    onClick={() => {
+                        setDropzones(
+                            Array.from(
+                                { length: generateCount },
+                                () => generateRandomDropzone({
+                                    world: generateWorld({
+                                        ca: generators[generator](caStateCount),
+                                    }),
+                                })));
+                    }}> (Re-)generate </button>
+                <br />
+                <label>
+                    <input type="checkbox"
+                        onChange={() =>
+                            setIsCompositionFiltered(!isCompositionFiltered)} />
+                    {translate("filter rock in")} {JSON.stringify(rockRange)}
+                    &nbsp;{translate("and energy in")}
+                    {JSON.stringify(energyRange)}
+                </label>
+            </div>
+            <div css={[{
+                flexShrink: 1,
+                display: "flex",
+                flexFlow: "row wrap",
             }]}>
-                <DropzonePreview
-                    css={[{
-                        margin: "0.1vmin",
-                    }]}
-                    dropzone={dropzone} />
-                <button
-                    css={[{
-                        position: "absolute",
-                        bottom: "1vmin",
-                        left: "50%",
-                        transform: "translateX(-50%)",
-                    }]}
-                    onClick={() => setDropzone(dropzone)}
-                >  <Hiking css={{ height: "1em", marginTop: "-0.2em" }} />
-                    &nbsp;Go!</button>
-            </div>)}
+                {filteredDropzones.map((dropzone, i) => <div key={i} css={[{
+                    position: "relative",
+                    height: "fit-content",
+                }]}>
+                    <DropzonePreview
+                        css={[{
+                            margin: "0.1vmin",
+                        }]}
+                        dropzone={dropzone} />
+                    <button
+                        css={[{
+                            position: "absolute",
+                            bottom: "10%",
+                            left: "50%",
+                            transform: "translateX(-50%)",
+                        }]}
+                        onClick={() => setDropzone(dropzone)}
+                    >  <Hiking css={{ height: "1em", marginTop: "-0.2em" }} />
+                        &nbsp;Go!</button>
+                </div>)}
+            </div>
         </div>
     </div>;
 }

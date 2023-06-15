@@ -17,35 +17,42 @@ export function HistoricalDrops({
         {historicalWorlds.length === 0 && <>
             <Sparkles css={{ height: "8em", margin: "2em" }} />
         </>}
-        <div css={[{
-            listStyle: "none",
-            display: "flex",
-            flexDirection: "row",
-            flexWrap: "wrap",
-        }]}>
-            {historicalWorlds
-                .slice(0, 10)
-                .map((drop, i) => <div
-                    key={i}
-                    css={[{
-                        position: "relative",
-                    }]}>
-                    <DropzonePreview
+        <div css={{ display: "flex", height: "100%" }}>
+            <div css={[{
+                listStyle: "none",
+                display: "flex",
+                flexDirection: "row",
+                flexWrap: "wrap",
+                overflow: "auto",
+            }]}>
+                {historicalWorlds
+                    .slice(0, 10)
+                    .map((drop, i) => <div
+                        key={i}
                         css={[{
-                            margin: "0.1vmin",
-                        }]}
-                        dropzone={drop.zone} />
-                    <button
-                        css={[{
-                            position: "absolute",
-                            bottom: "1vmin",
-                            left: "50%",
-                            transform: "translateX(-50%)",
-                        }]}
-                        onClick={() => setDrop(drop)}
-                    >  <Hiking css={{ height: "1em", marginTop: "-0.2em" }} />
-                        &nbsp;Go!</button>
-                </div>)}
+                            position: "relative",
+                            height: "fit-content",
+                        }]}>
+                        <DropzonePreview
+                            css={[{
+                                margin: "0.1vmin",
+                            }]}
+                            dropzone={drop.zone} />
+                        <button
+                            css={[{
+                                position: "absolute",
+                                bottom: "10%",
+                                left: "50%",
+                                transform: "translateX(-50%)",
+                            }]}
+                            onClick={() => setDrop(drop)}
+                        >  <Hiking css={{
+                            height: "1em",
+                            marginTop: "-0.2em",
+                        }} />
+                            &nbsp;Go!</button>
+                    </div>)}
+            </div>
         </div>
     </div>;
 }
