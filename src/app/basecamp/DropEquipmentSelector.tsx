@@ -92,7 +92,7 @@ export function DropEquipmentSelector({
             <br />- {[
                 translate("No blink"),
                 translate("Blink forward-left or forward-right"),
-                translate("Blick in any direction"),
+                translate("Blink in any direction"),
             ][dropEquipment.knightMoveLevel]}
         </div>
     </div>;
