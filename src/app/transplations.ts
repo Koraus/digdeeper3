@@ -136,4 +136,8 @@ export const translation = {
         "en": "Reload",
         "uk": "Перезавантажити",
     },
+    "Drop Stats": {
+        "en": "Drop Stats",
+        "uk": "Статистика",
+    },
 };

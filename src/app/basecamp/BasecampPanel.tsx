@@ -19,6 +19,8 @@ import { VolumeMute } from "@emotion-icons/fa-solid/VolumeMute";
 import { VolumeUp } from "@emotion-icons/fa-solid/VolumeUp";
 import { muteSoundsRecoil } from "../muteSoundsRecoil";
 import { TrendingUp } from "@emotion-icons/boxicons-regular/TrendingUp";
+import { DropStats } from "./DropStats";
+import { ChartBar } from "@emotion-icons/fa-solid/ChartBar";
 
 
 export function BasecampPanel({
@@ -94,6 +96,10 @@ export function BasecampPanel({
                                     <History css={iconStyle} />&nbsp;
                                     {translate("History")}
                                 </Tab>
+                                <Tab>
+                                    <ChartBar css={iconStyle} />&nbsp;
+                                    {translate("Drop Stats")}
+                                </Tab>
                             </div>
                         </TabList>
                         <div css={[{
@@ -114,6 +120,9 @@ export function BasecampPanel({
                             </TabPanel>
                             <TabPanel>
                                 <HistoricalDrops css={{ height: "100%" }} />
+                            </TabPanel>
+                            <TabPanel>
+                                <DropStats css={{ height: "100%" }} />
                             </TabPanel>
                         </div>
                     </div>
