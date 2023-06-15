@@ -41,25 +41,25 @@ export function DevChoiceWorlds({
             devChoiceWorlds.map((world) => generateRandomDropzone({ world })));
     }
     return <div {...props}>
-        <button
-            css={[{
-                margin: "0.9vmin 0",
-            }]}
-            onClick={() =>
-                setDropzones(
-                    devChoiceWorlds.map((world) =>
-                        generateRandomDropzone({ world })))
-            }> {translate("Reroll")} </button>
         {dropzones
-            && <div css={{ display: "flex", height: "100%" }}>
+            && <div css={{ height: "100%", overflow: "auto" }}>
+                <button
+                    css={[{
+                        margin: "0.9vmin 0",
+                    }]}
+                    onClick={() =>
+                        setDropzones(
+                            devChoiceWorlds.map((world) =>
+                                generateRandomDropzone({ world })))
+                    }> {translate("Reroll")} </button>
                 <div css={[{
                     display: "flex",
                     flexDirection: "row",
                     flexWrap: "wrap",
-                    overflow: "auto",
                 }]}>
                     {dropzones.map((dropzone, i) => <div key={i} css={[{
                         position: "relative",
+                        height: "fit-content",
                     }]}>
                         <DropzonePreview
                             css={[{
@@ -69,7 +69,7 @@ export function DevChoiceWorlds({
                         <button
                             css={[{
                                 position: "absolute",
-                                bottom: "1vmin",
+                                bottom: "10%",
                                 left: "50%",
                                 transform: "translateX(-50%)",
                             }]}

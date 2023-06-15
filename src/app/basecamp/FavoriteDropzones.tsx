@@ -21,10 +21,12 @@ export function FavoriteDropzones({
         <div css={[{
             display: "flex",
             flexFlow: "row wrap",
+            height: "100%",
             overflow: "auto",
         }]}>
             {favoriteDropzones.map((dropzone, i) => <div key={i} css={[{
                 position: "relative",
+                height: "fit-content",
             }]}>
                 <DropzonePreview
                     css={[{
@@ -42,7 +44,7 @@ export function FavoriteDropzones({
                     })}
                     css={[{
                         position: "absolute",
-                        bottom: "1vmin",
+                        bottom: "10%",
                         left: "50%",
                         transform: "translateX(-50%)",
                     }]}

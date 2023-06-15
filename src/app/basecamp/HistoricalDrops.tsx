@@ -31,6 +31,7 @@ export function HistoricalDrops({
                         key={i}
                         css={[{
                             position: "relative",
+                            height: "fit-content",
                         }]}>
                         <DropzonePreview
                             css={[{
@@ -40,7 +41,7 @@ export function HistoricalDrops({
                         <button
                             css={[{
                                 position: "absolute",
-                                bottom: "1vmin",
+                                bottom: "10%",
                                 left: "50%",
                                 transform: "translateX(-50%)",
                             }]}

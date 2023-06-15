@@ -119,6 +119,10 @@ export const translation = {
         "en": "controls help",
         "uk": "управління",
     },
+    "Reload": {
+        "en": "Reload",
+        "uk": "Перезавантажити",
+    },
 };
 
 const resolveByLanguage = <T>(
