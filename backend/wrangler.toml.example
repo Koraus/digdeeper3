@@ -14,6 +14,11 @@ kv_namespaces = [
     { binding = "KV1", id = "<fill in>" }
 ]
 
+[vars]
+# The necessary secrets are:
+# - DATESEED_SECRET
+# Run `echo <VALUE> | wrangler secret put <NAME>` for each of these
+
 [durable_objects]
 bindings = [{name = "CHAINER", class_name = "Chainer"}]
 

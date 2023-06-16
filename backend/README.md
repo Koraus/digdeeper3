@@ -6,4 +6,6 @@ For deployment,
 
 - copy or rename `wrangler.toml.example` -> `wrangler.toml` and fill in the marked fields there
 
+- add secrets as described in `wrangler.toml`
+
 - deploy using `npx wrangler deploy`

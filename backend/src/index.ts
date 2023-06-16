@@ -1,11 +1,18 @@
 import "@rauschma/iterator-helpers-polyfill/install";
 import { Env } from "./Env";
 import { _throw } from "../../src/utils/_throw";
-import { router } from "./router";
 import { error } from "itty-router";
+import { Router, status } from "itty-router";
+import { addHidKvRoutes } from "./addHidKvRoutes";
+import { addTrekRoutes } from "./addTrekRoutes";
+import { addDateseedRoutes } from "./addDateseedRoutes";
 
 
-export { Chainer } from "./Chainer";
+const router = Router();
+router.options("*", () => status(204));
+addHidKvRoutes(router);
+addTrekRoutes(router);
+addDateseedRoutes(router);
 
 export default {
     fetch: (request: Request, env: Env) => router
@@ -28,3 +35,6 @@ export default {
             return error(500, err instanceof Error ? err.stack : err);
         }),
 };
+
+
+export { Chainer } from "./Chainer";
