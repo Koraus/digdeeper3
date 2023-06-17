@@ -11,7 +11,9 @@ import { generateWorld } from "../model/generate";
 import { generateRandomSymmetricalRule } from "../ca/generateRandomSymmetricalRule";
 import { useSetDropzone } from "./basecamp/useSetDropzone";
 import { useTranslate } from "./languageRecoil";
-
+import { _throw } from "../utils/_throw";
+import { NewGameInCuratedDailyDropzoneButton } from "./NewGameInCuratedDailyDropzoneButton";
+import { NewGameInWildDailyDropzoneButton } from "./NewGameInWildDailyDropzoneButton";
 
 
 export function NewGameButtonsPanel({
@@ -25,56 +27,68 @@ export function NewGameButtonsPanel({
 
     return <div css={[{
         display: "flex",
-        flexFlow: "row nowrap",
+        flexFlow: "column nowrap",
     }, cssProp]} {...props}>
-        <button
-            onClick={() => setDrop(drop)}
-            css={[{
-                display: "flex",
-                alignItems: "center",
-            }]}
-        >
-            <RestartAlt
+        <div css={[{
+            display: "flex",
+            flexFlow: "row nowrap",
+        }]}>
+            <button
+                onClick={() => setDrop(drop)}
                 css={[{
-                    width: "2vmin",
-                    marginRight: "0.4vmin",
-                }]} />
-            {translate("Restart")}
-        </button>
-        <button
-            css={[{
-                display: "flex",
-                alignItems: "center",
-            }]}
-            onClick={() => setDropzone(generateRandomDropzone({
-                world: drop.zone.world,
-            }))}
-        >
-            <PinDrop
+                    display: "flex",
+                    alignItems: "center",
+                }]}
+            >
+                <RestartAlt
+                    css={[{
+                        width: "2vmin",
+                        marginRight: "0.4vmin",
+                    }]} />
+                {translate("Restart")}
+            </button>
+            <button
                 css={[{
-                    width: "2vmin",
-                    marginRight: "0.4vmin",
-                }]} />
-            {translate("New Dropzone")}
-        </button>
-        <button
-            css={[{
-                display: "flex",
-                alignItems: "center",
-            }]}
-            onClick={() => setDropzone(generateRandomDropzone({
-                world: generateWorld({
-                    // todo use gen rules from "NewDropzones" here
-                    ca: generateRandomSymmetricalRule(caStateCount),
-                }),
-            }))}
-        >
-            <World
+                    display: "flex",
+                    alignItems: "center",
+                }]}
+                onClick={() => setDropzone(generateRandomDropzone({
+                    world: drop.zone.world,
+                }))}
+            >
+                <PinDrop
+                    css={[{
+                        width: "2vmin",
+                        marginRight: "0.4vmin",
+                    }]} />
+                {translate("New Dropzone")}
+            </button>
+            <button
                 css={[{
-                    width: "2vmin",
-                    marginRight: "0.4vmin",
-                }]} />
-            {translate("New World")}
-        </button>
+                    display: "flex",
+                    alignItems: "center",
+                }]}
+                onClick={() => setDropzone(generateRandomDropzone({
+                    world: generateWorld({
+                        // todo use gen rules from "NewDropzones" here
+                        ca: generateRandomSymmetricalRule(caStateCount),
+                    }),
+                }))}
+            >
+                <World
+                    css={[{
+                        width: "2vmin",
+                        marginRight: "0.4vmin",
+                    }]} />
+                {translate("New World")}
+            </button>
+        </div>
+        <div css={[{
+            display: "flex",
+            flexFlow: "row nowrap",
+        }]}>
+            <NewGameInCuratedDailyDropzoneButton />
+            <NewGameInWildDailyDropzoneButton />
+        </div>
     </div>;
 }

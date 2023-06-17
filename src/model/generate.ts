@@ -36,14 +36,16 @@ export function generateWorld({
     } as World;
 }
 
-export const generateRandomDropzone = ({
+export const generateDropzone = ({
     world,
+    seed,
 }: {
-    world: World,
+    world: World;
+    seed: number;
 }): Dropzone => ({
     v: version,
     world,
-    seed: Math.floor(Math.random() * LehmerPrng.MAX_INT32),
+    seed,
     width: 51,
     startFillState: (() => {
         const composition = getComposition(world.ca);
@@ -55,4 +57,14 @@ export const generateRandomDropzone = ({
 
         return grass;
     })(),
+});
+
+
+export const generateRandomDropzone = ({
+    world,
+}: {
+    world: World,
+}): Dropzone => generateDropzone({
+    world,
+    seed: Math.floor(Math.random() * LehmerPrng.MAX_INT32),
 });

@@ -140,4 +140,12 @@ export const translation = {
         "en": "Drop Stats",
         "uk": "Статистика",
     },
+    "Daily Game": {
+        "en": "Daily Game",
+        "uk": "Щоденна гра",
+    },
+    "Wild Daily Game": {
+        "en": "Wild Daily Game",
+        "uk": "Дика щоденна гра",
+    },
 };

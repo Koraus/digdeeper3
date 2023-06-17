@@ -1,6 +1,5 @@
-import { Router, error, json, status } from "itty-router";
+import { RouterType, json } from "itty-router";
 import { Env } from "./Env";
-import { _throw } from "../../src/utils/_throw";
 import { clientifyRoutedStub } from "./RoutedDurableObject";
 import { hidFor } from "./hidFor";
 import { Chainer } from "./Chainer";
@@ -17,26 +16,7 @@ function getChainerStub(
     return clientifyRoutedStub<Chainer>(stub);
 }
 
-export const router = Router();
-
-router
-    .options("*", () => status(204))
-    .get("/hid_kv/:hid/:ctype?", async ({ params: {
-        hid, ctype,
-    } }, env: Env) => {
-        const value = await env.HID_KV.get(hid, { type: "stream" });
-        if (value === null) {
-            return error(404, `Value for \`${hid}\` not found`);
-        }
-        return new Response(value, {
-            headers: {
-                ...(ctype === "json" ? {
-                    "Content-Type": "application/json",
-                } : {}),
-                "Cache-Control": "public, max-age=31536000, immutable",
-            },
-        });
-    })
+export const addTrekRoutes = (router: RouterType) => router
     .post("/trek/", async (req, env: Env) => {
         const content = await req.json();
 
