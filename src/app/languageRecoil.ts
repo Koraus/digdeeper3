@@ -1,6 +1,6 @@
 import { atom, useRecoilValue } from "recoil";
 import { localStorageAtomEffect } from "../utils/reactish/localStorageAtomEffect";
-import { translation } from "./transplations";
+import { translation } from "./translation";
 
 
 
