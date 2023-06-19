@@ -3,7 +3,6 @@ import { generateDropzone, generateWorld } from "../model/generate";
 import { jsx, keyframes } from "@emotion/react";
 import { useSetDropzone } from "./basecamp/useSetDropzone";
 import { useTranslate } from "./languageRecoil";
-import usePromise from "react-use-promise";
 import { LoaderCircle } from "@emotion-icons/boxicons-regular/LoaderCircle";
 import { Error as ErrorIcon } from "@emotion-icons/boxicons-solid/Error";
 import { HmacSHA256 } from "crypto-js";
@@ -11,6 +10,7 @@ import { generateRandomRule } from "../ca/generateRandomRule";
 import { createCryptoRandom } from "../utils/createCryptoRandom";
 import { caStateCount } from "../model/terms/World";
 import { _never } from "../utils/_never";
+import { useDailyDateseed } from "./fetchDateseed";
 
 
 
@@ -19,17 +19,7 @@ export function NewGameInWildDailyDropzoneButton({
 }: jsx.JSX.IntrinsicElements["button"]) {
     const translate = useTranslate();
     const setDropzone = useSetDropzone();
-    const dayDatetime =
-        new Date().toISOString().split("T")[0] + "T00:00:00.000Z";
-    const [dailySeed, dailySeedError, dailySeedStatus] = usePromise(
-        async () => {
-            const url = `https://dd3.x-pl.art/dateseed/${dayDatetime}`;
-            const response = await fetch(url);
-            const dailySeed = await response.text();
-            // console.log({ dailySeed: dailySeed });
-            return dailySeed;
-        },
-        [dayDatetime]);
+    const [dailySeed, dailySeedError, dailySeedStatus] = useDailyDateseed();
     const newGameInCuratedDailyDropzone = () => {
         if (!dailySeed) { return _never(); }
         setDropzone(generateDropzone({

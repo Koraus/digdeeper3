@@ -25,10 +25,8 @@ import { DisclaimerPanel as _DisclaimerPanel } from "./DisclaimerPanel";
 import { CheckboxWarning as DisclaimerIcon } from "@emotion-icons/fluentui-system-regular/CheckboxWarning";
 import { levelProgressRecoil } from "./levelProgressRecoil";
 import { usePlayerControls } from "./usePlayerControls";
-import { useSetDropzone } from "./basecamp/useSetDropzone";
-import { generateRandomDropzone } from "../model/generate";
-import { devChoiceWorlds } from "./basecamp/DevChoiceWorlds";
 import { KnightMovesButtonsPanel } from "./KnightMovesButtonsPanel";
+import { useSetInitialDropzoneEffect } from "./useSetInitialDropzoneEffect";
 
 
 const eqStringify = <T,>(p: T, n: T) =>
@@ -60,18 +58,7 @@ const DisclaimerPanel = memo(_DisclaimerPanel, eqStringify);
 
 
 export function App() {
-    {
-        // set the very first world once on start
-        const randomEl = <T,>(arr: readonly T[]) =>
-            arr[Math.floor(Math.random() * arr.length)];
-        const setDropzone = useSetDropzone();
-        useEffect(() => {
-            setDropzone(generateRandomDropzone({
-                world: randomEl(devChoiceWorlds),
-            }));
-        }, []);
-    }
-
+    const ready = useSetInitialDropzoneEffect();
 
     const [isBasecampShown, setIsBasecampShown] = useState(false);
     const [mapShowState, setMapShowState] = useState(0);
@@ -103,6 +90,8 @@ export function App() {
     const [isDisclaimerShown, setIsDisclaimerShown] = useState(false);
 
     usePlayerControls();
+
+    if (!ready) { return "..."; }
 
     return <div
         css={{
