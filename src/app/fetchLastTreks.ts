@@ -1,4 +1,5 @@
 import { PackedTrek } from "../model/terms/PackedTrek";
+import { fetchByHidMemoized } from "./fetchByHid";
 
 type Block = { prev?: string, hids: string[] };
 
@@ -8,20 +9,21 @@ async function fetchTrekOpenBlock() {
     return result as Block;
 }
 
-const fetchByHid = async (hid: string) =>
-    (await fetch(`https://dd3.x-pl.art/hid_kv/${hid}/json`)).json();
-
 export async function fetchLastTreks(limit = 1000) {
     let block = await fetchTrekOpenBlock();
 
-    const treks: PackedTrek[] = await Promise.all(block.hids.map(fetchByHid));
+    const treks: PackedTrek[] =
+        await Promise.all(block.hids.map(fetchByHidMemoized));
 
     while (treks.length < limit && block.prev) {
-        block = await fetchByHid(block.prev) as Block;
+        block = await fetchByHidMemoized(block.prev) as Block;
         treks.unshift(...(
-            await Promise.all(block.hids.map(fetchByHid)) as PackedTrek[]
+            await Promise.all(
+                block.hids
+                    .slice(0, limit - treks.length)
+                    .map(fetchByHidMemoized)) as PackedTrek[]
         ));
     }
 
-    return treks.slice(-limit);
+    return treks;
 }
