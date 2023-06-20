@@ -4,8 +4,9 @@ import { Grass } from "./Grass";
 import { Rock } from "./Rock";
 import { Bricks } from "./Bricks";
 import { Pickable, PickablePick } from "./Pickable";
-import { Color, Matrix4, Quaternion, Vector3 } from "three";
+import { Color as ThreeColor, Matrix4, Quaternion, Vector3 } from "three";
 import { epxandedSight } from "./CellsView";
+import Color from "color";
 
 
 
@@ -14,139 +15,102 @@ const _v3s = Array.from({ length: 3 }, () => new Vector3());
 const _qs = Array.from({ length: 3 }, () => new Quaternion());
 
 
-const autoColorTheme = ({ rockColor, grassColor, energyColor,
+const autoColorTheme = ({
+    rockColor, grassColor, energyColor,
 }: {
-    rockColor: string,
-    grassColor: string,
-    energyColor: string
+    rockColor: Color,
+    grassColor: Color,
+    energyColor: Color,
 }) => {
+    const surfaceRockColor = Color.hsv(
+        rockColor.hue(),
+        rockColor.saturationv(),
+        rockColor.value() * 0.7);
 
-    const toRGBArray = (rgbStr: string) => {
-        const matches = rgbStr.match(/\d+/g);
-        if (matches !== null) {
-            return matches.map(Number);
-        }
-        return [];
-    };
+    const surfaceGrassColor = Color.hsv(
+        grassColor.hue(),
+        grassColor.saturationv(),
+        grassColor.value() * 0.7);
 
-    const rgb2hsv = (rgb: number[]): number[] => {
-        const [r, g, b] = rgb;
-        const v = Math.max(r, g, b);
-        const c = v - Math.min(r, g, b);
-        const h = c && ((v == r)
-            ? (g - b) / c : ((v == g)
-                ? 2 + (b - r) / c : 4 + (r - g) / c));
-        return [60 * (h < 0 ? h + 6 : h), v && c / v, v];
-    };
+    const surfaceEnergyColor = Color.hsv(
+        energyColor.hue(),
+        energyColor.saturationv(),
+        energyColor.value() * 0.7);
 
-    const hsv2rgb = (hsv: number[]): string => {
-        const [h, s, v] = hsv;
-        const f = (n: number, k = (n + h / 60) % 6) =>
-            v - v * s * Math.max(Math.min(k, 4 - k, 1), 0);
-        return `rgb(${Math.round(f(5))}, 
-        ${Math.round(f(3))}, ${Math.round(f(1))})`;
-    };
-
-    const surfaceRockColor = () => {
-        const rockColorHSV = rgb2hsv(toRGBArray(rockColor));
-        const rockColorRGB = hsv2rgb(
-            [rockColorHSV[0],
-            rockColorHSV[1],
-            (rockColorHSV[2] * 0.7)]);
-        return rockColorRGB;
-    };
-
-    const surfaceGrassColor = () => {
-        const grassColorHSV = rgb2hsv(toRGBArray(grassColor));
-        const grassColorRGB = hsv2rgb(
-            [grassColorHSV[0]
-                , grassColorHSV[1],
-            (grassColorHSV[2] * 0.7)]);
-        return grassColorRGB;
-    };
-
-    const surfaceEnergyColor = () => {
-        const energyColorHSV = rgb2hsv(toRGBArray(energyColor));
-        const energyColorRGB = hsv2rgb(
-            [energyColorHSV[0],
-            energyColorHSV[1],
-            (energyColorHSV[2] * 0.7)]);
-        return energyColorRGB;
-    };
-
-    const bricksColor = () => {
-        const color = rgb2hsv(toRGBArray(rockColor));
-        const colorRGB = hsv2rgb([color[0], 0.2, 150]);
-        return colorRGB;
-    };
+    const bricksColor = Color.hsv(
+        rockColor.hue(),
+        20,
+        50);
 
     const colorTheme = {
         rock: {
-            mainColor: new Color(rockColor),
+            mainColor: new ThreeColor(rockColor.toString()),
             snowColor: undefined,
         },
-        grass: new Color(grassColor),
-        pickable: new Color(energyColor),
+        grass: new ThreeColor(grassColor.toString()),
+        pickable: new ThreeColor(energyColor.toString()),
         surface: {
-            rock: new Color(surfaceRockColor()),
-            grass: new Color(surfaceGrassColor()),
-            energy: new Color(surfaceEnergyColor()),
+            rock: new ThreeColor(surfaceRockColor.toString()),
+            grass: new ThreeColor(surfaceGrassColor.toString()),
+            energy: new ThreeColor(surfaceEnergyColor.toString()),
             thickness: 2,
         },
-        bricks: new Color(bricksColor()),
+        bricks: new ThreeColor(bricksColor.toString()),
     };
 
     return colorTheme;
 };
 
-// const colorThemes = [autoColorTheme({
-//     rockColor: "rgb(180, 60, 98)",
-//     energyColor: "rgb(101, 93, 195)",
-//     grassColor: "rgb(115, 170, 198)",
-// })]
+const colorThemes1 = [
+    autoColorTheme({
+        rockColor: new Color("rgb(180, 60, 98)"),
+        energyColor: new Color("rgb(101, 93, 195)"),
+        grassColor: new Color("rgb(115, 170, 198)"),
+    }),
+];
 
 const colorThemes = [{
     // floating world draft
     rock: undefined,
-    grass: new Color("#90ea67"),
-    pickable: new Color("#b635d3"),
+    grass: new ThreeColor("#90ea67"),
+    pickable: new ThreeColor("#b635d3"),
     surface: {
         rock: undefined,
-        grass: new Color("#d8dd76"),
-        energy: new Color("#ffc57a"),
+        grass: new ThreeColor("#d8dd76"),
+        energy: new ThreeColor("#ffc57a"),
         thickness: 0.4,
     },
-    bricks: new Color("#ff8968"),
+    bricks: new ThreeColor("#ff8968"),
 }, {
     // earth-like vegetation of mideteranian climate
     rock: {
-        mainColor: new Color("#2e444f"),
+        mainColor: new ThreeColor("#2e444f"),
         snowColor: undefined,
     },
-    grass: new Color("#90ea67"),
-    pickable: new Color("#b635d3"),
+    grass: new ThreeColor("#90ea67"),
+    pickable: new ThreeColor("#b635d3"),
     surface: {
-        rock: new Color("#576c6e"),
-        grass: new Color("#d8dd76"),
-        energy: new Color("#ffc57a"),
+        rock: new ThreeColor("#576c6e"),
+        grass: new ThreeColor("#d8dd76"),
+        energy: new ThreeColor("#ffc57a"),
         thickness: 2,
     },
-    bricks: new Color("#ff8968"),
+    bricks: new ThreeColor("#ff8968"),
 }, {
     // [name]
     rock: {
-        mainColor: new Color("#782881"),
+        mainColor: new ThreeColor("#782881"),
         snowColor: undefined,
     },
-    grass: new Color("#980843"),
-    pickable: new Color("#61C3EA"),
+    grass: new ThreeColor("#980843"),
+    pickable: new ThreeColor("#61C3EA"),
     surface: {
-        rock: new Color("#2d282e"),
-        grass: new Color("#6a3e4f"),
-        energy: new Color("#a947b4"),
+        rock: new ThreeColor("#2d282e"),
+        grass: new ThreeColor("#6a3e4f"),
+        energy: new ThreeColor("#a947b4"),
         thickness: 2,
     },
-    bricks: new Color("#bf4967"),
+    bricks: new ThreeColor("#bf4967"),
 }, {
     //     // snowy -- tbd
     //     rock: {
@@ -166,48 +130,48 @@ const colorThemes = [{
     // }, {
     // cherry
     rock: {
-        mainColor: new Color("#670471"),
+        mainColor: new ThreeColor("#670471"),
         snowColor: undefined,
     },
-    grass: new Color("#cb276c"),
-    pickable: new Color("#61C3EA"),
+    grass: new ThreeColor("#cb276c"),
+    pickable: new ThreeColor("#61C3EA"),
     surface: {
-        rock: new Color("#66356b"),
-        grass: new Color("#ce6d95"),
-        energy: new Color("#ca7aa9"),
+        rock: new ThreeColor("#66356b"),
+        grass: new ThreeColor("#ce6d95"),
+        energy: new ThreeColor("#ca7aa9"),
         thickness: 2,
     },
-    bricks: new Color("#bf4967"),
+    bricks: new ThreeColor("#bf4967"),
 }, {
     // mossy
     rock: {
-        mainColor: new Color("#5a3b4d"),
-        snowColor: new Color("#0e8960"),
+        mainColor: new ThreeColor("#5a3b4d"),
+        snowColor: new ThreeColor("#0e8960"),
     },
-    grass: new Color("#98d06d"),
-    pickable: new Color("#ff4a98"),
+    grass: new ThreeColor("#98d06d"),
+    pickable: new ThreeColor("#ff4a98"),
     surface: {
-        rock: new Color("#97858f"),
-        grass: new Color("#c9cf79"),
-        energy: new Color("#cfc279"),
+        rock: new ThreeColor("#97858f"),
+        grass: new ThreeColor("#c9cf79"),
+        energy: new ThreeColor("#cfc279"),
         thickness: 2,
     },
-    bricks: new Color("#938572"),
+    bricks: new ThreeColor("#938572"),
 }, {
     // Alien Planet
     rock: {
-        mainColor: new Color("#6c6356"),
+        mainColor: new ThreeColor("#6c6356"),
         snowColor: undefined,
     },
-    grass: new Color("#175051"),
-    pickable: new Color("#5cf1f4"),
+    grass: new ThreeColor("#175051"),
+    pickable: new ThreeColor("#5cf1f4"),
     surface: {
-        rock: new Color("#151f3b"),
-        grass: new Color("#2a3246"),
-        energy: new Color("#3d4866"),
+        rock: new ThreeColor("#151f3b"),
+        grass: new ThreeColor("#2a3246"),
+        energy: new ThreeColor("#3d4866"),
         thickness: 2,
     },
-    bricks: new Color("#155b84"),
+    bricks: new ThreeColor("#155b84"),
 }] as const;
 
 export function Cell(ctx: LayoutContext) {
