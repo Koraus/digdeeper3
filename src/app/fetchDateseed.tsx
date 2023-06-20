@@ -13,7 +13,10 @@ export async function fetchDateseed(datetime: Date | string) {
 }
 
 export const fetchDailyDateseed = () =>
-    fetchDateseed(new Date().toISOString().split("T")[0] + "T00:00:00.000Z");
+    fetchDateseed(new Date().toISOString().slice(0, 10) + "T00:00:00.000Z");
+
+export const fetchMonthlyDateseed = () =>
+    fetchDateseed(new Date().toISOString().slice(0, 7) + "-01T00:00:00.000Z");
 
 export const useDailyDateseed = () => {
     const [refreshTrigger, setRefreshTrigger] = useState(0);
@@ -35,4 +38,26 @@ export const useDailyDateseed = () => {
     return usePromise(
         () => fetchDateseed(dayDatetime),
         [dayDatetime]);
+};
+
+export const useMonthlyDateseed = () => {
+    const [refreshTrigger, setRefreshTrigger] = useState(0);
+    const weekDatetime =
+        new Date().toISOString().slice(0, 7) + "-01T00:00:00.000Z";
+    useEffect(() => {
+        // to avoid dealing with time calculations,
+        // just run a simple date check every minute
+        const h = setInterval(
+            () => {
+                const dayDatetime1 =
+                    new Date().toISOString().slice(0, 7) + "-01T00:00:00.000Z";
+                if (dayDatetime1 === weekDatetime) { return; }
+                setRefreshTrigger(refreshTrigger + 1);
+            },
+            1 * 60 * 1000);
+        return () => clearTimeout(h);
+    }, []);
+    return usePromise(
+        () => fetchDateseed(weekDatetime),
+        [weekDatetime]);
 };

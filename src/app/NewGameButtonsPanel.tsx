@@ -14,6 +14,8 @@ import { useTranslate } from "./languageRecoil";
 import { _throw } from "../utils/_throw";
 import { NewGameInCuratedDailyDropzoneButton } from "./NewGameInCuratedDailyDropzoneButton";
 import { NewGameInWildDailyDropzoneButton } from "./NewGameInWildDailyDropzoneButton";
+import { NewGameInCuratedMonthlyDropzoneButton } from "./NewGameInCuratedMonthlyDropzoneButton";
+import { NewGameInWildMonthlyDropzoneButton } from "./NewGameInWildMonthlyDropzoneButton";
 
 
 export function NewGameButtonsPanel({
@@ -89,6 +91,13 @@ export function NewGameButtonsPanel({
         }]}>
             <NewGameInCuratedDailyDropzoneButton />
             <NewGameInWildDailyDropzoneButton />
+        </div>
+        <div css={[{
+            display: "flex",
+            flexFlow: "row nowrap",
+        }]}>
+            <NewGameInCuratedMonthlyDropzoneButton />
+            <NewGameInWildMonthlyDropzoneButton />
         </div>
     </div>;
 }

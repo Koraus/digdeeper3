@@ -8,29 +8,29 @@ import { Error as ErrorIcon } from "@emotion-icons/boxicons-solid/Error";
 import { HmacSHA256 } from "crypto-js";
 import { devChoiceWorlds } from "./basecamp/DevChoiceWorlds";
 import { _never } from "../utils/_never";
-import { useDailyDateseed } from "./fetchDateseed";
+import { useMonthlyDateseed } from "./fetchDateseed";
 
 
-export function generateCuratedDailyDropzone(dailySeed: string) {
+export function generateCuratedMonthlyDropzone(dailySeed: string) {
     const worldIndexSeed =
-        HmacSHA256(dailySeed, "curatedDaily.worldIndexSeed").words[0] >>> 0;
+        HmacSHA256(dailySeed, "curatedMonthly.worldIndexSeed").words[0] >>> 0;
     return generateDropzone({
         world: devChoiceWorlds[worldIndexSeed % devChoiceWorlds.length],
 
         // make it 31 bit to fit positive int32,
         // todo: fix/change prng to use full uint32 range
         seed:
-            HmacSHA256(dailySeed, "curatedDaily.dropzoneSeed")
+            HmacSHA256(dailySeed, "curatedMonthly.dropzoneSeed")
                 .words[0] >>> 1,
     });
 }
 
-export function NewGameInCuratedDailyDropzoneButton({
+export function NewGameInCuratedMonthlyDropzoneButton({
     css: cssProp, ...props
 }: jsx.JSX.IntrinsicElements["button"]) {
     const translate = useTranslate();
     const setDropzone = useSetDropzone();
-    const [dailySeed, dailySeedError, dailySeedStatus] = useDailyDateseed();
+    const [dailySeed, dailySeedError, dailySeedStatus] = useMonthlyDateseed();
     return <button
         css={[{
             display: "flex",
@@ -40,7 +40,7 @@ export function NewGameInCuratedDailyDropzoneButton({
             if (!dailySeed) {
                 return _never("The button is expected to be disabled");
             }
-            setDropzone(generateCuratedDailyDropzone(dailySeed));
+            setDropzone(generateCuratedMonthlyDropzone(dailySeed));
         }}
         disabled={dailySeedStatus !== "resolved"}
         {...props}
@@ -60,6 +60,6 @@ export function NewGameInCuratedDailyDropzoneButton({
             css={{ width: "2vmin", marginRight: "0.4vmin" }} />}
 
         <Today css={{ width: "2vmin", marginRight: "0.4vmin" }} />
-        {translate("Daily Game")}
+        {translate("Monthly Game")}
     </button>;
 }

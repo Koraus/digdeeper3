@@ -148,4 +148,12 @@ export const translation = {
         "en": "Wild Daily Game",
         "uk": "Дика щоденна гра",
     },
+    "Monthly Game": {
+        "en": "Monthly Game",
+        "uk": "Щомісячна гра",
+    },
+    "Wild Monthly Game": {
+        "en": "Wild Monthly Game",
+        "uk": "Дика щомісячна гра",
+    },
 };
