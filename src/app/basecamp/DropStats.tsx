@@ -4,13 +4,17 @@ import { fetchLastTreks } from "../fetchLastTreks";
 import { LoaderCircle } from "@emotion-icons/boxicons-regular/LoaderCircle";
 import { Error as ErrorIcon } from "@emotion-icons/boxicons-solid/Error";
 import { useRecoilValue } from "recoil";
-import { playerActionRecoil, startForTrek } from "../playerActionRecoil";
+import { playerActionRecoil, sightAt, startForTrek } from "../playerActionRecoil";
 import { eqDropzone } from "../../model/terms/Dropzone";
 import { version as sightVersion } from "../../model/version";
 import { Sparkles } from "@emotion-icons/ionicons-solid/Sparkles";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Reload } from "@emotion-icons/ionicons-solid/Reload";
 import { useTranslate } from "../languageRecoil";
+import { evacuationLineProgress } from "../../model/evacuation";
+import { applyStep, initSight } from "../../model/sight";
+import { enumerateBytecode } from "../../model/terms/PackedTrek";
+import { _never } from "../../utils/_never";
 
 
 export function DropStats({
@@ -20,13 +24,40 @@ export function DropStats({
     const dropzone = startForTrek(playerAction.trek).zone;
     const [refreahTrigger, setRefreahTrigger] = useState(0);
     const translate = useTranslate();
+    const playerSight = sightAt(playerAction.trek);
+    const playerNextEvacuationLine = Math.floor(evacuationLineProgress(playerSight.maxDepth)) + 1;
 
     const [treks, treksError, treksStatus] = usePromise(async () => {
         const treks = await fetchLastTreks();
         return treks
-            .filter(t => t.v === sightVersion)
-            .filter(t => eqDropzone(t.drop.zone, dropzone));
-    }, [dropzone, refreahTrigger]);
+            .filter(t => t.v === sightVersion);
+    }, [refreahTrigger]);
+
+    const treks1 = useMemo(() =>
+        treks
+            ?.filter(t => eqDropzone(t.drop.zone, dropzone))
+            .map(trek => {
+                let sight = initSight(trek.drop);
+                for (const instruction of enumerateBytecode(trek)) {
+                    sight = applyStep(trek.drop, sight, instruction)[0] ?? _never();
+                }
+                return ({
+                    trek,
+                    sight,
+                });
+            })
+            .sort((a, b) =>
+                (Math.floor(evacuationLineProgress(a.sight.maxDepth))
+                    - Math.floor(evacuationLineProgress(b.sight.maxDepth)))
+                || (a.trek.bytecodeLength - b.trek.bytecodeLength))
+        , [treks, dropzone]);
+
+    const treks2 = useMemo(() =>
+        treks1
+            ?.filter(({ sight }) =>
+                Math.floor(evacuationLineProgress(sight.maxDepth))
+                === playerNextEvacuationLine)
+        , [treks1, playerAction, playerNextEvacuationLine]);
 
 
     return <div {...props}>
@@ -42,6 +73,12 @@ export function DropStats({
             &nbsp;{translate("Reload")}
         </button>
         <br />
+        your next evac: {playerNextEvacuationLine}
+        <br />
+        <br />
+        known treks:
+        <br />
+        (lower score is better)
         {treksStatus === "pending"
             && <LoaderCircle css={{ height: "8em", margin: "2em" }} />}
         {treksStatus === "rejected"
@@ -49,16 +86,26 @@ export function DropStats({
                 <ErrorIcon css={{ height: "8em", margin: "2em" }} />
                 {treksError.message}
             </>}
-        {treks && treks.length === 0 && <>
+        {treks1 && treks1.length === 0 && <>
             <Sparkles css={{ height: "8em", margin: "2em" }} />
         </>}
         <div css={{ overflow: "auto", height: "100%" }}>
-            {treks && treks.map((i, index) => <div
-                key={index}
-                css={{ borderBottom: "1px solid gray" }}
+            {treks1 && treks1.map(({ trek, sight }, i) => <div
+                key={i}
+                css={{
+                    backgroundColor: i % 2
+                        ? "rgb(255, 255, 255, 0.08)"
+                        : undefined,
+                    color:
+                        playerNextEvacuationLine
+                            === Math.floor(evacuationLineProgress(sight.maxDepth))
+                            ? undefined
+                            : "grey",
+                }}
             >
-                <p>bytecodeLength: {JSON.stringify(i.bytecodeLength)}</p>
-                <p>bytecodeBase64: {JSON.stringify(i.bytecodeBase64)}</p>
+                {trek.bytecodeLength} score
+                &nbsp;@&nbsp;
+                evac #{Math.floor(evacuationLineProgress(sight.maxDepth))}
             </div>)}
         </div>
     </div >;

@@ -77,6 +77,10 @@ export function BasecampPanel({
                         <TabList>
                             <div css={{ fontSize: "1.2em" }}>
                                 <Tab>
+                                    <ChartBar css={iconStyle} />&nbsp;
+                                    {translate("Drop Stats")}
+                                </Tab>
+                                <Tab>
                                     <Ribbon css={iconStyle} />&nbsp;
                                     {translate("Dev Choice")}
                                 </Tab>
@@ -96,16 +100,15 @@ export function BasecampPanel({
                                     <History css={iconStyle} />&nbsp;
                                     {translate("History")}
                                 </Tab>
-                                <Tab>
-                                    <ChartBar css={iconStyle} />&nbsp;
-                                    {translate("Drop Stats")}
-                                </Tab>
                             </div>
                         </TabList>
                         <div css={[{
                             flexShrink: 1,
                             overflow: "hidden",
                         }, "&>* { height: 100% }"]}>
+                            <TabPanel>
+                                <DropStats css={{ height: "100%" }} />
+                            </TabPanel>
                             <TabPanel>
                                 <DevChoiceWorlds css={{ height: "100%" }} />
                             </TabPanel>
@@ -120,9 +123,6 @@ export function BasecampPanel({
                             </TabPanel>
                             <TabPanel>
                                 <HistoricalDrops css={{ height: "100%" }} />
-                            </TabPanel>
-                            <TabPanel>
-                                <DropStats css={{ height: "100%" }} />
                             </TabPanel>
                         </div>
                     </div>
