@@ -30,8 +30,8 @@ const addXp = (levelProgress: number, xp: number) => {
 
 
 export const levelCap =
-    neighborhoods.length
-    + knightMovesPerLevel.length;
+    neighborhoods.length - 1
+    + knightMovesPerLevel.length - 1;
 
 // Level is stored as state agnostically as possible
 // so that the level achieved persists
