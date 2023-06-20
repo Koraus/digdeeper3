@@ -8,10 +8,102 @@ import { Color, Matrix4, Quaternion, Vector3 } from "three";
 import { epxandedSight } from "./CellsView";
 
 
+
 const _m4s = Array.from({ length: 3 }, () => new Matrix4());
 const _v3s = Array.from({ length: 3 }, () => new Vector3());
 const _qs = Array.from({ length: 3 }, () => new Quaternion());
 
+
+const autoColorTheme = ({ rockColor, grassColor, energyColor,
+}: {
+    rockColor: string,
+    grassColor: string,
+    energyColor: string
+}) => {
+
+    const toRGBArray = (rgbStr: string) => {
+        const matches = rgbStr.match(/\d+/g);
+        if (matches !== null) {
+            return matches.map(Number);
+        }
+        return [];
+    };
+
+    const rgb2hsv = (rgb: number[]): number[] => {
+        const [r, g, b] = rgb;
+        const v = Math.max(r, g, b);
+        const c = v - Math.min(r, g, b);
+        const h = c && ((v == r)
+            ? (g - b) / c : ((v == g)
+                ? 2 + (b - r) / c : 4 + (r - g) / c));
+        return [60 * (h < 0 ? h + 6 : h), v && c / v, v];
+    };
+
+    const hsv2rgb = (hsv: number[]): string => {
+        const [h, s, v] = hsv;
+        const f = (n: number, k = (n + h / 60) % 6) =>
+            v - v * s * Math.max(Math.min(k, 4 - k, 1), 0);
+        return `rgb(${Math.round(f(5))}, 
+        ${Math.round(f(3))}, ${Math.round(f(1))})`;
+    };
+
+    const surfaceRockColor = () => {
+        const rockColorHSV = rgb2hsv(toRGBArray(rockColor));
+        const rockColorRGB = hsv2rgb(
+            [rockColorHSV[0],
+            rockColorHSV[1],
+            (rockColorHSV[2] * 0.7)]);
+        return rockColorRGB;
+    };
+
+    const surfaceGrassColor = () => {
+        const grassColorHSV = rgb2hsv(toRGBArray(grassColor));
+        const grassColorRGB = hsv2rgb(
+            [grassColorHSV[0]
+                , grassColorHSV[1],
+            (grassColorHSV[2] * 0.7)]);
+        return grassColorRGB;
+    };
+
+    const surfaceEnergyColor = () => {
+        const energyColorHSV = rgb2hsv(toRGBArray(energyColor));
+        const energyColorRGB = hsv2rgb(
+            [energyColorHSV[0],
+            energyColorHSV[1],
+            (energyColorHSV[2] * 0.7)]);
+        return energyColorRGB;
+    };
+
+    const bricksColor = () => {
+        const color = rgb2hsv(toRGBArray(rockColor));
+        const colorRGB = hsv2rgb([color[0], 0.2, 150]);
+        return colorRGB;
+    };
+
+    const colorTheme = {
+        rock: {
+            mainColor: new Color(rockColor),
+            snowColor: undefined,
+        },
+        grass: new Color(grassColor),
+        pickable: new Color(energyColor),
+        surface: {
+            rock: new Color(surfaceRockColor()),
+            grass: new Color(surfaceGrassColor()),
+            energy: new Color(surfaceEnergyColor()),
+            thickness: 2,
+        },
+        bricks: new Color(bricksColor()),
+    };
+
+    return colorTheme;
+};
+
+// const colorThemes = [autoColorTheme({
+//     rockColor: "rgb(180, 60, 98)",
+//     energyColor: "rgb(101, 93, 195)",
+//     grassColor: "rgb(115, 170, 198)",
+// })]
 
 const colorThemes = [{
     // floating world draft
@@ -128,7 +220,7 @@ export function Cell(ctx: LayoutContext) {
 
     const cIndex =
         Number(dropzone.world.ca.rule[1]);
-        // Math.floor(t / 12) + 10;
+    // Math.floor(t / 12) + 10;
     const colors = colorThemes[cIndex % colorThemes.length];
 
     const expSight = epxandedSight(trek);
