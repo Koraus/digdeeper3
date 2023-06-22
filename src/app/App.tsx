@@ -171,6 +171,13 @@ export function App() {
                 }} />
                 <DropStats css={{
                     pointerEvents: "all",
+                    background: "#00000020",
+                    padding: "0.6vmin 1.2vmin",
+                    borderRadius: "1vmin",
+                    border: "0.1vmin solid #000000ff",
+                    margin: "1.6vmin 0",
+                    filter: dropShadow5("0.2em", "0.2em", "#00000040"),
+                    width: "max-content",
                 }} />
             </div>
             <div

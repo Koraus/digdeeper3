@@ -39,7 +39,8 @@ export function DropStats({
             .map(trek => {
                 let sight = initSight(trek.drop);
                 for (const instruction of enumerateBytecode(trek)) {
-                    sight = applyStep(trek.drop, sight, instruction)[0] ?? _never();
+                    sight = applyStep(trek.drop, sight, instruction)[0]
+                        ?? _never();
                 }
                 return ({
                     trek,
@@ -61,6 +62,9 @@ export function DropStats({
 
 
     return <div {...props}>
+        your next evac: {playerNextEvacuationLine}
+        <br />
+        <br />
         <button
             css={[{ margin: "0.9vmin 0" }]}
             onClick={() => { setRefreahTrigger(refreahTrigger + 1); }}
@@ -70,15 +74,10 @@ export function DropStats({
                 height: "1em",
                 marginTop: "-0.2em",
             }} />
-            &nbsp;{translate("Reload")}
-        </button>
-        <br />
-        your next evac: {playerNextEvacuationLine}
-        <br />
-        <br />
-        known treks:
+        </button> known treks:
         <br />
         (lower score is better)
+        <br />
         {treksStatus === "pending"
             && <LoaderCircle css={{ height: "8em", margin: "2em" }} />}
         {treksStatus === "rejected"
