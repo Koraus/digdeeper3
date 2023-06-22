@@ -27,6 +27,7 @@ import { levelProgressRecoil } from "./levelProgressRecoil";
 import { usePlayerControls } from "./usePlayerControls";
 import { KnightMovesButtonsPanel } from "./KnightMovesButtonsPanel";
 import { useSetInitialDropzoneEffect } from "./useSetInitialDropzoneEffect";
+import { DropStats as _DropStats } from "./DropStats";
 
 
 const eqStringify = <T,>(p: T, n: T) =>
@@ -55,6 +56,7 @@ const ControlsPanel = memo(_ContraolsPanel, eqStringify);
 const NewGameButtonsPanel = memo(_NewGameButtonsPanel, eqStringify);
 const EnergyPanel = memo(_EnergyPanel, eqStringify);
 const DisclaimerPanel = memo(_DisclaimerPanel, eqStringify);
+const DropStats = memo(_DropStats, eqStringify);
 
 
 export function App() {
@@ -165,6 +167,9 @@ export function App() {
                     }} />
                 </div>
                 <Gui css={{
+                    pointerEvents: "all",
+                }} />
+                <DropStats css={{
                     pointerEvents: "all",
                 }} />
             </div>

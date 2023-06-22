@@ -19,7 +19,7 @@ import { VolumeMute } from "@emotion-icons/fa-solid/VolumeMute";
 import { VolumeUp } from "@emotion-icons/fa-solid/VolumeUp";
 import { muteSoundsRecoil } from "../muteSoundsRecoil";
 import { TrendingUp } from "@emotion-icons/boxicons-regular/TrendingUp";
-import { DropStats } from "./DropStats";
+import { DropStats } from "../DropStats";
 import { ChartBar } from "@emotion-icons/fa-solid/ChartBar";
 
 
@@ -77,10 +77,6 @@ export function BasecampPanel({
                         <TabList>
                             <div css={{ fontSize: "1.2em" }}>
                                 <Tab>
-                                    <ChartBar css={iconStyle} />&nbsp;
-                                    {translate("Drop Stats")}
-                                </Tab>
-                                <Tab>
                                     <Ribbon css={iconStyle} />&nbsp;
                                     {translate("Dev Choice")}
                                 </Tab>
@@ -106,9 +102,6 @@ export function BasecampPanel({
                             flexShrink: 1,
                             overflow: "hidden",
                         }, "&>* { height: 100% }"]}>
-                            <TabPanel>
-                                <DropStats css={{ height: "100%" }} />
-                            </TabPanel>
                             <TabPanel>
                                 <DevChoiceWorlds css={{ height: "100%" }} />
                             </TabPanel>

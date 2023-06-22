@@ -1,20 +1,20 @@
 import type { jsx } from "@emotion/react";
 import usePromise from "react-use-promise";
-import { fetchLastTreks } from "../fetchLastTreks";
+import { fetchLastTreks } from "./fetchLastTreks";
 import { LoaderCircle } from "@emotion-icons/boxicons-regular/LoaderCircle";
 import { Error as ErrorIcon } from "@emotion-icons/boxicons-solid/Error";
 import { useRecoilValue } from "recoil";
-import { playerActionRecoil, sightAt, startForTrek } from "../playerActionRecoil";
-import { eqDropzone } from "../../model/terms/Dropzone";
-import { version as sightVersion } from "../../model/version";
+import { playerActionRecoil, sightAt, startForTrek } from "./playerActionRecoil";
+import { eqDropzone } from "../model/terms/Dropzone";
+import { version as sightVersion } from "../model/version";
 import { Sparkles } from "@emotion-icons/ionicons-solid/Sparkles";
 import { useMemo, useState } from "react";
 import { Reload } from "@emotion-icons/ionicons-solid/Reload";
-import { useTranslate } from "../languageRecoil";
-import { evacuationLineProgress } from "../../model/evacuation";
-import { applyStep, initSight } from "../../model/sight";
-import { enumerateBytecode } from "../../model/terms/PackedTrek";
-import { _never } from "../../utils/_never";
+import { useTranslate } from "./languageRecoil";
+import { evacuationLineProgress } from "../model/evacuation";
+import { applyStep, initSight } from "../model/sight";
+import { enumerateBytecode } from "../model/terms/PackedTrek";
+import { _never } from "../utils/_never";
 
 
 export function DropStats({
