@@ -7,6 +7,7 @@ import { Pickable, PickablePick } from "./Pickable";
 import { Color as ThreeColor, Matrix4, Quaternion, Vector3 } from "three";
 import { epxandedSight } from "./CellsView";
 import Color from "color";
+import { Aqua } from "./Aqua";
 
 
 
@@ -25,22 +26,22 @@ const autoColorTheme = ({
     const surfaceRockColor = Color.hsv(
         rockColor.hue(),
         rockColor.saturationv(),
-        rockColor.value() * 0.7);
+        rockColor.value() * 0.6);
 
     const surfaceGrassColor = Color.hsv(
         grassColor.hue(),
-        grassColor.saturationv(),
-        grassColor.value() * 0.7);
+        grassColor.saturationv() * 0.9,
+        grassColor.value() * 0.8);
 
     const surfaceEnergyColor = Color.hsv(
         energyColor.hue(),
-        energyColor.saturationv(),
+        energyColor.saturationv() * 0.7,
         energyColor.value() * 0.7);
 
     const bricksColor = Color.hsv(
-        rockColor.hue(),
-        20,
-        50);
+        rockColor.hue() * 1.05,
+        rockColor.saturationv() * 0.3,
+        70);
 
     const colorTheme = {
         rock: {
@@ -63,14 +64,28 @@ const autoColorTheme = ({
 
 const colorThemes1 = [
     autoColorTheme({
-        rockColor: new Color("rgb(180, 60, 98)"),
-        energyColor: new Color("rgb(101, 93, 195)"),
-        grassColor: new Color("rgb(115, 170, 198)"),
+        rockColor: new Color("#965e3d"),
+        energyColor: new Color("#74cbf3"),
+        grassColor: new Color("#99ff24"),
     }),
 ];
 
 const colorThemes = [{
     // floating world draft
+    aqua: new ThreeColor("#5cbefb"),
+    rock: undefined,
+    grass: new ThreeColor("#90ea67"),
+    pickable: new ThreeColor("#b635d3"),
+    surface: {
+        rock: undefined,
+        grass: new ThreeColor("#d8dd76"),
+        energy: new ThreeColor("#ffc57a"),
+        thickness: 0.4,
+    },
+    bricks: new ThreeColor("#ff8968"),
+}, {
+    // floating world draft
+    aqua: undefined,
     rock: undefined,
     grass: new ThreeColor("#90ea67"),
     pickable: new ThreeColor("#b635d3"),
@@ -83,6 +98,7 @@ const colorThemes = [{
     bricks: new ThreeColor("#ff8968"),
 }, {
     // earth-like vegetation of mideteranian climate
+    aqua: undefined,
     rock: {
         mainColor: new ThreeColor("#2e444f"),
         snowColor: undefined,
@@ -98,6 +114,7 @@ const colorThemes = [{
     bricks: new ThreeColor("#ff8968"),
 }, {
     // [name]
+    aqua: undefined,
     rock: {
         mainColor: new ThreeColor("#782881"),
         snowColor: undefined,
@@ -113,6 +130,7 @@ const colorThemes = [{
     bricks: new ThreeColor("#bf4967"),
 }, {
     //     // snowy -- tbd
+    //     aqua: undefined,
     //     rock: {
     //         mainColor: new Color("#0b76ab"),
     //         snowColor: new Color("#cae0fb"),
@@ -129,6 +147,7 @@ const colorThemes = [{
     //     bricks: new Color("#fb9658"),
     // }, {
     // cherry
+    aqua: undefined,
     rock: {
         mainColor: new ThreeColor("#670471"),
         snowColor: undefined,
@@ -144,6 +163,7 @@ const colorThemes = [{
     bricks: new ThreeColor("#bf4967"),
 }, {
     // mossy
+    aqua: undefined,
     rock: {
         mainColor: new ThreeColor("#5a3b4d"),
         snowColor: new ThreeColor("#0e8960"),
@@ -159,6 +179,7 @@ const colorThemes = [{
     bricks: new ThreeColor("#938572"),
 }, {
     // Alien Planet
+    aqua: undefined,
     rock: {
         mainColor: new ThreeColor("#6c6356"),
         snowColor: undefined,
@@ -182,8 +203,7 @@ export function Cell(ctx: LayoutContext) {
         abuseBox,
     } = ctx;
 
-    const cIndex =
-        Number(dropzone.world.ca.rule[1]);
+    const cIndex =  Number(dropzone.world.ca.rule[1]);
     // Math.floor(t / 12) + 10;
     const colors = colorThemes[cIndex % colorThemes.length];
 
@@ -195,6 +215,7 @@ export function Cell(ctx: LayoutContext) {
     const isRock = caState === visualStateMap.rock;
     const isEnergy = caState === visualStateMap.energy;
     const visualKey = isGrass ? "grass" : isRock ? "rock" : "energy";
+    const isAquea = colors.aqua ? true : false;
 
     const surfaceColor = colors.surface[visualKey];
     if (surfaceColor) {
@@ -223,6 +244,9 @@ export function Cell(ctx: LayoutContext) {
         }
         if (isRock && colors.rock) {
             Rock(colors.rock, ctx);
+        }
+        if (isAquea && colors.aqua) {
+            Aqua(colors.aqua, ctx);
         }
     } else {
         if (isRock && !surfaceColor) {
