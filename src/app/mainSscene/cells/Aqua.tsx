@@ -13,9 +13,9 @@ export function Aqua(color: Color, {
     const aqua = abuseBox();
     aqua.setColor(new Color(color));
     aqua.setMatrix(_m4s[0].compose(
-        _v3s[1].set(0, -0.9, 0), // position
+        _v3s[1].set(0, -1.2, 0),
         _qs[0].identity(),
-        _v3s[0].set(1, 1, 1), // scale
+        _v3s[0].set(1, 1.6, 1),
     ).premultiply(rootMatrixWorld));
-    
+
 }

@@ -71,7 +71,7 @@ const colorThemes1 = [
 ];
 
 const colorThemes = [{
-    // floating world draft
+    // aqua world draft
     aqua: new ThreeColor("#5cbefb"),
     rock: undefined,
     grass: new ThreeColor("#90ea67"),
@@ -80,7 +80,7 @@ const colorThemes = [{
         rock: undefined,
         grass: new ThreeColor("#d8dd76"),
         energy: new ThreeColor("#ffc57a"),
-        thickness: 0.4,
+        thickness: 2,
     },
     bricks: new ThreeColor("#ff8968"),
 }, {
@@ -203,7 +203,7 @@ export function Cell(ctx: LayoutContext) {
         abuseBox,
     } = ctx;
 
-    const cIndex =  Number(dropzone.world.ca.rule[1]);
+    const cIndex = Number(dropzone.world.ca.rule[1]);
     // Math.floor(t / 12) + 10;
     const colors = colorThemes[cIndex % colorThemes.length];
 
@@ -215,7 +215,6 @@ export function Cell(ctx: LayoutContext) {
     const isRock = caState === visualStateMap.rock;
     const isEnergy = caState === visualStateMap.energy;
     const visualKey = isGrass ? "grass" : isRock ? "rock" : "energy";
-    const isAquea = colors.aqua ? true : false;
 
     const surfaceColor = colors.surface[visualKey];
     if (surfaceColor) {
@@ -242,11 +241,12 @@ export function Cell(ctx: LayoutContext) {
         if (isGrass) {
             Grass(colors.grass, ctx);
         }
-        if (isRock && colors.rock) {
-            Rock(colors.rock, ctx);
-        }
-        if (isAquea && colors.aqua) {
-            Aqua(colors.aqua, ctx);
+        if (isRock) {
+            if (colors.rock) {
+                Rock(colors.rock, ctx);
+            } else if (colors.aqua) {
+                Aqua(colors.aqua, ctx);
+            }
         }
     } else {
         if (isRock && !surfaceColor) {
