@@ -49,7 +49,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Tweet
-        uses: remmintan/tweet-v2-api@e5ee7fb6ed1c944c9e1414d6320e70aefce85519
+        uses: ndry/tweet-v2-api@main
         with:
           status: |
             Released ${{ github.event.release.name }}
