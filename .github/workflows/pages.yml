@@ -46,6 +46,8 @@ jobs:
 
   tweet:
     needs: deploy
+    environment:
+      name: github-pages
     runs-on: ubuntu-latest
     steps:
       - name: Tweet
