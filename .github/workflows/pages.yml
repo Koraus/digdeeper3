@@ -43,3 +43,21 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/deploy-pages@v1
+
+  tweet:
+    needs: deploy
+    environment:
+      name: github-pages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Tweet
+        uses: ndry/tweet-v2-api@main
+        with:
+          status: |
+            Update: ${{ github.event.head_commit.message }}
+            #digdeeper3 #ThroughCells
+        env:
+          CONSUMER_API_KEY: ${{ secrets.TWITTER_CONSUMER_API_KEY }}
+          CONSUMER_API_SECRET_KEY: ${{ secrets.TWITTER_CONSUMER_API_SECRET_KEY }}
+          ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
+          ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
