@@ -1,9 +1,13 @@
-import buildTime from "~build/time";
-import { abbreviatedSha as buildGitRevSha } from "~build/info";
+import getRepoInfo from "git-repo-info";
+import path from 'node:path';
 
-const biuldTimeStr = ((date: Date) => {
+
+function compactBuildTime({ date, anchorYear }: {
+    date: Date,
+    anchorYear: number,
+}) {
     const digits = "0123456789abcdefghijklmnopqrstuvwxyz";
-    
+
     /**
      * @param anchorYear the year of the beginning of the relevant time
      * @param date current date
@@ -22,7 +26,7 @@ const biuldTimeStr = ((date: Date) => {
             return _0 + _0 + mYearStr + _a;
         }
         return digits[relYear];
-    })(2023, date);
+    })(anchorYear, date);
 
     const monthStr = digits[date.getUTCMonth() + 1]; // Jan is 1, Dec is c=12
     const dayStr = digits[date.getUTCDate()]; // 1, 2, ..., 9, a, b, ..., v=31
@@ -38,11 +42,34 @@ const biuldTimeStr = ((date: Date) => {
         .substring(2, 6); // 4 digits of precision give resolution of ~9 sec
 
     return relYearStr + monthStr + dayStr + fractionOfDayStr;
-})(buildTime);
+}
 
-export const appVersion = "2-alpha"
-    + `+${biuldTimeStr}-${buildGitRevSha}`
-    + (import.meta.env.PROD ? "" : ("-" + import.meta.env.MODE));
+export function appVersionPlugin(option: {
+    root?: string,
+    mode?: string,
+} = {}) {
+    const buildTime = new Date();
+    const buildTimeStr = compactBuildTime({
+        date: buildTime,
+        anchorYear: 2023,
+    });
 
-// eslint-disable-next-line no-console 
-console.log("appVersion", appVersion);
+    const root = path.resolve(option?.root ?? process.cwd());
+    const info = getRepoInfo(root);
+    const buildGitRevSha = info.abbreviatedSha;
+
+    const appVersion = "2-alpha"
+        + `+${buildTimeStr}-${buildGitRevSha}`;
+    return {
+        name: "app-version",
+        appVersion,
+        resolveId(id: string) {
+            if (id !== "~appVersion") { return; }
+            return "\0" + id;
+        },
+        load(id: string) {
+            if (id !== "\0~appVersion") { return; }
+            return `export const appVersion = ${JSON.stringify(appVersion)};`;
+        },
+    };
+}

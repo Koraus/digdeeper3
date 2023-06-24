@@ -3,7 +3,7 @@ import "./initAnalytics";
 import { Canvas } from "@react-three/fiber";
 import { MainScene } from "./mainSscene/MainScene";
 import { NoToneMapping } from "three";
-import { appVersion } from "./appVersion";
+import { appVersion } from "~appVersion";
 import { Gui as _Gui } from "./Gui";
 import { NewGameButtonsPanel as _NewGameButtonsPanel } from "./NewGameButtonsPanel";
 import { EnergyPanel as _EnergyPanel } from "./EnergyPanel";
@@ -29,6 +29,8 @@ import { KnightMovesButtonsPanel } from "./KnightMovesButtonsPanel";
 import { useSetInitialDropzoneEffect } from "./useSetInitialDropzoneEffect";
 import { DropStats as _DropStats } from "./DropStats";
 
+// eslint-disable-next-line no-console 
+console.log("appVersion", appVersion);
 
 const eqStringify = <T,>(p: T, n: T) =>
     JSON.stringify(p) === JSON.stringify(n);

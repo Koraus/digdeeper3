@@ -1,5 +1,5 @@
 import { PluginOption, defineConfig } from "vite";
-import BuildInfo from "vite-plugin-info";
+import { appVersionPlugin } from "./appVersionPlugin";
 import react from "@vitejs/plugin-react";
 import packageLockJson from "../package-lock.json";
 import { createHtmlPlugin } from "vite-plugin-html";
@@ -71,6 +71,7 @@ export default defineConfig(async ({
         },
 
         plugins: [
+            appVersionPlugin(),
             ...(isBuildForOnlineEnv ? [{
                 name: "_noop",
                 enforce: "pre",
@@ -134,7 +135,6 @@ export default defineConfig(async ({
                     ],
                 }
             }),
-            BuildInfo(),
             viteStaticCopy({
                 targets: [{
                     src: "LICENSE",
