@@ -51,14 +51,22 @@ jobs:
     runs-on: ubuntu-latest
     if: github.repository == 'ndry/digdeeper3'
     steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: github-pages
+      
+      - name: Display structure of downloaded files
+        run: ls -R
+        working-directory: .
+
       - uses: manleydev/butler-publish-itchio-action@master
         env:
           BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
           CHANNEL: html5
           ITCH_GAME: through-cells
           ITCH_USER: ndry
-          PACKAGE: dist
-          VERSION_FILE: dist/appVersion.txt
+          PACKAGE: .
+          VERSION_FILE: appVersion.txt
 
   tweet:
     needs: deploy-itch
