@@ -1,5 +1,7 @@
 import getRepoInfo from "git-repo-info";
 import path from 'node:path';
+import { Plugin, ResolvedConfig } from "vite";
+import { promises as fs } from "node:fs";
 
 
 function compactBuildTime({ date, anchorYear }: {
@@ -48,18 +50,18 @@ export function appVersionPlugin(option: {
     root?: string,
     mode?: string,
 } = {}) {
+    let config = undefined as undefined | ResolvedConfig;
+
     const buildTime = new Date();
     const buildTimeStr = compactBuildTime({
         date: buildTime,
         anchorYear: 2023,
     });
-
     const root = path.resolve(option?.root ?? process.cwd());
     const info = getRepoInfo(root);
-    const buildGitRevSha = info.abbreviatedSha;
-
     const appVersion = "2-alpha"
-        + `+${buildTimeStr}-${buildGitRevSha}`;
+        + `+${buildTimeStr}-${info.abbreviatedSha}`;
+
     return {
         name: "app-version",
         appVersion,
@@ -71,5 +73,15 @@ export function appVersionPlugin(option: {
             if (id !== "\0~appVersion") { return; }
             return `export const appVersion = ${JSON.stringify(appVersion)};`;
         },
-    };
+        configResolved(_config) { config = _config; },
+        async closeBundle() {
+            if (config === undefined) { return; }
+            if (config.command === 'serve') { return; }
+
+            await fs.writeFile(
+                path.join(config.build.outDir, "appVersion.txt"),
+                appVersion,
+            );
+        },
+    } as Plugin;
 }
