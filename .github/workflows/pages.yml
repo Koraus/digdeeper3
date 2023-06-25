@@ -67,22 +67,3 @@ jobs:
           ITCH_USER: ndry
           PACKAGE: dist
           VERSION_FILE: dist/appVersion.txt
-
-  tweet:
-    needs: deploy-itch
-    environment:
-      name: github-pages
-    runs-on: ubuntu-latest
-    if: github.repository == 'ndry/digdeeper3'
-    steps:
-      - name: Tweet
-        uses: ndry/tweet-v2-api@main
-        with:
-          status: |
-            ${{ github.event.head_commit.message }}
-            #digdeeper3_commit #digdeeper3 #ThroughCells
-        env:
-          CONSUMER_API_KEY: ${{ secrets.TWITTER_CONSUMER_API_KEY }}
-          CONSUMER_API_SECRET_KEY: ${{ secrets.TWITTER_CONSUMER_API_SECRET_KEY }}
-          ACCESS_TOKEN: ${{ secrets.TWITTER_ACCESS_TOKEN }}
-          ACCESS_TOKEN_SECRET: ${{ secrets.TWITTER_ACCESS_TOKEN_SECRET }}
