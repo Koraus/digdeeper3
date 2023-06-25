@@ -55,9 +55,11 @@ jobs:
         with:
           name: github-pages
       
-      - name: Display structure of downloaded files
-        run: ls -R
-        working-directory: .
+      - run: ls -R
+
+      - run: tar -xvf artifact.tar
+      
+      - run: ls -R
 
       - uses: manleydev/butler-publish-itchio-action@master
         env:
