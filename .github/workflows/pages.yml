@@ -32,7 +32,7 @@ jobs:
         with:
           path: dist/
 
-  deploy:
+  deploy-gh-pages:
     needs: build
     permissions:
       pages: write # to deploy to Pages
@@ -44,11 +44,28 @@ jobs:
     steps:
       - uses: actions/deploy-pages@v1
 
-  tweet:
-    needs: deploy
+  deploy-itch:
+    needs: build
     environment:
       name: github-pages
     runs-on: ubuntu-latest
+    if: ${{ vars.RUN_DEPLOY_ITCH != '' }}
+    steps:
+      - uses: manleydev/butler-publish-itchio-action@master
+        env:
+          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
+          CHANNEL: html5
+          ITCH_GAME: through-cells
+          ITCH_USER: ndry
+          PACKAGE: dist
+          VERSION_FILE: dist/appVersion.txt
+
+  tweet:
+    needs: deploy-itch
+    environment:
+      name: github-pages
+    runs-on: ubuntu-latest
+    if: ${{ vars.RUN_TWEET != '' }}
     steps:
       - name: Tweet
         uses: ndry/tweet-v2-api@main
