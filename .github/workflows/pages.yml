@@ -54,12 +54,9 @@ jobs:
       - uses: actions/download-artifact@v3
         with:
           name: github-pages
-      
-      - run: ls -R
-
-      - run: tar -xvf artifact.tar
-      
-      - run: ls -R
+      # - run: ls -R
+      - run: tar -xf artifact.tar -C dist
+      # - run: ls -R
 
       - uses: manleydev/butler-publish-itchio-action@master
         env:
@@ -67,8 +64,8 @@ jobs:
           CHANNEL: html5
           ITCH_GAME: through-cells
           ITCH_USER: ndry
-          PACKAGE: .
-          VERSION_FILE: appVersion.txt
+          PACKAGE: dist
+          VERSION_FILE: dist/appVersion.txt
 
   tweet:
     needs: deploy-itch
