@@ -55,6 +55,7 @@ jobs:
         with:
           name: github-pages
       # - run: ls -R
+      - run: mkdir dist
       - run: tar -xf artifact.tar -C dist
       # - run: ls -R
 
