@@ -79,8 +79,8 @@ jobs:
         uses: ndry/tweet-v2-api@main
         with:
           status: |
-            Update: ${{ github.event.head_commit.message }}
-            #digdeeper3 #ThroughCells
+            ${{ github.event.head_commit.message }}
+            #digdeeper3_commit #digdeeper3 #ThroughCells
         env:
           CONSUMER_API_KEY: ${{ secrets.TWITTER_CONSUMER_API_KEY }}
           CONSUMER_API_SECRET_KEY: ${{ secrets.TWITTER_CONSUMER_API_SECRET_KEY }}
