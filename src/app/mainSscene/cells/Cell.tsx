@@ -15,6 +15,12 @@ const _m4s = Array.from({ length: 3 }, () => new Matrix4());
 const _v3s = Array.from({ length: 3 }, () => new Vector3());
 const _qs = Array.from({ length: 3 }, () => new Quaternion());
 
+const toPastelColor = (color: Color): Color => {
+    return Color.hsv(
+        color.hue(),
+        color.saturationv() * 1.1,
+        color.value()).mix(Color("white"));
+};
 
 const autoColorTheme = ({
     rockColor, grassColor, energyColor,
@@ -23,25 +29,15 @@ const autoColorTheme = ({
     grassColor: Color,
     energyColor: Color,
 }) => {
-    const surfaceRockColor = Color.hsv(
-        rockColor.hue(),
-        rockColor.saturationv(),
-        rockColor.value() * 0.6);
 
-    const surfaceGrassColor = Color.hsv(
-        grassColor.hue(),
-        grassColor.saturationv() * 0.9,
-        grassColor.value() * 0.8);
-
-    const surfaceEnergyColor = Color.hsv(
-        energyColor.hue(),
-        energyColor.saturationv() * 0.7,
-        energyColor.value() * 0.7);
+    const surfaceRockColor = toPastelColor(rockColor);
+    const surfaceGrassColor = toPastelColor(grassColor);
+    const surfaceEnergyColor = toPastelColor(energyColor);
 
     const bricksColor = Color.hsv(
         rockColor.hue() * 1.05,
-        rockColor.saturationv() * 0.3,
-        70);
+        rockColor.saturationv() * 0.7,
+        60).mix(Color("#c9aa82"));
 
     const colorTheme = {
         rock: {
@@ -62,13 +58,13 @@ const autoColorTheme = ({
     return colorTheme;
 };
 
-const colorThemes1 = [
-    autoColorTheme({
-        rockColor: new Color("#965e3d"),
-        energyColor: new Color("#74cbf3"),
-        grassColor: new Color("#99ff24"),
-    }),
-];
+// const colorThemes = [
+//     autoColorTheme({
+//         rockColor: new Color("rgb(126, 64, 10)"),
+//         energyColor: new Color("#a826a8"),
+//         grassColor: new Color("#51d040"),
+//     }),
+// ];
 
 const colorThemes = [{
     // aqua world draft
