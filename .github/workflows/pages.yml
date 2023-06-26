@@ -32,7 +32,7 @@ jobs:
         with:
           path: dist/
 
-  deploy:
+  deploy-gh-pages:
     needs: build
     permissions:
       pages: write # to deploy to Pages
@@ -43,3 +43,27 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/deploy-pages@v1
+
+  deploy-itch:
+    needs: build
+    environment:
+      name: github-pages
+    runs-on: ubuntu-latest
+    if: github.repository == 'ndry/digdeeper3'
+    steps:
+      - uses: actions/download-artifact@v3
+        with:
+          name: github-pages
+      # - run: ls -R
+      - run: mkdir dist
+      - run: tar -xf artifact.tar -C dist
+      # - run: ls -R
+
+      - uses: manleydev/butler-publish-itchio-action@master
+        env:
+          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_CREDENTIALS }}
+          CHANNEL: html5
+          ITCH_GAME: through-cells
+          ITCH_USER: ndry
+          PACKAGE: dist
+          VERSION_FILE: dist/appVersion.txt

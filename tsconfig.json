@@ -13,7 +13,7 @@
     },
     "files": [
         "./node_modules/vite/client.d.ts", 
-        "./node_modules/vite-plugin-info/client.d.ts",
+        "./vite.config/appVersionPlugin/client.d.ts",
         "./node_modules/@rauschma/iterator-helpers-polyfill/dist/src/install.d.ts"
     ],
     "include": ["./src/"],

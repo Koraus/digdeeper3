@@ -1,6 +1,7 @@
-# <img src="./favicon.svg" alt="favicon" width="16" /> Through Cells / digdeeper3 ([play dev build](https://ndry.github.io/digdeeper3/))
+# <img src="./favicon.svg" alt="favicon" width="16" /> Through Cells / digdeeper3 ([play dev on itch](https://ndry.itch.io/through-cells))
 
-Play [development build](https://ndry.github.io/digdeeper3/) on GitHub Pages
+Play development build on itch.io: [ndry.itch.io/through-cells](https://ndry.itch.io/through-cells)
+/ on GitHub Pages: [ndry.github.io/digdeeper3](https://ndry.github.io/digdeeper3/)
 
 ![Game screenhot](./cover.png "Cover")
 

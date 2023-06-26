@@ -1,5 +1,5 @@
 import { init, setOptOut as _setOptOut, Types } from "@amplitude/analytics-browser";
-import { appVersion } from "./appVersion";
+import { appVersion } from "~appVersion";
 import { optOutAnalyticsRecoil } from "./optOutAnalyticsRecoil";
 
 
