@@ -32,12 +32,16 @@ const autoColorTheme = ({
 
     const surfaceRockColor = toPastelColor(rockColor);
     const surfaceGrassColor = toPastelColor(grassColor);
-    const surfaceEnergyColor = toPastelColor(energyColor);
+    const surfaceEnergyColor = toPastelColor(Color.hsv(
+        grassColor.hue(),
+        energyColor.saturationv(),
+        energyColor.value(),
+    )).rotate(-40);
 
     const bricksColor = Color.hsv(
         rockColor.hue() * 1.05,
         rockColor.saturationv() * 0.7,
-        60).mix(Color("#c9aa82"));
+        60).mix(Color("#c9aa82")).rotate(-15);
 
     const colorTheme = {
         rock: {
@@ -60,9 +64,9 @@ const autoColorTheme = ({
 
 // const colorThemes = [
 //     autoColorTheme({
-//         rockColor: new Color("rgb(126, 64, 10)"),
-//         energyColor: new Color("#a826a8"),
-//         grassColor: new Color("#51d040"),
+//         rockColor: new Color("rgb(172, 158, 0)"),
+//         energyColor: new Color("#ff5fff"),
+//         grassColor: new Color("#1d99ff"),
 //     }),
 // ];
 
